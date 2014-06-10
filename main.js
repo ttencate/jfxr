@@ -24,6 +24,10 @@ jfxr.service('Sound', function(context) {
 		}
 	};
 
+	Sound.prototype.getBuffer = function() {
+		return this.buffer;
+	};
+
 	return Sound;
 });
 
@@ -38,7 +42,7 @@ jfxr.service('Player', function($rootScope, $timeout, context) {
 
 		this.analyser = context.createAnalyser();
 		this.analyser.fftSize = 256;
-		this.analyser.smoothingTimeConstant = 0.5;
+		this.analyser.smoothingTimeConstant = 0.0;
 		this.analyser.connect(context.destination);
 	};
 
@@ -49,7 +53,7 @@ jfxr.service('Player', function($rootScope, $timeout, context) {
 		var self = this;
 		this.source = context.createBufferSource();
 		this.source.connect(this.analyser);
-		this.source.buffer = this.sound.buffer;
+		this.source.buffer = this.sound.getBuffer();
 		this.source.start();
 		this.source.onended = function() {
 			$rootScope.$apply(function() {
@@ -155,6 +159,66 @@ jfxr.directive('analyser', function() {
 				window.requestAnimationFrame(animFrame);
 			};
 			window.requestAnimationFrame(animFrame);
+		},
+	};
+});
+
+jfxr.directive('waveform', function() {
+	var draw = function(canvas, buffer) {
+		var width = canvas.clientWidth;
+		var height = canvas.clientHeight;
+		if (canvas.width != width) {
+			canvas.width = width;
+		}
+		if (canvas.height != height) {
+			canvas.height = height;
+		}
+
+		var context = canvas.getContext('2d');
+		context.globalAlpha = 1.0;
+		context.clearRect(0, 0, width, height);
+
+		var channels = [];
+		for (var c = 0; c < buffer.numberOfChannels; c++) {
+			channels.push(buffer.getChannelData(c));
+		}
+
+		var numSamples = buffer.length;
+		context.strokeStyle = '#88f';
+		context.lineWidth = 1.0;
+		context.globalAlpha = 1.0;
+		context.beginPath();
+		context.moveTo(0, height / 2);
+		for (var i = 0; i < numSamples; i++) {
+			var sample = (channels[0][i] + channels[1][i]) / 2;
+			context.lineTo(i / numSamples * width, (sample + 1) * height / 2);
+		}
+		context.stroke();
+
+		context.strokeStyle = '#fff';
+		context.globalAlpha = 0.1;
+		context.beginPath();
+		context.moveTo(0, height / 2);
+		context.lineTo(width, height / 2);
+		context.stroke();
+	};
+
+	return {
+		scope: {
+			'waveform': '=',
+		},
+		link: function(scope, element, attrs, ctrl) {
+			var destroyed = false;
+			element.bind('$destroy', function() {
+				destroyed = true;
+			});
+
+			var canvas = element[0];
+
+			scope.$watch(function() {
+				var data = scope.$eval('waveform');
+				draw(canvas, data);
+			});
 		},
 	};
 });

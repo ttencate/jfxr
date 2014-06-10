@@ -60,6 +60,20 @@ jfxr.service('Player', function($rootScope, $timeout, context) {
 });
 
 jfxr.controller('JfxrCtrl', function(Sound, Player, $scope) {
-	$scope.sound = new Sound();
-	$scope.player = new Player($scope.sound);
+	var sound = new Sound();
+	$scope.sound = sound;
+
+	var player = new Player(sound);
+
+	this.isPlaying = function() {
+		return player.playing;
+	};
+
+	this.togglePlay = function() {
+		if (player.playing) {
+			player.stop();
+		} else {
+			player.play();
+		}
+	};
 });

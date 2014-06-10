@@ -167,11 +167,13 @@ h1 {
   top: 1px;
 }
 
-.symbol-play {
+.playstop-play:before {
+  content: '\25b6';
   vertical-align: 13%;
 }
 
-.symbol-stop {
+.playstop-stop:before {
+  content: '\25fc';
   font-size: 114%;
   vertical-align: 10%;
 }

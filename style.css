@@ -44,7 +44,7 @@ h1, h2, h3 {
 .topbar {
   display: flex;
   flex-direction: row;
-  height: 48px;
+  height: 47px;
   margin-bottom: 8px;
 }
 
@@ -112,13 +112,21 @@ h1 {
   line-height: 39px;
 }
 
+.playbackpane {
+  display: flex;
+  align-items: stretch;
+  padding: 2px;
+}
+
+.analyser {
+  flex-grow: 1;
+  margin-right: 2px;
+}
+
 .playstop {
-  position: absolute;
-  right: 2px;
-  top: 2px;
   cursor: pointer;
+  margin: 0;
   width: 92px;
-  height: 44px;
   border: none;
   outline: none;
   border-top-right-radius: 8px;

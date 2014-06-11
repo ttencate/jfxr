@@ -284,6 +284,7 @@ jfxr.controller('JfxrCtrl', function(Sound, Player, $scope, localStorage) {
 	this.keyDown = function(e) {
 		if (e.keyCode == 32) { // space
 			this.togglePlay();
+			e.preventDefault();
 		}
 	};
 

@@ -142,43 +142,35 @@ h1 {
   font-size: 32px;
   line-height: 32px;
 
-  background: #040408;
+  background-image: linear-gradient(#101020 0%, #404080 100%);
   box-shadow:
     0 0 2px rgba(224, 224, 255, 0.3) inset,
-    2px 4px 4px rgba(192, 192, 255, 0.3) inset,
-    8px 16px 32px rgba(128, 128, 255, 0.1) inset,
-    -4px -8px 4px rgba(0, 0, 0, 0.4) inset;
+    0 0 8px rgba(0, 0, 0, 1.0) inset,
+    0 12px 4px rgba(192, 192, 255, 0.2) inset;
 
-  color: #dde;
+  color: rgba(255, 255, 255, 0.7);
   text-shadow:
-    -1px -2px 4px rgba(0, 0, 0, 1.0),
+    -1px -2px 4px rgba(0, 0, 0, 0.5),
     1px 2px 4px rgba(128, 128, 255, 0.5);
 }
 
 .playstop:hover {
-  background: #080810;
   box-shadow:
-    0 0 2px rgba(224, 224, 255, 0.3) inset,
-    2px 4px 4px rgba(128, 128, 255, 0.5) inset,
-    8px 16px 32px rgba(128, 128, 255, 0.3) inset,
-    -4px -8px 4px rgba(0, 0, 0, 0.4) inset;
+    0 0 2px rgba(224, 224, 255, 0.5) inset,
+    0 0 8px rgba(0, 0, 0, 1.0) inset,
+    0 12px 4px rgba(192, 192, 255, 0.5) inset;
+  color: rgba(240, 240, 255, 1.0);
   text-shadow:
-    0 0 8px rgba(0, 0, 0, 1.0),
-    0 0 4px rgba(128, 128, 255, 1.0);
+    -1px -2px 4px rgba(0, 0, 0, 0.5),
+    1px 2px 4px rgba(128, 128, 255, 1.0);
 }
 
 .playstop:active {
+  color: rgba(255, 255, 255, 0.6);
   box-shadow:
-    0 0 2px rgba(224, 224, 255, 0.2) inset,
-    1px 2px 4px rgba(128, 128, 255, 0.5) inset,
-    4px 8px 32px rgba(128, 128, 255, 0.3) inset,
-    -2px -4px 4px rgba(0, 0, 0, 0.4) inset;
-}
-
-:active .symbol {
-  position: relative;
-  left: 1px;
-  top: 1px;
+    0 0 2px rgba(224, 224, 255, 0.3) inset,
+    0 0 8px rgba(0, 0, 0, 1.0) inset,
+    0 12px 4px rgba(192, 192, 255, 0.3) inset;
 }
 
 .playstop-play:before {

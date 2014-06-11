@@ -212,6 +212,8 @@ h2 {
   text-transform: uppercase;
   font-weight: 400;
   font-size: 100%;
+  line-height: 16px;
+  box-sizing: border-box;
   color: #555;
   text-shadow: 0 0 1px #333;
   border-bottom: 1px solid #111;
@@ -221,12 +223,24 @@ h2 {
   line-height: 100%;
 }
 
+.params tr {
+  height: 16px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #080808;
+}
+
 .paramlabel {
   text-align: right;
+  padding-right: 8px;
+}
+
+.paramcontrol {
+  padding-right: 8px;
 }
 
 .paramvalue {
   text-align: right;
+  padding-right: 2px;
 }
 
 .paramunit {

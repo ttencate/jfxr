@@ -42,7 +42,7 @@ jfxr.service('Player', function($rootScope, $timeout, context) {
 
 		this.analyser = context.createAnalyser();
 		this.analyser.fftSize = 256;
-		this.analyser.smoothingTimeConstant = 0.0;
+		this.analyser.smoothingTimeConstant = 0.5;
 		this.analyser.connect(context.destination);
 	};
 
@@ -90,8 +90,13 @@ jfxr.directive('analyser', function() {
 			canvas.height = height;
 		}
 
-		var numBars = data.length;
-		var barWidth = Math.max(1, Math.ceil(width / numBars));
+		var barWidth = Math.max(2, Math.ceil(width / data.length));
+		var numBars = Math.floor(width / barWidth);
+		var barGap = 1;
+
+		var blockHeight = 3;
+		var blockGap = 1;
+		var numBlocks = Math.floor(height / blockHeight);
 
 		var context = canvas.getContext('2d');
 		context.clearRect(0, 0, width, height);
@@ -105,14 +110,15 @@ jfxr.directive('analyser', function() {
 		context.globalAlpha = 1.0;
 		for (var i = 0; i < numBars; i++) {
 			var f = (data[i] + 100) / 100;
-			context.fillRect(i * barWidth, (1 - f) * height, barWidth, f * height);
+			var y = Math.round(f * numBlocks) / numBlocks;
+			context.fillRect(i * barWidth, (1 - y) * height, barWidth - barGap, y * height);
 		}
 
-		context.fillStyle = '#fff';
-		context.globalAlpha = 0.2;
-		for (var i = 0; i <= 6; i++) {
-			var y = i / 6 * (height - 1) + 0.5;
-			context.fillRect(0, y, width, 0.5);
+		context.fillStyle = '#111';
+		context.globalAlpha = 0.3;
+		for (var i = 0; i < numBlocks; i++) {
+			var y = i * blockHeight + 1;
+			context.fillRect(0, y, width, blockGap);
 		}
 	};
 

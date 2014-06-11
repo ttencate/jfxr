@@ -13,7 +13,7 @@
           <h1>jfxr&thinsp;~</h1>
         </div>
         <div class="pane pane-top-right column-right playbackpane">
-          <canvas analyser="ctrl.getAnalyser()" playing="ctrl.isPlaying()" class="analyser"></canvas>
+          <canvas width="360" height="43" analyser="ctrl.getFrequencyData()" enabled="ctrl.isAnalyserEnabled()" ng-click="ctrl.toggleAnalyserEnabled()" class="analyser" ng-class="{'analyser-disabled': !ctrl.isAnalyserEnabled()}"></canvas>
           <button ng-click="ctrl.togglePlay()" class="playstop" ng-class="{'playstop-play': !ctrl.isPlaying(), 'playstop-stop': ctrl.isPlaying()}" title="{{ctrl.isPlaying() ? 'Stop (space)' : 'Play (space)'}}"></button>
         </div>
       </div>

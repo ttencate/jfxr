@@ -44,6 +44,23 @@ jfxr.service('Player', function($rootScope, $timeout, context) {
 		this.analyser.fftSize = 256;
 		this.analyser.smoothingTimeConstant = 0.5;
 		this.analyser.connect(context.destination);
+
+		this.frequencyData = new Float32Array(this.analyser.frequencyBinCount);
+		for (var i = 0; i < this.frequencyData.length; i++) {
+			this.frequencyData[i] = -100;
+		}
+
+		// Make sure that the AnalyserNode is tickled at a regular interval,
+		// even if we paint the canvas at irregular intervals. This is needed
+		// because smoothing is applied only when the data is requested.
+		this.script = context.createScriptProcessor();
+		this.script.onaudioprocess = function(e) {
+			self.analyser.getFloatFrequencyData(self.frequencyData);
+			for (var c = 0; c < e.outputBuffer.numberOfChannels; c++) {
+				e.outputBuffer.getChannelData(c).set(e.inputBuffer.getChannelData(c));
+			}
+		};
+		this.script.connect(this.analyser);
 	};
 
 	Player.prototype.play = function() {
@@ -52,7 +69,7 @@ jfxr.service('Player', function($rootScope, $timeout, context) {
 		}
 		var self = this;
 		this.source = context.createBufferSource();
-		this.source.connect(this.analyser);
+		this.source.connect(this.script);
 		this.source.buffer = this.sound.getBuffer();
 		this.source.start();
 		this.source.onended = function() {
@@ -72,24 +89,19 @@ jfxr.service('Player', function($rootScope, $timeout, context) {
 		this.playing = false;
 	};
 
-	Player.prototype.getAnalyser = function() {
-		return this.analyser;
+	Player.prototype.getFrequencyData = function() {
+		return this.frequencyData;
 	};
 
 	return Player;
 });
 
 jfxr.directive('analyser', function() {
-	var draw = function(canvas, data, minData, maxData) {
-		var width = canvas.clientWidth;
-		var height = canvas.clientHeight;
-		if (canvas.width != width) {
-			canvas.width = width;
-		}
-		if (canvas.height != height) {
-			canvas.height = height;
-		}
+	var clear = function(context, width, height) {
+		context.clearRect(0, 0, width, height);
+	};
 
+	var draw = function(context, width, height, data) {
 		var barWidth = Math.max(2, Math.ceil(width / data.length));
 		var numBars = Math.floor(width / barWidth);
 		var barGap = 1;
@@ -98,8 +110,7 @@ jfxr.directive('analyser', function() {
 		var blockGap = 1;
 		var numBlocks = Math.floor(height / blockHeight);
 
-		var context = canvas.getContext('2d');
-		context.clearRect(0, 0, width, height);
+		clear(context, width, height);
 
 		var gradient = context.createLinearGradient(0, 0, 0, height);
 		gradient.addColorStop(0, '#f00');
@@ -125,7 +136,7 @@ jfxr.directive('analyser', function() {
 	return {
 		scope: {
 			'analyser': '=',
-			'playing': '=',
+			'enabled': '=',
 		},
 		link: function(scope, element, attrs, ctrl) {
 			var destroyed = false;
@@ -134,37 +145,34 @@ jfxr.directive('analyser', function() {
 			});
 
 			var canvas = element[0];
-
-			var analyser = null;
-			var data = null;
-			scope.$watch('analyser', function(value) {
-				analyser = value;
-				data = new Float32Array(analyser.frequencyBinCount);
-			});
-
-			var playing = null;
-			scope.$watch('playing', function(value) {
-				playing = value;
-				// AnalyserNode without inputs just keeps handing back the last
-				// valid data, so fill the array with silence.
-				if (!playing) {
-					for (var i = 0; i < data.length; i++) {
-						data[i] = -1000;
-					}
-				}
-			});
+			var context = canvas.getContext('2d');
+			var width = canvas.width;
+			var height = canvas.height;
 
 			var animFrame = function() {
-				if (destroyed || !analyser || !data) {
+				if (!enabled) {
 					return;
 				}
-				if (playing) {
-					analyser.getFloatFrequencyData(data);
+				if (data) {
+					draw(context, width, height, data);
 				}
-				draw(canvas, data);
 				window.requestAnimationFrame(animFrame);
 			};
-			window.requestAnimationFrame(animFrame);
+
+			var data = null;
+			scope.$watch('analyser', function(value) {
+				data = value;
+			});
+
+			var enabled = true;
+			scope.$watch('enabled', function(value) {
+				enabled = value;
+				if (enabled) {
+					window.requestAnimationFrame(animFrame);
+				} else {
+					clear(context, width, height);
+				}
+			});
 		},
 	};
 });
@@ -229,11 +237,33 @@ jfxr.directive('waveform', function() {
 	};
 });
 
-jfxr.controller('JfxrCtrl', function(Sound, Player, $scope) {
+jfxr.service('localStorage', function() {
+	var LocalStorage = function() {
+		this.data = window.localStorage || {};
+	};
+
+	LocalStorage.prototype.get = function(key, defaultValue) {
+		var json = this.data[key];
+		if (json == undefined) {
+			return defaultValue;
+		}
+		return JSON.parse(json);
+	};
+
+	LocalStorage.prototype.set = function(key, value) {
+		this.data[key] = JSON.stringify(value);
+	};
+
+	return new LocalStorage();
+});
+
+jfxr.controller('JfxrCtrl', function(Sound, Player, $scope, localStorage) {
 	var sound = new Sound();
 	$scope.sound = sound;
 
 	var player = new Player(sound);
+
+	var analyserEnabled = localStorage.get('analyserEnabled', true);
 
 	this.isPlaying = function() {
 		return player.playing;
@@ -247,13 +277,22 @@ jfxr.controller('JfxrCtrl', function(Sound, Player, $scope) {
 		}
 	};
 
-	this.getAnalyser = function() {
-		return player.getAnalyser();
+	this.getFrequencyData = function() {
+		return player.getFrequencyData();
 	};
 
 	this.keyDown = function(e) {
 		if (e.keyCode == 32) { // space
 			this.togglePlay();
 		}
+	};
+
+	this.isAnalyserEnabled = function() {
+		return analyserEnabled;
+	};
+
+	this.toggleAnalyserEnabled = function() {
+		analyserEnabled = !analyserEnabled;
+		localStorage.set('analyserEnabled', analyserEnabled);
 	};
 });

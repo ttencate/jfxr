@@ -120,6 +120,13 @@ h1 {
 
 .analyser {
   flex-grow: 1;
+  cursor: pointer;
+}
+
+.analyser-disabled {
+  background-image: linear-gradient(#080808 0%, #101010 30%, #080808 70%, #000000 100%);
+  box-shadow:
+    0 0 2px rgba(255, 255, 255, 0.1) inset;
 }
 
 .playstop {

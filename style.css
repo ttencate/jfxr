@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 html {
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 12px;
@@ -12,35 +17,25 @@ html {
 }
 
 body {
-  margin: 0;
   padding: 16px;
   box-sizing: border-box;
   height: 100%;
 }
 
-h1, h2, h3 {
-  margin: 0;
-  padding: 0;
-}
-
 table {
-  margin: 0;
-  padding: 0;
   border: 0;
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-tr {
-  margin: 0;
-  padding: 0;
+th, td {
+  border: 0;
+  vertical-align: middle;
+  font-weight: normal;
 }
 
-th, td {
-  vertical-align: middle;
-  border: none;
-  font-weight: normal;
-  border: 0;
+input, button {
+  outline: 0;
 }
 
 .main {
@@ -153,10 +148,8 @@ h1 {
 
 .playstop {
   cursor: pointer;
-  margin: 0;
   width: 92px;
   border: none;
-  outline: none;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 
@@ -224,6 +217,10 @@ h2 {
   border-bottom: 1px solid #111;
 }
 
+.params {
+  line-height: 100%;
+}
+
 .paramlabel {
   text-align: right;
 }
@@ -232,8 +229,11 @@ h2 {
   text-align: right;
 }
 
+.paramunit {
+  text-align: left;
+}
+
 input[type=range] {
-  outline: none;
   -webkit-appearance: none;
   background-color: transparent;
   background-image: -webkit-linear-gradient(

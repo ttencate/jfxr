@@ -8,7 +8,7 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 		return this.value_;
 	},
 	set: function(value) {
-		this.value_ = value;
+		this.value_ = parseFloat(value);
 		if (this.onchange) {
 			this.onchange();
 		}
@@ -38,7 +38,7 @@ jfxr.Sound = function(context) {
 jfxr.Sound.prototype.getBuffer = function() {
 	if (this.dirty) {
 		var sampleRate = this.sampleRate;
-		this.buffer = this.context.createBuffer(1, 1 * sampleRate, sampleRate);
+		this.buffer = this.context.createBuffer(1, 0.1 * sampleRate, sampleRate);
 		var frequency = this.frequency.value;
 		var frequencySlide = this.frequencySlide.value;
 		var data = this.buffer.getChannelData(0);

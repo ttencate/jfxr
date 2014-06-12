@@ -173,7 +173,7 @@ jfxrApp.directive('waveform', function() {
 		context.moveTo(0, height / 2);
 		for (var i = 0; i < numSamples; i++) {
 			var sample = channel[i];
-			context.lineTo(i / numSamples * width, (sample + 1) * height / 2);
+			context.lineTo(i / numSamples * width, (1 - sample) * height / 2);
 		}
 		context.stroke();
 

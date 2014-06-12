@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="jfxr">
+<html ng-app="jfxrApp">
   <head>
     <title>jfxr</title>
     <meta charset="utf-8">
@@ -42,7 +42,13 @@
       </div>
     </div>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
-    <script>var jfxr = angular.module('jfxr', []);</script>
+    <script>
+      var jfxrApp = angular.module('jfxrApp', []);
+      var jfxr = {};
+    </script>
+    <script src="shims.js"></script>
+    <script src="sound.js"></script>
+    <script src="ui.js"></script>
     <script src="main.js"></script>
   </body>
 </html>

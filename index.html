@@ -27,14 +27,14 @@
           <table class="params">
             <tr>
               <th class="paramlabel">Frequency</th>
-              <td class="paramcontrol"><input type="range" min="10" max="20000" ng-model="frequency"></input></td>
-              <td class="paramvalue">{{frequency}}</td>
+              <td class="paramcontrol"><input type="range" min="10" max="20000" ng-model="sound.frequency.value"></input></td>
+              <td class="paramvalue">{{sound.frequency.value}}</td>
               <td class="paramunit">Hz</td>
             </tr>
             <tr>
               <th class="paramlabel">Frequency slide</th>
-              <td class="paramcontrol"><input type="range" min="-100000" max="100000" ng-model="frequencySlide"></input></td>
-              <td class="paramvalue">{{frequencySlide}}</td>
+              <td class="paramcontrol"><input type="range" min="-10000" max="10000" ng-model="sound.frequencySlide.value"></input></td>
+              <td class="paramvalue">{{sound.frequencySlide.value}}</td>
               <td class="paramunit">Hz/s</td>
             </tr>
           </table>

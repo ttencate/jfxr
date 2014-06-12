@@ -163,10 +163,7 @@ jfxrApp.directive('waveform', function() {
 		context.globalAlpha = 1.0;
 		context.clearRect(0, 0, width, height);
 
-		var channels = [];
-		for (var c = 0; c < buffer.numberOfChannels; c++) {
-			channels.push(buffer.getChannelData(c));
-		}
+		var channel = buffer.getChannelData(0);
 
 		var numSamples = buffer.length;
 		context.strokeStyle = '#88f';
@@ -175,7 +172,7 @@ jfxrApp.directive('waveform', function() {
 		context.beginPath();
 		context.moveTo(0, height / 2);
 		for (var i = 0; i < numSamples; i++) {
-			var sample = (channels[0][i] + channels[1][i]) / 2;
+			var sample = channel[i];
 			context.lineTo(i / numSamples * width, (sample + 1) * height / 2);
 		}
 		context.stroke();

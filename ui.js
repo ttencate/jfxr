@@ -148,7 +148,7 @@ jfxrApp.directive('analyser', function() {
 	};
 });
 
-jfxrApp.directive('waveform', function() {
+jfxrApp.directive('waveshape', function() {
 	var draw = function(canvas, buffer) {
 		var width = canvas.clientWidth;
 		var height = canvas.clientHeight;
@@ -187,7 +187,7 @@ jfxrApp.directive('waveform', function() {
 
 	return {
 		scope: {
-			'waveform': '=',
+			'waveshape': '=',
 		},
 		link: function(scope, element, attrs, ctrl) {
 			var destroyed = false;
@@ -198,8 +198,46 @@ jfxrApp.directive('waveform', function() {
 			var canvas = element[0];
 
 			scope.$watch(function() {
-				var data = scope.$eval('waveform');
+				var data = scope.$eval('waveshape');
 				draw(canvas, data);
+			});
+		},
+	};
+});
+
+jfxrApp.directive('waveform', function() {
+	return {
+		require: 'ngModel',
+		scope: {
+			title: '=',
+			waveform: '@',
+			ngModel: '=',
+		},
+		template:
+			'<label class="waveform" ' +
+			'       ng-class="\'waveform-\' + waveform + (checked ? \' checked\' : \'\')" title="{{title}}">' +
+			'  <input type="radio" name="waveform" ng-value="waveform"></input>' +
+			'  {{title}}' +
+			'</label>',
+		link: function(scope, element, attrs, modelCtrl) {
+			var input = element.find('input');
+			var value = scope.waveform;
+
+			scope.$watch(function() { return input[0].checked; }, function(checked) {
+				scope.checked = checked;
+			});
+
+			modelCtrl.$render = function() {
+				console.log('Render! value:', value);
+				input[0].checked = (modelCtrl.$viewValue == value);
+			};
+			input.bind('click', function() {
+				scope.$apply(function() {
+					console.log('Clicked! checked:', input[0].checked, 'value:', value);
+					if (input[0].checked) {
+						modelCtrl.$setViewValue(value);
+					}
+				});
 			});
 		},
 	};

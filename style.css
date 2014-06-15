@@ -199,7 +199,7 @@ h1 {
   vertical-align: 10%;
 }
 
-.waveform {
+.waveshape {
   width: 100%;
   height: 63px;
   background-color: #111;
@@ -245,6 +245,41 @@ h2 {
 
 .paramunit {
   text-align: left;
+}
+
+.waveform {
+  cursor: pointer;
+  text-indent: -9999px;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background: url(waveforms.png);
+  opacity: 0.7;
+  margin-right: 4px;
+}
+
+.waveform:hover {
+  opacity: 1.0;
+}
+
+.waveform.checked {
+  background-color: #444;
+}
+
+.waveform-sine {
+  background-position: 0 0;
+}
+
+.waveform-triangle {
+  background-position: -15px 0;
+}
+
+.waveform-sawtooth {
+  background-position: -30px 0;
+}
+
+.waveform-square {
+  background-position: -45px 0;
 }
 
 input[type=range] {

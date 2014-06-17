@@ -1,7 +1,10 @@
 jfxr.Parameter = function(args) {
+	this.label = args.label || '<unnamed>';
 	this.type_ = args.type || 'float';
 	this.value_ = args.value;
 	this.values_ = this.type_ == 'enum' ? (args.values || []) : null;
+	this.minValue = this.type_ == 'float' ? args.minValue : null;
+	this.maxValue = this.type_ == 'float' ? args.maxValue : null;
 };
 
 Object.defineProperty(jfxr.Parameter.prototype, 'value', {
@@ -47,6 +50,7 @@ jfxr.Sound = function(context) {
 	this.sampleRate = 44100;
 
 	this.waveform = new jfxr.Parameter({
+		label: 'Waveform',
 		value: 'sine',
 		type: 'enum',
 		values: {
@@ -56,8 +60,20 @@ jfxr.Sound = function(context) {
 			'square': 'Square',
 		},
 	});
-	this.frequency = new jfxr.Parameter({value: 880});
-	this.frequencySlide = new jfxr.Parameter({value: 0});
+	this.frequency = new jfxr.Parameter({
+		label: 'Frequency',
+		unit: 'Hz',
+		value: 880,
+		minValue: 10,
+		maxValue: 10000,
+	});
+	this.frequencySlide = new jfxr.Parameter({
+		label: 'Frequency slide',
+		unit: 'Hz/s',
+		value: 0,
+		minValue: -10000,
+		maxValue: 10000,
+	});
 
 	this.buffer = null;
 	this.dirty = true;

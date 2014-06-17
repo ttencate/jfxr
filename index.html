@@ -23,32 +23,15 @@
         </div>
         <div class="pane pane-bottom-right column-right">
           <canvas waveshape="sound.getBuffer()" class="waveshape"></canvas>
-          <h2>Waveform</h2>
-          <table class="params">
-            <tr>
-              <th class="paramlabel">Waveform</th>
-              <td class="paramcontrol">
-                <span ng-model="sound.waveform.value" waveform="sine" title="Sine"></span>
-                <span ng-model="sound.waveform.value" waveform="triangle" title="Triangle"></span>
-                <span ng-model="sound.waveform.value" waveform="sawtooth" title="Sawtooth"></span>
-                <span ng-model="sound.waveform.value" waveform="square" title="Square"></span>
-              </td>
-              <td class="paramvalue">{{sound.waveform.valueTitle()}}</td>
-              <td class="paramunit"></td>
-            </tr>
-            <tr>
-              <th class="paramlabel">Frequency</th>
-              <td class="paramcontrol"><input type="range" min="10" max="10000" ng-model="sound.frequency.value"></input></td>
-              <td class="paramvalue">{{sound.frequency.value}}</td>
-              <td class="paramunit">Hz</td>
-            </tr>
-            <tr>
-              <th class="paramlabel">Frequency slide</th>
-              <td class="paramcontrol"><input type="range" min="-10000" max="10000" ng-model="sound.frequencySlide.value"></input></td>
-              <td class="paramvalue">{{sound.frequencySlide.value}}</td>
-              <td class="paramunit">Hz/s</td>
-            </tr>
-          </table>
+          <h2>Tone</h2>
+          <custom-param label="sound.waveform.label" value="sound.waveform.valueTitle()">
+            <span ng-model="sound.waveform.value" waveform-button="sine" title="Sine"></span>
+            <span ng-model="sound.waveform.value" waveform-button="triangle" title="Triangle"></span>
+            <span ng-model="sound.waveform.value" waveform-button="sawtooth" title="Sawtooth"></span>
+            <span ng-model="sound.waveform.value" waveform-button="square" title="Square"></span>
+          </custom-param>
+          <float-param param="sound.frequency"></float-param>
+          <float-param param="sound.frequencySlide"></float-param>
         </div>
       </div>
     </div>

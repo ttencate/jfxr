@@ -205,12 +205,44 @@ jfxrApp.directive('waveshape', function() {
 	};
 });
 
-jfxrApp.directive('waveform', function() {
+jfxrApp.directive('customParam', function() {
+	return {
+		restrict: 'E',
+		scope: {
+			'label': '=',
+			'value': '=',
+			'unit': '=',
+		},
+		transclude: true,
+		template: 
+			'<div class="param">' +
+            '  <div class="paramlabel">{{label}}</div>' +
+            '  <div class="paramcontrol" ng-transclude></div>' +
+            '  <div class="paramvalue">{{value}}</div>' +
+            '  <div class="paramunit">{{unit}}</div>' +
+			'</div>',
+	};
+});
+
+jfxrApp.directive('floatParam', function() {
+	return {
+		restrict: 'E',
+		scope: {
+			param: '=',
+		},
+		template:
+			'<custom-param label="param.label" value="param.value" unit="param.unit">' +
+            '  <input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" ng-model="param.value"></input>' +
+			'</custom-param>',
+	};
+});
+
+jfxrApp.directive('waveformButton', function() {
 	return {
 		require: 'ngModel',
 		scope: {
 			title: '=',
-			waveform: '@',
+			waveform: '@waveformButton',
 			ngModel: '=',
 		},
 		template:

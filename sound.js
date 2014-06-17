@@ -77,10 +77,32 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var frequency = this.frequency.value;
 		var frequencySlide = this.frequencySlide.value;
 		var data = this.buffer.getChannelData(0);
+		var waveform = this.waveform.value;
 		for (var i = 0; i < data.length; i++) {
+			var sample = 0;
+
 			var t = i / sampleRate;
 			var f = frequency + t * frequencySlide;
-			data[i] = Math.sin(2 * Math.PI * t * f);
+			var phase = t * f - Math.floor(t * f);
+			switch (waveform) {
+				case 'sine':
+					sample = Math.sin(2 * Math.PI * phase);
+					break;
+				case 'triangle':
+					sample =
+						phase < 0.25 ? 4 * phase :
+						phase < 0.75 ? 2 - 4 * phase :
+						-4 + 4 * phase;
+					break;
+				case 'sawtooth':
+					sample = phase < 0.5 ? 2 * phase : -2 + 2 * phase;
+					break;
+				case 'square':
+					sample = phase < 0.5 ? 1 : -1;
+					break;
+			}
+
+			data[i] = sample;
 		}
 		this.dirty = false;
 	}

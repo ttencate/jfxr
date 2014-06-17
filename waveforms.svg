@@ -28,10 +28,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="22.4"
-     inkscape:cx="1.9060315"
-     inkscape:cy="4.4023931"
+     inkscape:cx="36.147103"
+     inkscape:cy="8.822036"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="1280"
      inkscape:window-height="776"
@@ -64,7 +64,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -72,8 +72,8 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="background (HIDE BEFORE EXPORT)"
-     sodipodi:insensitive="true"
-     style="display:none">
+     style="display:none"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#000000;stroke:none"
        id="rect3777"
@@ -105,13 +105,6 @@
        sodipodi:nodetypes="cccc" />
     <path
        style="fill:none;stroke:#ffffff;stroke-width:1px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 31.5,13.5 12,-12 0,12"
-       id="path3765"
-       inkscape:connector-curvature="0"
-       transform="translate(0,1037.3622)"
-       sodipodi:nodetypes="ccc" />
-    <path
-       style="fill:none;stroke:#ffffff;stroke-width:1px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1"
        d="m 46.5,7.5 0,-6 6,0 0,12 6,0 0,-6"
        id="path3767"
        inkscape:connector-curvature="0"
@@ -130,5 +123,11 @@
            y="0.85786426"
            style="fill:#ff0000" /></flowRegion><flowPara
          id="flowPara3775"
-         style="font-size:12px;letter-spacing:0.05000000000000000px;fill:#ff0000">TODO</flowPara></flowRoot>  </g>
+         style="font-size:12px;letter-spacing:0.05000000000000000px;fill:#ff0000">TODO</flowPara></flowRoot>    <path
+       sodipodi:nodetypes="cccc"
+       inkscape:connector-curvature="0"
+       id="path3002"
+       d="m 31.5,1044.8622 6,-6 0,12 6,-6"
+       style="fill:none;stroke:#ffffff;stroke-width:1px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1" />
+  </g>
 </svg>

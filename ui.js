@@ -228,12 +228,10 @@ jfxrApp.directive('waveform', function() {
 			});
 
 			modelCtrl.$render = function() {
-				console.log('Render! value:', value);
 				input[0].checked = (modelCtrl.$viewValue == value);
 			};
 			input.bind('click', function() {
 				scope.$apply(function() {
-					console.log('Clicked! checked:', input[0].checked, 'value:', value);
 					if (input[0].checked) {
 						modelCtrl.$setViewValue(value);
 					}

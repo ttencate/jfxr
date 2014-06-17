@@ -5,6 +5,7 @@ jfxr.Parameter = function(args) {
 	this.values_ = this.type_ == 'enum' ? (args.values || []) : null;
 	this.minValue = this.type_ == 'float' ? args.minValue : null;
 	this.maxValue = this.type_ == 'float' ? args.maxValue : null;
+	this.step = this.type_ == 'float' ? (args.step || 'any') : null;
 };
 
 Object.defineProperty(jfxr.Parameter.prototype, 'value', {
@@ -66,6 +67,7 @@ jfxr.Sound = function(context) {
 		value: 880,
 		minValue: 10,
 		maxValue: 10000,
+		step: 1,
 	});
 	this.frequencySlide = new jfxr.Parameter({
 		label: 'Frequency slide',
@@ -73,6 +75,31 @@ jfxr.Sound = function(context) {
 		value: 0,
 		minValue: -10000,
 		maxValue: 10000,
+		step: 100,
+	});
+	this.attack = new jfxr.Parameter({
+		label: 'Attack',
+		unit: 's',
+		value: 0,
+		minValue: 0,
+		maxValue: 5,
+		step: 0.01,
+	});
+	this.sustain = new jfxr.Parameter({
+		label: 'Sustain',
+		unit: 's',
+		value: 0.1,
+		minValue: 0,
+		maxValue: 5,
+		step: 0.01,
+	});
+	this.release = new jfxr.Parameter({
+		label: 'Release',
+		unit: 's',
+		value: 0,
+		minValue: 0,
+		maxValue: 5,
+		step: 0.01,
 	});
 
 	this.buffer = null;
@@ -88,16 +115,22 @@ jfxr.Sound = function(context) {
 
 jfxr.Sound.prototype.getBuffer = function() {
 	if (this.dirty) {
-		var sampleRate = this.sampleRate;
-		this.buffer = this.context.createBuffer(1, 0.1 * sampleRate, sampleRate);
+		var waveform = this.waveform.value;
 		var frequency = this.frequency.value;
 		var frequencySlide = this.frequencySlide.value;
-		var data = this.buffer.getChannelData(0);
-		var waveform = this.waveform.value;
-		for (var i = 0; i < data.length; i++) {
-			var sample = 0;
+		var attack = this.attack.value;
+		var sustain = this.sustain.value;
+		var release = this.release.value;
 
+		var sampleRate = this.sampleRate;
+		var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + release)));
+		this.buffer = this.context.createBuffer(1, numSamples, sampleRate);
+		var data = this.buffer.getChannelData(0);
+
+		for (var i = 0; i < numSamples; i++) {
+			var sample = 0;
 			var t = i / sampleRate;
+
 			var f = frequency + t * frequencySlide;
 			var phase = t * f - Math.floor(t * f);
 			switch (waveform) {
@@ -116,6 +149,12 @@ jfxr.Sound.prototype.getBuffer = function() {
 				case 'square':
 					sample = phase < 0.5 ? 1 : -1;
 					break;
+			}
+
+			if (t < attack) {
+				sample *= t / attack;
+			} else if (t > attack + sustain) {
+				sample *= 1 - (t - attack - sustain) / release;
 			}
 
 			data[i] = sample;

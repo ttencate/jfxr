@@ -1,5 +1,6 @@
 jfxr.Parameter = function(args) {
 	this.label = args.label || '<unnamed>';
+	this.unit = args.unit || '';
 	this.type_ = args.type || 'float';
 	this.value_ = args.value;
 	this.values_ = this.type_ == 'enum' ? (args.values || []) : null;

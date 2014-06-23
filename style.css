@@ -224,13 +224,15 @@ h2 {
   height: 16px;
   border-bottom: 1px solid #080808;
   display: flex;
-  flex-direction: horizontal;
+  flex-direction: row;
+  align-items: center;
 }
 
 .paramlabel {
   width: 128px;
   text-align: right;
   padding-right: 8px;
+  margin-top: -2px;
 }
 
 .paramcontrol {
@@ -242,11 +244,13 @@ h2 {
   width: 64px;
   text-align: right;
   padding-right: 2px;
+  margin-top: -2px;
 }
 
 .paramunit {
   width: 32px;
   text-align: left;
+  margin-top: -2px;
 }
 
 .waveform {
@@ -284,53 +288,41 @@ h2 {
   background-position: -45px 0;
 }
 
-input[type=range] {
+.floatslider {
+  display: block;
   -webkit-appearance: none;
   background-color: transparent;
   background-image: -webkit-linear-gradient(
-    rgba(0, 0, 0, 0) 0px,
     rgba(0, 0, 0, 0) 4px,
     #000 4px,
-    #000 5px,
-    #222 5px,
-    #222 6px,
-    #444 6px,
-    #444 7px,
-    #000 7px,
+    #222 8px,
     #000 8px,
-    rgba(0, 0, 0, 0) 8px,
-    rgba(0, 0, 0, 0) 12px
+    #000 9px,
+    rgba(0, 0, 0, 0) 9px
   );
   width: 200px;
-  height: 12px;
+  height: 13px;
+  margin: 1px 0;
   cursor: pointer;
 }
 
-input[type="range"]::-webkit-slider-thumb {
+.floatslider::-webkit-slider-thumb {
   -webkit-appearance: none;
   background-color: #666;
   background-image: -webkit-radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
   border-radius: 2px;
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   box-shadow:
     1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
     -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
 }
 
-input[type="range"]::-webkit-slider-thumb:after {
-  display: block;
-  width: 20px;
-  height: 20px;
-  left: -4px;
-  top: -4px;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
+.floatslider::-webkit-slider-thumb:hover {
   background-color: #888;
 }
 
-input[type="range"]::-webkit-slider-thumb:active {
+.floatslider::-webkit-slider-thumb:active {
   background-color: #555;
   box-shadow:
     1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,

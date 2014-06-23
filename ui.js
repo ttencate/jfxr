@@ -232,7 +232,7 @@ jfxrApp.directive('floatParam', function() {
 		},
 		template:
 			'<custom-param label="param.label" value="param.value" unit="param.unit">' +
-            '  <input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" step="{{param.step}}" ng-model="param.value"></input>' +
+            '  <input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" step="{{param.step}}" ng-model="param.value" class="floatslider"></input>' +
 			'</custom-param>',
 	};
 });

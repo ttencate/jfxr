@@ -231,9 +231,22 @@ jfxrApp.directive('floatParam', function() {
 			param: '=',
 		},
 		template:
-			'<custom-param label="param.label" value="param.value" unit="param.unit">' +
+			'<custom-param label="param.label" value="param.value|number:param.digits" unit="param.unit">' +
             '  <input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" step="{{param.step}}" ng-model="param.value" class="floatslider"></input>' +
 			'</custom-param>',
+		link: function(scope, element, attrs, ctrl) {
+			element.bind('wheel', function(e) {
+				if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey || e.buttons) {
+					return;
+				}
+				var delta = e.deltaX + e.deltaY;
+				scope.$apply(function() {
+					var param = scope.param;
+					param.value += Math.sign(delta) * param.step;
+				});
+				e.preventDefault();
+			});
+		},
 	};
 });
 

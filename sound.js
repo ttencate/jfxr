@@ -7,6 +7,7 @@ jfxr.Parameter = function(args) {
 	this.minValue = this.type_ == 'float' ? args.minValue : null;
 	this.maxValue = this.type_ == 'float' ? args.maxValue : null;
 	this.step = this.type_ == 'float' ? (args.step || 'any') : null;
+	this.digits = this.type_ == 'float' ? Math.max(0, Math.round(-Math.log(this.step) / Math.log(10))) : null;
 };
 
 Object.defineProperty(jfxr.Parameter.prototype, 'value', {
@@ -17,7 +18,14 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 	set: function(value) {
 		switch (this.type_) {
 			case 'float':
-				this.value_ = parseFloat(value);
+				value = parseFloat(value);
+				if (this.minValue !== null && value < this.minValue) {
+					value = this.minValue;
+				}
+				if (this.maxValue !== null && value > this.maxValue) {
+					value = this.maxValue;
+				}
+				this.value_ = value;
 				break;
 			case 'enum':
 				var found = false;

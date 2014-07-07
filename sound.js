@@ -136,12 +136,15 @@ jfxr.Sound.prototype.getBuffer = function() {
 		this.buffer = this.context.createBuffer(1, numSamples, sampleRate);
 		var data = this.buffer.getChannelData(0);
 
+		var phase = 0;
 		for (var i = 0; i < numSamples; i++) {
 			var sample = 0;
 			var t = i / sampleRate;
 
 			var f = frequency + t * frequencySlide;
-			var phase = t * f - Math.floor(t * f);
+			var periodInSamples = sampleRate / f;
+			phase += 1 / periodInSamples;
+		   	phase = phase - Math.floor(phase);
 			switch (waveform) {
 				case 'sine':
 					sample = Math.sin(2 * Math.PI * phase);

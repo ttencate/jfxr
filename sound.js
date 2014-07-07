@@ -59,6 +59,8 @@ jfxr.Sound = function(context) {
 
 	this.sampleRate = 44100;
 
+	// Frequency parameters
+
 	this.waveform = new jfxr.Parameter({
 		label: 'Waveform',
 		value: 'sine',
@@ -86,6 +88,9 @@ jfxr.Sound = function(context) {
 		maxValue: 10000,
 		step: 100,
 	});
+
+	// Amplitude parameters
+	
 	this.attack = new jfxr.Parameter({
 		label: 'Attack',
 		unit: 's',
@@ -110,6 +115,22 @@ jfxr.Sound = function(context) {
 		maxValue: 5,
 		step: 0.01,
 	});
+	this.tremoloAmount = new jfxr.Parameter({
+		label: 'Tremolo amount',
+		unit: '',
+		value: 0,
+		minValue: 0,
+		maxValue: 1,
+		step: 0.01,
+	});
+	this.tremoloFrequency = new jfxr.Parameter({
+		label: 'Tremolo frequency',
+		unit: 'Hz',
+		value: 10,
+		minValue: 1,
+		maxValue: 1000,
+		step: 1,
+	});
 
 	this.buffer = null;
 	this.dirty = true;
@@ -130,6 +151,8 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var attack = this.attack.value;
 		var sustain = this.sustain.value;
 		var release = this.release.value;
+		var tremoloAmount = this.tremoloAmount.value;
+		var tremoloFrequency = this.tremoloFrequency.value;
 
 		var sampleRate = this.sampleRate;
 		var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + release)));
@@ -162,6 +185,8 @@ jfxr.Sound.prototype.getBuffer = function() {
 					sample = phase < 0.5 ? 1 : -1;
 					break;
 			}
+
+			sample *= 1 - tremoloAmount * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
 
 			if (t < attack) {
 				sample *= t / attack;

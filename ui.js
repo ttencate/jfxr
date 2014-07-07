@@ -231,9 +231,12 @@ jfxrApp.directive('floatParam', function() {
 			param: '=',
 		},
 		template:
-			'<custom-param label="param.label" value="param.value|number:param.digits" unit="param.unit">' +
-            '  <input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" step="{{param.step}}" ng-model="param.value" class="floatslider"></input>' +
-			'</custom-param>',
+			'<div class="param">' +
+            '  <div class="paramlabel">{{param.label}}</div>' +
+            '  <div class="paramcontrol"><input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" step="{{param.step}}" ng-model="param.value" class="floatslider"></input></div>' +
+            '  <div class="paramvalue"><input class="floattext" type="text" ng-model="param.value"></input></div>' +
+            '  <div class="paramunit">{{param.unit}}</div>' +
+			'</div>',
 		link: function(scope, element, attrs, ctrl) {
 			element.bind('wheel', function(e) {
 				if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey || e.buttons) {

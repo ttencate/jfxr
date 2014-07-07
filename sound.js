@@ -88,8 +88,8 @@ jfxr.Sound = function(context) {
 		maxValue: 10000,
 		step: 100,
 	});
-	this.vibratoAmount = new jfxr.Parameter({
-		label: 'Vibrato amount',
+	this.vibratoDepth = new jfxr.Parameter({
+		label: 'Vibrato depth',
 		unit: 'Hz',
 		value: 0,
 		minValue: 0,
@@ -131,8 +131,8 @@ jfxr.Sound = function(context) {
 		maxValue: 5,
 		step: 0.01,
 	});
-	this.tremoloAmount = new jfxr.Parameter({
-		label: 'Tremolo amount',
+	this.tremoloDepth = new jfxr.Parameter({
+		label: 'Tremolo depth',
 		unit: '',
 		value: 0,
 		minValue: 0,
@@ -164,12 +164,12 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var waveform = this.waveform.value;
 		var frequency = this.frequency.value;
 		var frequencySlide = this.frequencySlide.value;
-		var vibratoAmount = this.vibratoAmount.value;
+		var vibratoDepth = this.vibratoDepth.value;
 		var vibratoFrequency = this.vibratoFrequency.value;
 		var attack = this.attack.value;
 		var sustain = this.sustain.value;
 		var release = this.release.value;
-		var tremoloAmount = this.tremoloAmount.value;
+		var tremoloDepth = this.tremoloDepth.value;
 		var tremoloFrequency = this.tremoloFrequency.value;
 
 		var sampleRate = this.sampleRate;
@@ -183,7 +183,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 			var t = i / sampleRate;
 
 			var f = frequency + t * frequencySlide;
-			f += 1 - vibratoAmount * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
+			f += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
 			var periodInSamples = sampleRate / f;
 			phase += 1 / periodInSamples;
 		   	phase = phase - Math.floor(phase);
@@ -205,7 +205,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 					break;
 			}
 
-			sample *= 1 - tremoloAmount * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
+			sample *= 1 - tremoloDepth * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
 
 			if (t < attack) {
 				sample *= t / attack;

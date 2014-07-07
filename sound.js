@@ -88,6 +88,22 @@ jfxr.Sound = function(context) {
 		maxValue: 10000,
 		step: 100,
 	});
+	this.vibratoAmount = new jfxr.Parameter({
+		label: 'Vibrato amount',
+		unit: 'Hz',
+		value: 0,
+		minValue: 0,
+		maxValue: 1000,
+		step: 10,
+	});
+	this.vibratoFrequency = new jfxr.Parameter({
+		label: 'Vibrato frequency',
+		unit: 'Hz',
+		value: 10,
+		minValue: 1,
+		maxValue: 1000,
+		step: 1,
+	});
 
 	// Amplitude parameters
 	
@@ -148,6 +164,8 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var waveform = this.waveform.value;
 		var frequency = this.frequency.value;
 		var frequencySlide = this.frequencySlide.value;
+		var vibratoAmount = this.vibratoAmount.value;
+		var vibratoFrequency = this.vibratoFrequency.value;
 		var attack = this.attack.value;
 		var sustain = this.sustain.value;
 		var release = this.release.value;
@@ -165,6 +183,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 			var t = i / sampleRate;
 
 			var f = frequency + t * frequencySlide;
+			f += 1 - vibratoAmount * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
 			var periodInSamples = sampleRate / f;
 			phase += 1 / periodInSamples;
 		   	phase = phase - Math.floor(phase);

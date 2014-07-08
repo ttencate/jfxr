@@ -8,7 +8,7 @@ jfxr.Parameter = function(args) {
 	this.maxValue = this.type_ == 'float' ? args.maxValue : null;
 	this.step = this.type_ == 'float' ? (args.step || 'any') : null;
 	this.digits = this.type_ == 'float' ? Math.max(0, Math.round(-Math.log(this.step) / Math.log(10))) : null;
-	this.disabled_ = args.disabled || null;
+	this.disabledReason_ = args.disabledReason || null;
 };
 
 Object.defineProperty(jfxr.Parameter.prototype, 'value', {
@@ -55,7 +55,11 @@ jfxr.Parameter.prototype.valueTitle = function() {
 };
 
 jfxr.Parameter.prototype.isDisabled = function(sound) {
-	return !!(this.disabled_ && this.disabled_(sound));
+	return !!(this.disabledReason_ && this.disabledReason_(sound));
+};
+
+jfxr.Parameter.prototype.whyDisabled = function(sound) {
+	return this.disabledReason_ && this.disabledReason_(sound);
 };
 
 jfxr.Sound = function(context) {
@@ -66,10 +70,16 @@ jfxr.Sound = function(context) {
 
 	var frequencyIsMeaningless = function(sound) {
 		var w = sound.waveform.value;
-		return w == 'whitenoise' || w == 'pinknoise' || w == 'brownnoise';
+		if (w == 'whitenoise' || w == 'pinknoise' || w == 'brownnoise') {
+			return 'Frequency settings do not apply to noise';
+		}
+		return null;
 	};
 	var isNotSquare = function(sound) {
-		return sound.waveform.value != 'square';
+		if (sound.waveform.value != 'square') {
+			return 'Duty cycle only applies to square waveforms';
+		}
+		return null;
 	};
 
 	// Frequency parameters
@@ -98,7 +108,7 @@ jfxr.Sound = function(context) {
 		minValue: 10,
 		maxValue: 10000,
 		step: 1,
-		disabled: frequencyIsMeaningless,
+		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencySlide = new jfxr.Parameter({
 		label: 'Frequency slide',
@@ -107,7 +117,7 @@ jfxr.Sound = function(context) {
 		minValue: -10000,
 		maxValue: 10000,
 		step: 100,
-		disabled: frequencyIsMeaningless,
+		disabledReason: frequencyIsMeaningless,
 	});
 	this.vibratoDepth = new jfxr.Parameter({
 		label: 'Vibrato depth',
@@ -116,7 +126,7 @@ jfxr.Sound = function(context) {
 		minValue: 0,
 		maxValue: 1000,
 		step: 10,
-		disabled: frequencyIsMeaningless,
+		disabledReason: frequencyIsMeaningless,
 	});
 	this.vibratoFrequency = new jfxr.Parameter({
 		label: 'Vibrato frequency',
@@ -125,7 +135,7 @@ jfxr.Sound = function(context) {
 		minValue: 1,
 		maxValue: 1000,
 		step: 1,
-		disabled: frequencyIsMeaningless,
+		disabledReason: frequencyIsMeaningless,
 	});
 	this.squareDuty = new jfxr.Parameter({
 		label: 'Square duty',
@@ -134,7 +144,7 @@ jfxr.Sound = function(context) {
 		minValue: 0,
 		maxValue: 100,
 		step: 1,
-		disabled: isNotSquare,
+		disabledReason: isNotSquare,
 	});
 	this.squareDutySweep = new jfxr.Parameter({
 		label: 'Square duty sweep',
@@ -143,7 +153,7 @@ jfxr.Sound = function(context) {
 		minValue: -1000,
 		maxValue: 1000,
 		step: 5,
-		disabled: isNotSquare,
+		disabledReason: isNotSquare,
 	});
 
 	// Amplitude parameters

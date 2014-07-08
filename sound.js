@@ -193,11 +193,6 @@ jfxr.Sound.prototype.getBuffer = function() {
 			var sample = 0;
 			var t = i / sampleRate;
 
-			var f = frequency + t * frequencySlide;
-			f += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
-			var periodInSamples = sampleRate / f;
-			phase += 1 / periodInSamples;
-		   	phase = phase - Math.floor(phase);
 			switch (waveform) {
 				case 'sine':
 					sample = Math.sin(2 * Math.PI * phase);
@@ -238,6 +233,12 @@ jfxr.Sound.prototype.getBuffer = function() {
 					prevSample = sample;
 					break;
 			}
+
+			var f = frequency + t * frequencySlide;
+			f += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
+			var periodInSamples = sampleRate / f;
+			phase += 1 / periodInSamples;
+			phase = phase - Math.floor(phase);
 
 			sample *= 1 - tremoloDepth * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
 

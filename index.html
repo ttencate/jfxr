@@ -28,13 +28,18 @@
           <canvas waveshape="sound.getBuffer()" class="waveshape"></canvas>
           <h2>Tone</h2>
           <custom-param label="sound.waveform.label" value="sound.waveform.valueTitle()">
-            <span ng-model="sound.waveform.value" waveform-button="sine" title="Sine"></span>
-            <span ng-model="sound.waveform.value" waveform-button="triangle" title="Triangle"></span>
-            <span ng-model="sound.waveform.value" waveform-button="sawtooth" title="Sawtooth"></span>
-            <span ng-model="sound.waveform.value" waveform-button="square" title="Square"></span>
-            <span ng-model="sound.waveform.value" waveform-button="whitenoise" title="White noise"></span>
-            <span ng-model="sound.waveform.value" waveform-button="pinknoise" title="Pink noise"></span>
-            <span ng-model="sound.waveform.value" waveform-button="brownnoise" title="Brown noise"></span>
+            <div class="waveforms">
+              <span ng-model="sound.waveform.value" waveform-button="sine" title="Sine"></span>
+              <span ng-model="sound.waveform.value" waveform-button="triangle" title="Triangle"></span>
+              <span ng-model="sound.waveform.value" waveform-button="sawtooth" title="Sawtooth"></span>
+              <span ng-model="sound.waveform.value" waveform-button="square" title="Square"></span>
+              <span ng-model="sound.waveform.value" waveform-button="tangent" title="Tangent"></span>
+              <span ng-model="sound.waveform.value" waveform-button="whistle" title="Whistle"></span>
+              <span ng-model="sound.waveform.value" waveform-button="breaker" title="Breaker"></span>
+              <span ng-model="sound.waveform.value" waveform-button="whitenoise" title="White noise"></span>
+              <span ng-model="sound.waveform.value" waveform-button="pinknoise" title="Pink noise"></span>
+              <span ng-model="sound.waveform.value" waveform-button="brownnoise" title="Brown noise"></span>
+            </div>
           </custom-param>
           <float-param param="sound.frequency"></float-param>
           <float-param param="sound.frequencySlide"></float-param>

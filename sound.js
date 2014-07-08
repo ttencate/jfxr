@@ -70,6 +70,9 @@ jfxr.Sound = function(context) {
 			'triangle': 'Triangle',
 			'sawtooth': 'Sawtooth',
 			'square': 'Square',
+			'tangent': 'Tangent',
+			'whistle': 'Whistle',
+			'breaker': 'Breaker',
 			'whitenoise': 'White noise',
 			'pinknoise': 'Pink noise',
 			'brownnoise': 'Brown noise',
@@ -208,6 +211,18 @@ jfxr.Sound.prototype.getBuffer = function() {
 					break;
 				case 'square':
 					sample = phase < 0.5 ? 1 : -1;
+					break;
+				case 'tangent':
+					sample = 0.3 * Math.tan(Math.PI * phase);
+					break;
+				case 'whistle':
+					sample = 0.75 * Math.sin(2 * Math.PI * phase) + 0.25 * Math.sin(40 * Math.PI * phase);
+					break;
+				case 'breaker':
+					// Make sure to start at a zero crossing.
+					var p = phase + Math.sqrt(0.75);
+					if (p >= 1) p -= 1;
+					sample = -1 + 2 * Math.abs(1 - p*p*2);
 					break;
 				case 'whitenoise':
 					sample = random.uniform(-1, 1);

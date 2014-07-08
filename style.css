@@ -254,6 +254,11 @@ h2 {
   text-align: left;
 }
 
+.waveforms {
+  display: flex;
+  justify-content: space-between;
+}
+
 .waveform {
   cursor: pointer;
   text-indent: -9999px;
@@ -262,7 +267,6 @@ h2 {
   height: 15px;
   background: url(waveforms.png);
   opacity: 0.7;
-  margin-right: 4px;
 }
 
 .waveform:hover {
@@ -287,6 +291,18 @@ h2 {
 
 .waveform-square {
   background-position: -45px 0;
+}
+
+.waveform-tangent {
+  background-position: -60px 0;
+}
+
+.waveform-whistle {
+  background-position: -75px 0;
+}
+
+.waveform-breaker {
+  background-position: -90px 0;
 }
 
 .waveform-whitenoise {

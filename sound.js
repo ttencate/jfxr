@@ -70,6 +70,9 @@ jfxr.Sound = function(context) {
 			'triangle': 'Triangle',
 			'sawtooth': 'Sawtooth',
 			'square': 'Square',
+			'whitenoise': 'White noise',
+			'pinknoise': 'Pink noise',
+			'brownnoise': 'Brown noise',
 		},
 	});
 	this.frequency = new jfxr.Parameter({
@@ -177,6 +180,12 @@ jfxr.Sound.prototype.getBuffer = function() {
 		this.buffer = this.context.createBuffer(1, numSamples, sampleRate);
 		var data = this.buffer.getChannelData(0);
 
+		// Pink noise parameters
+		var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+
+		// Brown noise parameters
+		var prevSample = 0;
+
 		var phase = 0;
 		for (var i = 0; i < numSamples; i++) {
 			var sample = 0;
@@ -202,6 +211,29 @@ jfxr.Sound.prototype.getBuffer = function() {
 					break;
 				case 'square':
 					sample = phase < 0.5 ? 1 : -1;
+					break;
+				case 'whitenoise':
+					sample = -1 + 2 * Math.random();
+					break;
+				case 'pinknoise':
+					// Method pk3 from http://www.firstpr.com.au/dsp/pink-noise/,
+					// due to Paul Kellet.
+					var white = -1 + 2 * Math.random();
+					b0 = 0.99886 * b0 + white * 0.0555179;
+					b1 = 0.99332 * b1 + white * 0.0750759;
+					b2 = 0.96900 * b2 + white * 0.1538520;
+					b3 = 0.86650 * b3 + white * 0.3104856;
+					b4 = 0.55000 * b4 + white * 0.5329522;
+					b5 = -0.7616 * b5 + white * 0.0168980;
+					sample = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) / 7;
+					b6 = white * 0.115926;
+					break;
+				case 'brownnoise':
+					var white = -1 + 2 * Math.random();
+					sample = prevSample + 0.1 * white;
+					if (sample < -1) sample = -1;
+					if (sample > 1) sample = 1;
+					prevSample = sample;
 					break;
 			}
 

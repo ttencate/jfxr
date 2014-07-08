@@ -257,7 +257,7 @@ jfxrApp.directive('waveformButton', function() {
 	return {
 		require: 'ngModel',
 		scope: {
-			title: '=',
+			title: '@',
 			waveform: '@waveformButton',
 			ngModel: '=',
 		},

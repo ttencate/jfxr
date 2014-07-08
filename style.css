@@ -289,6 +289,18 @@ h2 {
   background-position: -45px 0;
 }
 
+.waveform-whitenoise {
+  background-position: -105px 0;
+}
+
+.waveform-pinknoise {
+  background-position: -120px 0;
+}
+
+.waveform-brownnoise {
+  background-position: -135px 0;
+}
+
 .floatslider {
   display: block;
   -webkit-appearance: none;

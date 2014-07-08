@@ -146,9 +146,71 @@ h1 {
     0 0 2px rgba(255, 255, 255, 0.1) inset;
 }
 
+.autoplay {
+  position: relative;
+  cursor: pointer;
+  box-sizing: border-box;
+  width: 16px;
+  padding: 0 8px;
+  border: none;
+  background-image: linear-gradient(#101020 0%, #404080 100%);
+  box-shadow:
+    0 0 2px rgba(224, 224, 255, 0.3) inset,
+    0 0 8px rgba(0, 0, 0, 1.0) inset,
+    0 12px 4px rgba(192, 192, 255, 0.4) inset;
+
+  color: rgba(255, 255, 255, 0.3);
+  text-shadow:
+    -1px -2px 4px rgba(0, 0, 0, 0.5),
+    1px 2px 4px rgba(128, 128, 255, 0.5);
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 43px;
+}
+
+.autoplay:hover {
+  color: rgba(240, 240, 255, 1.0);
+  text-shadow:
+    -1px -2px 4px rgba(0, 0, 0, 0.5),
+    1px 2px 4px rgba(128, 128, 255, 1.0);
+}
+
+.autoplay-checked {
+  background-image: linear-gradient(#080810 0%, #202048 100%);
+  color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    -1px -1px 0px rgba(224, 224, 255, 0.2) inset,
+    1px 1px 8px rgba(0, 0, 0, 1.0) inset,
+    0 6px 4px rgba(192, 192, 255, 0.3) inset;
+}
+
+.autoplay:active {
+  color: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    -1px -1px 0px rgba(224, 224, 255, 0.2) inset,
+    1px 1px 8px rgba(0, 0, 0, 1.0) inset,
+    0 4px 4px rgba(192, 192, 255, 0.3) inset;
+}
+
+.autoplay input {
+  position: absolute;
+  visibility: hidden;
+}
+
+.autoplay span {
+  display: block;
+  margin-left: -101px;
+  width: 200px;
+  text-align: center;
+  -webkit-transform: rotate(-90deg);
+  -webkit-transform-origin: 50% 50%;
+}
+
 .playstop {
   cursor: pointer;
-  width: 92px;
+  width: 76px;
   border: none;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -185,7 +247,7 @@ h1 {
   box-shadow:
     0 0 2px rgba(224, 224, 255, 0.3) inset,
     0 0 8px rgba(0, 0, 0, 1.0) inset,
-    0 12px 4px rgba(192, 192, 255, 0.3) inset;
+    0 8px 4px rgba(192, 192, 255, 0.3) inset;
 }
 
 .playstop-play:before {

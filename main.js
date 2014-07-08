@@ -6,6 +6,8 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, localStorage) {
 
 	var analyserEnabled = localStorage.get('analyserEnabled', true);
 
+	this.autoplay = true;
+
 	this.isPlaying = function() {
 		return player.playing;
 	};

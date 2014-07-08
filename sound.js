@@ -186,6 +186,8 @@ jfxr.Sound.prototype.getBuffer = function() {
 		// Brown noise parameters
 		var prevSample = 0;
 
+		var random = new jfxr.Random(0x3cf78ba3); // Chosen by fair dice roll. Guaranteed to be random.
+
 		var phase = 0;
 		for (var i = 0; i < numSamples; i++) {
 			var sample = 0;
@@ -213,12 +215,12 @@ jfxr.Sound.prototype.getBuffer = function() {
 					sample = phase < 0.5 ? 1 : -1;
 					break;
 				case 'whitenoise':
-					sample = -1 + 2 * Math.random();
+					sample = random.uniform(-1, 1);
 					break;
 				case 'pinknoise':
 					// Method pk3 from http://www.firstpr.com.au/dsp/pink-noise/,
 					// due to Paul Kellet.
-					var white = -1 + 2 * Math.random();
+					var white = random.uniform(-1, 1);
 					b0 = 0.99886 * b0 + white * 0.0555179;
 					b1 = 0.99332 * b1 + white * 0.0750759;
 					b2 = 0.96900 * b2 + white * 0.1538520;
@@ -229,7 +231,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 					b6 = white * 0.115926;
 					break;
 				case 'brownnoise':
-					var white = -1 + 2 * Math.random();
+					var white = random.uniform(-1, 1);
 					sample = prevSample + 0.1 * white;
 					if (sample < -1) sample = -1;
 					if (sample > 1) sample = 1;

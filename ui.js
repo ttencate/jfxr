@@ -229,12 +229,16 @@ jfxrApp.directive('floatParam', function() {
 		restrict: 'E',
 		scope: {
 			param: '=',
+			sound: '=',
 		},
 		template:
-			'<div class="param">' +
+			'<div class="param" ng-class="{\'param-disabled\': param.isDisabled(sound)}">' +
             '  <div class="paramlabel">{{param.label}}</div>' +
-            '  <div class="paramcontrol"><input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" step="{{param.step}}" ng-model="param.value" class="floatslider"></input></div>' +
-            '  <div class="paramvalue"><input class="floattext" type="text" ng-model="param.value"></input></div>' +
+            '  <div class="paramcontrol"><input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" step="{{param.step}}" ng-model="param.value" ng-disabled="param.isDisabled(sound)" class="floatslider"></input></div>' +
+            '  <div class="paramvalue" ng-switch="param.isDisabled(sound)">' +
+			'    <input ng-switch-when="false" class="floattext" type="text" ng-model="param.value"></input>' +
+			'    <span ng-switch-when="true">&mdash;</span>' +
+			'  </div>' +
             '  <div class="paramunit">{{param.unit}}</div>' +
 			'</div>',
 		link: function(scope, element, attrs, ctrl) {

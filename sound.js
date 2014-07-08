@@ -8,6 +8,7 @@ jfxr.Parameter = function(args) {
 	this.maxValue = this.type_ == 'float' ? args.maxValue : null;
 	this.step = this.type_ == 'float' ? (args.step || 'any') : null;
 	this.digits = this.type_ == 'float' ? Math.max(0, Math.round(-Math.log(this.step) / Math.log(10))) : null;
+	this.disabled_ = args.disabled || null;
 };
 
 Object.defineProperty(jfxr.Parameter.prototype, 'value', {
@@ -53,11 +54,20 @@ jfxr.Parameter.prototype.valueTitle = function() {
 	}
 };
 
+jfxr.Parameter.prototype.isDisabled = function(sound) {
+	return !!(this.disabled_ && this.disabled_(sound));
+};
+
 jfxr.Sound = function(context) {
 	var self = this;
 	this.context = context;
 
 	this.sampleRate = 44100;
+
+	var frequencyIsMeaningless = function(sound) {
+		var w = sound.waveform.value;
+		return w == 'whitenoise' || w == 'pinknoise' || w == 'brownnoise';
+	};
 
 	// Frequency parameters
 
@@ -85,6 +95,7 @@ jfxr.Sound = function(context) {
 		minValue: 10,
 		maxValue: 10000,
 		step: 1,
+		disabled: frequencyIsMeaningless,
 	});
 	this.frequencySlide = new jfxr.Parameter({
 		label: 'Frequency slide',
@@ -93,6 +104,7 @@ jfxr.Sound = function(context) {
 		minValue: -10000,
 		maxValue: 10000,
 		step: 100,
+		disabled: frequencyIsMeaningless,
 	});
 	this.vibratoDepth = new jfxr.Parameter({
 		label: 'Vibrato depth',
@@ -101,6 +113,7 @@ jfxr.Sound = function(context) {
 		minValue: 0,
 		maxValue: 1000,
 		step: 10,
+		disabled: frequencyIsMeaningless,
 	});
 	this.vibratoFrequency = new jfxr.Parameter({
 		label: 'Vibrato frequency',
@@ -109,6 +122,7 @@ jfxr.Sound = function(context) {
 		minValue: 1,
 		maxValue: 1000,
 		step: 1,
+		disabled: frequencyIsMeaningless,
 	});
 
 	// Amplitude parameters

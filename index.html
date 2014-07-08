@@ -41,16 +41,16 @@
               <span ng-model="sound.waveform.value" waveform-button="brownnoise" title="Brown noise"></span>
             </div>
           </custom-param>
-          <float-param param="sound.frequency"></float-param>
-          <float-param param="sound.frequencySlide"></float-param>
-          <float-param param="sound.vibratoDepth"></float-param>
-          <float-param param="sound.vibratoFrequency"></float-param>
+          <float-param param="sound.frequency" sound="sound"></float-param>
+          <float-param param="sound.frequencySlide" sound="sound"></float-param>
+          <float-param param="sound.vibratoDepth" sound="sound"></float-param>
+          <float-param param="sound.vibratoFrequency" sound="sound"></float-param>
           <h2>Amplitude</h2>
-          <float-param param="sound.attack"></float-param>
-          <float-param param="sound.sustain"></float-param>
-          <float-param param="sound.release"></float-param>
-          <float-param param="sound.tremoloDepth"></float-param>
-          <float-param param="sound.tremoloFrequency"></float-param>
+          <float-param param="sound.attack" sound="sound"></float-param>
+          <float-param param="sound.sustain" sound="sound"></float-param>
+          <float-param param="sound.release" sound="sound"></float-param>
+          <float-param param="sound.tremoloDepth" sound="sound"></float-param>
+          <float-param param="sound.tremoloFrequency" sound="sound"></float-param>
         </div>
       </div>
     </div>

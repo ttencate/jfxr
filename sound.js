@@ -68,6 +68,9 @@ jfxr.Sound = function(context) {
 		var w = sound.waveform.value;
 		return w == 'whitenoise' || w == 'pinknoise' || w == 'brownnoise';
 	};
+	var isNotSquare = function(sound) {
+		return sound.waveform.value != 'square';
+	};
 
 	// Frequency parameters
 
@@ -124,6 +127,24 @@ jfxr.Sound = function(context) {
 		step: 1,
 		disabled: frequencyIsMeaningless,
 	});
+	this.squareDuty = new jfxr.Parameter({
+		label: 'Square duty',
+		unit: '%',
+		value: 50,
+		minValue: 0,
+		maxValue: 100,
+		step: 1,
+		disabled: isNotSquare,
+	});
+	this.squareDutySweep = new jfxr.Parameter({
+		label: 'Square duty sweep',
+		unit: '%/s',
+		value: 0,
+		minValue: -1000,
+		maxValue: 1000,
+		step: 5,
+		disabled: isNotSquare,
+	});
 
 	// Amplitude parameters
 	
@@ -153,11 +174,11 @@ jfxr.Sound = function(context) {
 	});
 	this.tremoloDepth = new jfxr.Parameter({
 		label: 'Tremolo depth',
-		unit: '',
+		unit: '%',
 		value: 0,
 		minValue: 0,
-		maxValue: 1,
-		step: 0.01,
+		maxValue: 100,
+		step: 1,
 	});
 	this.tremoloFrequency = new jfxr.Parameter({
 		label: 'Tremolo frequency',
@@ -186,6 +207,8 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var frequencySlide = this.frequencySlide.value;
 		var vibratoDepth = this.vibratoDepth.value;
 		var vibratoFrequency = this.vibratoFrequency.value;
+		var squareDuty = this.squareDuty.value;
+		var squareDutySweep = this.squareDutySweep.value;
 		var attack = this.attack.value;
 		var sustain = this.sustain.value;
 		var release = this.release.value;
@@ -224,7 +247,8 @@ jfxr.Sound.prototype.getBuffer = function() {
 					sample = phase < 0.5 ? 2 * phase : -2 + 2 * phase;
 					break;
 				case 'square':
-					sample = phase < 0.5 ? 1 : -1;
+					var d = (squareDuty + t * squareDutySweep) / 100;
+					sample = phase < d ? 1 : -1;
 					break;
 				case 'tangent':
 					sample = 0.3 * Math.tan(Math.PI * phase);
@@ -269,7 +293,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 			phase += 1 / periodInSamples;
 			phase = phase - Math.floor(phase);
 
-			sample *= 1 - tremoloDepth * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
+			sample *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
 
 			if (t < attack) {
 				sample *= t / attack;

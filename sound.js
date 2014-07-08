@@ -199,6 +199,24 @@ jfxr.Sound = function(context) {
 		step: 1,
 	});
 
+	// Output parameters
+	
+	this.compression = new jfxr.Parameter({
+		label: 'Compression exponent',
+		value: 1,
+		minValue: 0,
+		maxValue: 10,
+		step: 0.1,
+	});	
+	this.normalization = new jfxr.Parameter({
+		label: 'Normalization level',
+		unit: '%',
+		value: 100,
+		minValue: 0,
+		maxValue: 500,
+		step: 10,
+	});
+
 	this.buffer = null;
 	this.dirty = true;
 
@@ -224,6 +242,8 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var decay = this.decay.value;
 		var tremoloDepth = this.tremoloDepth.value;
 		var tremoloFrequency = this.tremoloFrequency.value;
+		var compression = this.compression.value;
+		var normalization = this.normalization.value;
 
 		var sampleRate = this.sampleRate;
 		var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
@@ -239,6 +259,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var random = new jfxr.Random(0x3cf78ba3); // Chosen by fair dice roll. Guaranteed to be random.
 
 		var phase = 0;
+		var maxSample = 0;
 		for (var i = 0; i < numSamples; i++) {
 			var sample = 0;
 			var t = i / sampleRate;
@@ -311,8 +332,21 @@ jfxr.Sound.prototype.getBuffer = function() {
 				sample *= 1 - (t - attack - sustain) / decay;
 			}
 
+			if (sample >= 0) {
+				sample = Math.pow(sample, compression);
+			} else {
+				sample = -Math.pow(-sample, compression);
+			}
+
 			data[i] = sample;
+			maxSample = Math.max(maxSample, Math.abs(sample));
 		}
+
+		var amplification = normalization / 100 / maxSample;
+		for (var i = 0; i < numSamples; i++) {
+			data[i] *= amplification;
+		}
+
 		this.dirty = false;
 	}
 	return this.buffer;

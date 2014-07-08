@@ -174,8 +174,8 @@ jfxr.Sound = function(context) {
 		maxValue: 5,
 		step: 0.01,
 	});
-	this.release = new jfxr.Parameter({
-		label: 'Release',
+	this.decay = new jfxr.Parameter({
+		label: 'Decay',
 		unit: 's',
 		value: 0,
 		minValue: 0,
@@ -221,12 +221,12 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var squareDutySweep = this.squareDutySweep.value;
 		var attack = this.attack.value;
 		var sustain = this.sustain.value;
-		var release = this.release.value;
+		var decay = this.decay.value;
 		var tremoloDepth = this.tremoloDepth.value;
 		var tremoloFrequency = this.tremoloFrequency.value;
 
 		var sampleRate = this.sampleRate;
-		var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + release)));
+		var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
 		this.buffer = this.context.createBuffer(1, numSamples, sampleRate);
 		var data = this.buffer.getChannelData(0);
 
@@ -308,7 +308,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 			if (t < attack) {
 				sample *= t / attack;
 			} else if (t > attack + sustain) {
-				sample *= 1 - (t - attack - sustain) / release;
+				sample *= 1 - (t - attack - sustain) / decay;
 			}
 
 			data[i] = sample;

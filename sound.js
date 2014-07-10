@@ -119,6 +119,15 @@ jfxr.Sound = function(context) {
 		step: 100,
 		disabledReason: frequencyIsMeaningless,
 	});
+	this.frequencyDeltaSlide = new jfxr.Parameter({
+		label: 'Frequency delta slide',
+		unit: 'Hz/s²',
+		value: 0,
+		minValue: -500000,
+		maxValue: 500000,
+		step: 1000,
+		disabledReason: frequencyIsMeaningless,
+	});
 	this.vibratoDepth = new jfxr.Parameter({
 		label: 'Vibrato depth',
 		unit: 'Hz',
@@ -233,6 +242,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var waveform = this.waveform.value;
 		var frequency = this.frequency.value;
 		var frequencySlide = this.frequencySlide.value;
+		var frequencyDeltaSlide = this.frequencyDeltaSlide.value;
 		var vibratoDepth = this.vibratoDepth.value;
 		var vibratoFrequency = this.vibratoFrequency.value;
 		var squareDuty = this.squareDuty.value;
@@ -318,7 +328,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 					break;
 			}
 
-			var f = frequency + t * frequencySlide;
+			var f = frequency + t * frequencySlide + t * t * frequencyDeltaSlide;
 			f += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
 			var periodInSamples = sampleRate / f;
 			phase += 1 / periodInSamples;

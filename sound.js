@@ -299,6 +299,9 @@ jfxr.Sound = function(context) {
 
 jfxr.Sound.prototype.getBuffer = function() {
 	if (this.dirty) {
+		this.renderTimeMs = null;
+		var startTime = Date.now();
+
 		var waveform = this.waveform.value;
 		var frequency = this.frequency.value;
 		var frequencySlide = this.frequencySlide.value;
@@ -445,6 +448,7 @@ jfxr.Sound.prototype.getBuffer = function() {
 			data[i] *= amplification;
 		}
 
+		this.renderTimeMs = Date.now() - startTime;
 		this.dirty = false;
 	}
 	return this.buffer;

@@ -25,8 +25,13 @@
         </div>
       </div>
       <div class="content">
-        <div class="pane pane-bottom-left column-left">
-          Lorem ipsum
+        <div class="pane pane-bottom-left column-left filespane">
+          <div class="history">
+            Lorem ipsum
+          </div>
+          <div class="statusbar">
+            Render time: {{sound.renderTimeMs}}&nbsp;ms
+          </div>
         </div>
         <div class="pane pane-bottom-right column-right vertical-scroll">
           <canvas waveshape="sound.getBuffer()" class="waveshape"></canvas>

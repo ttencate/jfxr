@@ -12,7 +12,7 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
 		this.playing = false;
 
 		this.analyser = context.createAnalyser();
-		this.analyser.fftSize = 256;
+		this.analyser.fftSize = 512;
 		this.analyser.smoothingTimeConstant = 0.5;
 		this.analyser.connect(context.destination);
 

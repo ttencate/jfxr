@@ -61,6 +61,8 @@ input, button {
   flex-direction: row;
   height: 47px;
   margin-bottom: 8px;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .content {

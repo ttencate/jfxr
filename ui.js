@@ -218,8 +218,7 @@ jfxrApp.directive('customParam', function() {
 			'<div class="param">' +
             '  <div class="paramlabel">{{label}}</div>' +
             '  <div class="paramcontrol" ng-transclude></div>' +
-            '  <div class="paramvalue">{{value}}</div>' +
-            '  <div class="paramunit">{{unit}}</div>' +
+            '  <div class="customparamvalue">{{value}}</div>' +
 			'</div>',
 	};
 });

@@ -16,3 +16,7 @@ Math.sign = function(x) {
     }
     return NaN;
 };
+
+Math.frac = function(x) {
+	return x - Math.floor(x);
+};

@@ -2,11 +2,12 @@ jfxr.Parameter = function(args) {
 	this.label = args.label || '<unnamed>';
 	this.unit = args.unit || '';
 	this.type_ = args.type || 'float';
+	var numeric = this.type_ == 'float' || this.type_ == 'int';
 	this.value_ = args.value;
 	this.values_ = this.type_ == 'enum' ? (args.values || []) : null;
-	this.minValue = this.type_ == 'float' ? args.minValue : null;
-	this.maxValue = this.type_ == 'float' ? args.maxValue : null;
-	this.step = this.type_ == 'float' ? (args.step || 'any') : null;
+	this.minValue = numeric ? args.minValue : null;
+	this.maxValue = numeric ? args.maxValue : null;
+	this.step = numeric ? (args.step || 'any') : null;
 	this.digits = this.type_ == 'float' ? Math.max(0, Math.round(-Math.log(this.step) / Math.log(10))) : null;
 	this.disabledReason_ = args.disabledReason || null;
 };
@@ -19,7 +20,11 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 	set: function(value) {
 		switch (this.type_) {
 			case 'float':
+			case 'int':
 				value = parseFloat(value);
+				if (this.type_ == 'int') {
+					value = Math.round(value);
+				}
 				if (this.minValue !== null && value < this.minValue) {
 					value = this.minValue;
 				}
@@ -71,7 +76,7 @@ jfxr.Sound = function(context) {
 	var frequencyIsMeaningless = function(sound) {
 		var w = sound.waveform.value;
 		if (w == 'whitenoise' || w == 'pinknoise' || w == 'brownnoise') {
-			return 'Frequency settings do not apply to noise';
+			return 'Frequency and harmonics settings do not apply to noise';
 		}
 		return null;
 	};
@@ -208,6 +213,26 @@ jfxr.Sound = function(context) {
 		step: 1,
 	});
 
+	// Harmonics parameters
+	
+	this.harmonics = new jfxr.Parameter({
+		label: 'Harmonics',
+		type: 'int',
+		value: 0,
+		minValue: 0,
+		maxValue: 5,
+		step: 1,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.harmonicsFalloff = new jfxr.Parameter({
+		label: 'Harmonics falloff',
+		value: 0.5,
+		minValue: 0,
+		maxValue: 1,
+		step: 0.01,
+		disabledReason: frequencyIsMeaningless,
+	});
+
 	// Output parameters
 	
 	this.compression = new jfxr.Parameter({
@@ -252,6 +277,8 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var decay = this.decay.value;
 		var tremoloDepth = this.tremoloDepth.value;
 		var tremoloFrequency = this.tremoloFrequency.value;
+		var harmonics = this.harmonics.value;
+		var harmonicsFalloff = this.harmonicsFalloff.value;
 		var compression = this.compression.value;
 		var normalization = this.normalization.value;
 
@@ -268,71 +295,90 @@ jfxr.Sound.prototype.getBuffer = function() {
 
 		var random = new jfxr.Random(0x3cf78ba3); // Chosen by fair dice roll. Guaranteed to be random.
 
+		var amp = 1;
+		var totalAmp = 0;
+		for (var harmonicIndex = 0; harmonicIndex <= harmonics; harmonicIndex++) {
+			totalAmp += amp;
+			amp *= harmonicsFalloff;
+		}
+		var firstHarmonicAmp = 1 / totalAmp;
+
 		var phase = 0;
 		var maxSample = 0;
 		for (var i = 0; i < numSamples; i++) {
 			var sample = 0;
 			var t = i / sampleRate;
 
-			switch (waveform) {
-				case 'sine':
-					sample = Math.sin(2 * Math.PI * phase);
-					break;
-				case 'triangle':
-					sample =
-						phase < 0.25 ? 4 * phase :
-						phase < 0.75 ? 2 - 4 * phase :
-						-4 + 4 * phase;
-					break;
-				case 'sawtooth':
-					sample = phase < 0.5 ? 2 * phase : -2 + 2 * phase;
-					break;
-				case 'square':
-					var d = (squareDuty + t * squareDutySweep) / 100;
-					sample = phase < d ? 1 : -1;
-					break;
-				case 'tangent':
-					sample = 0.3 * Math.tan(Math.PI * phase);
-					break;
-				case 'whistle':
-					sample = 0.75 * Math.sin(2 * Math.PI * phase) + 0.25 * Math.sin(40 * Math.PI * phase);
-					break;
-				case 'breaker':
-					// Make sure to start at a zero crossing.
-					var p = phase + Math.sqrt(0.75);
-					if (p >= 1) p -= 1;
-					sample = -1 + 2 * Math.abs(1 - p*p*2);
-					break;
-				case 'whitenoise':
-					sample = random.uniform(-1, 1);
-					break;
-				case 'pinknoise':
-					// Method pk3 from http://www.firstpr.com.au/dsp/pink-noise/,
-					// due to Paul Kellet.
-					var white = random.uniform(-1, 1);
-					b0 = 0.99886 * b0 + white * 0.0555179;
-					b1 = 0.99332 * b1 + white * 0.0750759;
-					b2 = 0.96900 * b2 + white * 0.1538520;
-					b3 = 0.86650 * b3 + white * 0.3104856;
-					b4 = 0.55000 * b4 + white * 0.5329522;
-					b5 = -0.7616 * b5 + white * 0.0168980;
-					sample = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) / 7;
-					b6 = white * 0.115926;
-					break;
-				case 'brownnoise':
-					var white = random.uniform(-1, 1);
-					sample = prevSample + 0.1 * white;
-					if (sample < -1) sample = -1;
-					if (sample > 1) sample = 1;
-					prevSample = sample;
-					break;
+			if (waveform == 'whitenoise' || waveform == 'pinknoise' || waveform == 'brownnoise') {
+				switch (waveform) {
+					case 'whitenoise':
+						sample = random.uniform(-1, 1);
+						break;
+					case 'pinknoise':
+						// Method pk3 from http://www.firstpr.com.au/dsp/pink-noise/,
+						// due to Paul Kellet.
+						var white = random.uniform(-1, 1);
+						b0 = 0.99886 * b0 + white * 0.0555179;
+						b1 = 0.99332 * b1 + white * 0.0750759;
+						b2 = 0.96900 * b2 + white * 0.1538520;
+						b3 = 0.86650 * b3 + white * 0.3104856;
+						b4 = 0.55000 * b4 + white * 0.5329522;
+						b5 = -0.7616 * b5 + white * 0.0168980;
+						sample = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) / 7;
+						b6 = white * 0.115926;
+						break;
+					case 'brownnoise':
+						var white = random.uniform(-1, 1);
+						sample = prevSample + 0.1 * white;
+						if (sample < -1) sample = -1;
+						if (sample > 1) sample = 1;
+						prevSample = sample;
+						break;
+				}
+			} else {
+				var amp = firstHarmonicAmp;
+				for (var harmonicIndex = 0; harmonicIndex <= harmonics; harmonicIndex++) {
+					var harmonicPhase = Math.frac(phase * (harmonicIndex + 1));
+					var h;
+					switch (waveform) {
+						case 'sine':
+							h = Math.sin(2 * Math.PI * harmonicPhase);
+							break;
+						case 'triangle':
+							h =
+								harmonicPhase < 0.25 ? 4 * harmonicPhase :
+								harmonicPhase < 0.75 ? 2 - 4 * harmonicPhase :
+								-4 + 4 * harmonicPhase;
+							break;
+						case 'sawtooth':
+							h = harmonicPhase < 0.5 ? 2 * harmonicPhase : -2 + 2 * harmonicPhase;
+							break;
+						case 'square':
+							var d = (squareDuty + t * squareDutySweep) / 100;
+							h = harmonicPhase < d ? 1 : -1;
+							break;
+						case 'tangent':
+							h = 0.3 * Math.tan(Math.PI * harmonicPhase);
+							break;
+						case 'whistle':
+							h = 0.75 * Math.sin(2 * Math.PI * harmonicPhase) + 0.25 * Math.sin(40 * Math.PI * harmonicPhase);
+							break;
+						case 'breaker':
+							// Make sure to start at a zero crossing.
+							var p = harmonicPhase + Math.sqrt(0.75);
+							if (p >= 1) p -= 1;
+							h = -1 + 2 * Math.abs(1 - p*p*2);
+							break;
+					}
+					sample += amp * h;
+					amp *= harmonicsFalloff;
+				}
 			}
 
 			var f = frequency + t * frequencySlide + t * t * frequencyDeltaSlide;
 			f += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
 			var periodInSamples = sampleRate / f;
-			phase += 1 / periodInSamples;
-			phase = phase - Math.floor(phase);
+			phase = Math.frac(phase + 1 / periodInSamples);
 
 			sample *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
 

@@ -30,7 +30,6 @@ bfxr sliders
 ------------
 
 - Punch
-- Harmonics, Harmonics falloff
 - Pitch jump onset/amount 1/2
 - Pitch jump repeat speed
 - Repeat speed

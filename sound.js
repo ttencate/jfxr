@@ -359,6 +359,9 @@ jfxr.Sound.prototype.getBuffer = function() {
 							break;
 						case 'tangent':
 							h = 0.3 * Math.tan(Math.PI * harmonicPhase);
+							// Arbitrary cutoff value to make normalization behave.
+							if (h > 2) h = 2;
+							if (h < -2) h = -2;
 							break;
 						case 'whistle':
 							h = 0.75 * Math.sin(2 * Math.PI * harmonicPhase) + 0.25 * Math.sin(40 * Math.PI * harmonicPhase);

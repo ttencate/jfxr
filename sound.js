@@ -233,6 +233,41 @@ jfxr.Sound = function(context) {
 		disabledReason: frequencyIsMeaningless,
 	});
 
+	// Filter parameters
+
+	this.lowPassCutoff = new jfxr.Parameter({
+		label: 'Low-pass cutoff',
+		unit: 'Hz',
+		value: 44100,
+		minValue: 0,
+		maxValue: 44100,
+		step: 1000,
+	});
+	this.lowPassCutoffSweep = new jfxr.Parameter({
+		label: 'Low-pass cutoff sweep',
+		unit: 'Hz/s',
+		value: 0,
+		minValue: -10000,
+		maxValue: 10000,
+		step: 100,
+	});
+	this.highPassCutoff = new jfxr.Parameter({
+		label: 'High-pass cutoff',
+		unit: 'Hz',
+		value: 0,
+		minValue: 0,
+		maxValue: 44100,
+		step: 1000,
+	});
+	this.highPassCutoffSweep = new jfxr.Parameter({
+		label: 'High-pass cutoff sweep',
+		unit: 'Hz/s',
+		value: 0,
+		minValue: -10000,
+		maxValue: 10000,
+		step: 100,
+	});
+
 	// Output parameters
 	
 	this.compression = new jfxr.Parameter({
@@ -279,6 +314,10 @@ jfxr.Sound.prototype.getBuffer = function() {
 		var tremoloFrequency = this.tremoloFrequency.value;
 		var harmonics = this.harmonics.value;
 		var harmonicsFalloff = this.harmonicsFalloff.value;
+		var lowPassCutoff = this.lowPassCutoff.value;
+		var lowPassCutoffSweep = this.lowPassCutoffSweep.value;
+		var highPassCutoff = this.highPassCutoff.value;
+		var highPassCutoffSweep = this.highPassCutoffSweep.value;
 		var compression = this.compression.value;
 		var normalization = this.normalization.value;
 

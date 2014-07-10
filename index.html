@@ -28,7 +28,7 @@
         <div class="pane pane-bottom-left column-left">
           Lorem ipsum
         </div>
-        <div class="pane pane-bottom-right column-right">
+        <div class="pane pane-bottom-right column-right vertical-scroll">
           <canvas waveshape="sound.getBuffer()" class="waveshape"></canvas>
           <h2>Tone</h2>
           <custom-param label="sound.waveform.label" value="sound.waveform.valueTitle()">
@@ -61,6 +61,11 @@
           <h2>Harmonics</h2>
           <float-param param="sound.harmonics" sound="sound"></float-param>
           <float-param param="sound.harmonicsFalloff" sound="sound"></float-param>
+          <h2>Filters</h2>
+          <float-param param="sound.lowPassCutoff" sound="sound"></float-param>
+          <float-param param="sound.lowPassCutoffSweep" sound="sound"></float-param>
+          <float-param param="sound.highPassCutoff" sound="sound"></float-param>
+          <float-param param="sound.highPassCutoffSweep" sound="sound"></float-param>
           <h2>Output</h2>
           <float-param param="sound.compression" sound="sound"></float-param>
           <float-param param="sound.normalization" sound="sound"></float-param>

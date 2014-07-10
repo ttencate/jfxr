@@ -94,6 +94,10 @@ input, button {
   border-bottom-right-radius: 8px;
 }
 
+.vertical-scroll {
+  overflow-y: auto;
+}
+
 .column-left {
   width: 160px;
   margin-right: 8px;

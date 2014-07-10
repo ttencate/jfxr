@@ -109,7 +109,7 @@ jfxr.Sound = function(context) {
 	this.frequency = new jfxr.Parameter({
 		label: 'Frequency',
 		unit: 'Hz',
-		value: 880,
+		value: 440,
 		minValue: 10,
 		maxValue: 10000,
 		step: 1,

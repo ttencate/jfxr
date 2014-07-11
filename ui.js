@@ -26,10 +26,9 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
 		this.script = context.createScriptProcessor();
 		this.script.onaudioprocess = function(e) {
 			self.analyser.getFloatFrequencyData(self.frequencyData);
-			for (var c = 0; c < e.outputBuffer.numberOfChannels; c++) {
-				e.outputBuffer.getChannelData(c).set(e.inputBuffer.getChannelData(c));
-			}
 		};
+		// Feed zeros into the analyser because otherwise it freezes up as soon
+		// as the sound stops playing.
 		this.script.connect(this.analyser);
 	};
 
@@ -39,7 +38,7 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
 		}
 		var self = this;
 		this.source = context.createBufferSource();
-		this.source.connect(this.script);
+		this.source.connect(this.analyser);
 		this.source.buffer = buffer;
 		this.source.start();
 		this.source.onended = function() {

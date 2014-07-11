@@ -41,6 +41,13 @@ jfxr.Synth.prototype.synth = function(sound) {
 	// Brown noise parameters
 	var prevSample = 0;
 
+	// Low-pass filter parameters
+	var lowPassPrev = 0;
+
+	// High-pass filter parameters
+	var highPassPrevIn = 0;
+	var highPassPrevOut = 0;
+
 	var random = new jfxr.Random(0x3cf78ba3); // Chosen by fair dice roll. Guaranteed to be random.
 
 	var amp = 1;
@@ -133,6 +140,29 @@ jfxr.Synth.prototype.synth = function(sound) {
 
 		sample *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
 
+		var cutoff = Math.clamp(0, sampleRate / 2, lowPassCutoff + t * lowPassCutoffSweep);
+		var wc = cutoff / sampleRate * Math.PI; // Don't we need a factor 2pi instead of pi?
+		var cosWc = Math.cos(wc);
+		var lowPassAlpha;
+		if (cosWc <= 0) {
+			lowPassAlpha = 1;
+		} else {
+			// From somewhere on the internet: cos wc = 2a / (1+a^2)
+			var lowPassAlpha = 1 / cosWc - Math.sqrt(1 / (cosWc * cosWc) - 1);
+			lowPassAlpha = 1 - lowPassAlpha; // Probably the internet's definition of alpha is different.
+		}
+		sample = lowPassAlpha * sample + (1 - lowPassAlpha) * lowPassPrev;
+		lowPassPrev = sample;
+
+		cutoff = Math.clamp(0, sampleRate / 2, highPassCutoff + t * highPassCutoffSweep);
+		wc = cutoff / sampleRate * Math.PI;
+		// From somewhere on the internet: a = (1 - sin wc) / cos wc
+		var highPassAlpha = (1 - Math.sin(wc)) / Math.cos(wc);
+		var origSample = sample;
+		sample = highPassAlpha * (highPassPrevOut - highPassPrevIn + sample);
+		highPassPrevIn = origSample;
+		highPassPrevOut = sample;
+
 		if (t < attack) {
 			sample *= t / attack;
 		} else if (t > attack + sustain) {
@@ -149,9 +179,10 @@ jfxr.Synth.prototype.synth = function(sound) {
 		maxSample = Math.max(maxSample, Math.abs(sample));
 	}
 
+	// TODO re-enable once we have a way to specify absolute amplification as an alternative
 	var amplification = normalization / 100 / maxSample;
 	for (var i = 0; i < numSamples; i++) {
-		data[i] *= amplification;
+		// data[i] *= amplification;
 	}
 
 	this.renderTimeMs = Date.now() - startTime;

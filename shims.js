@@ -20,3 +20,9 @@ Math.sign = function(x) {
 Math.frac = function(x) {
 	return x - Math.floor(x);
 };
+
+Math.clamp = function(min, max, x) {
+	if (x < min) return min;
+	if (x > max) return max;
+	return x;
+};

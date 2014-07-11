@@ -238,17 +238,17 @@ jfxr.Sound = function(context) {
 	this.lowPassCutoff = new jfxr.Parameter({
 		label: 'Low-pass cutoff',
 		unit: 'Hz',
-		value: 44100,
+		value: 22050,
 		minValue: 0,
-		maxValue: 44100,
-		step: 1000,
+		maxValue: 22050,
+		step: 100,
 	});
 	this.lowPassCutoffSweep = new jfxr.Parameter({
 		label: 'Low-pass cutoff sweep',
 		unit: 'Hz/s',
 		value: 0,
-		minValue: -10000,
-		maxValue: 10000,
+		minValue: -50000,
+		maxValue: 50000,
 		step: 100,
 	});
 	this.highPassCutoff = new jfxr.Parameter({
@@ -256,15 +256,15 @@ jfxr.Sound = function(context) {
 		unit: 'Hz',
 		value: 0,
 		minValue: 0,
-		maxValue: 44100,
-		step: 1000,
+		maxValue: 22050,
+		step: 100,
 	});
 	this.highPassCutoffSweep = new jfxr.Parameter({
 		label: 'High-pass cutoff sweep',
 		unit: 'Hz/s',
 		value: 0,
-		minValue: -10000,
-		maxValue: 10000,
+		minValue: -50000,
+		maxValue: 50000,
 		step: 100,
 	});
 

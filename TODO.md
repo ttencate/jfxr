@@ -7,6 +7,7 @@ Usability
 - Make text input boxes work better
 - Don't update wave on every slider change
 - Play on change
+- Speed up canvas drawing of long waveforms
 - Use web workers to not block UI
 - Draw amplitude graph
 - Draw frequency graph
@@ -34,8 +35,6 @@ bfxr sliders
 - Pitch jump repeat speed
 - Repeat speed
 - Flanger offset, Flanger sweep
-- Low-pass Filter Cutoff, Low-pass Filter Cutoff Sweep
-- High-pass Filter Cutoff, High-pass Filter Cutoff Sweep
 - Bit Crush, Bit Crush Sweep
 
 bfxr presets

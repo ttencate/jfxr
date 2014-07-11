@@ -17,12 +17,12 @@
         </div>
         <div class="pane pane-top-right column-right playbackpane">
           <canvas width="680" height="43" analyser="ctrl.getFrequencyData()" enabled="ctrl.isAnalyserEnabled()" ng-click="ctrl.toggleAnalyserEnabled()" class="analyser" ng-class="{'analyser-disabled': !ctrl.isAnalyserEnabled()}"></canvas>
-          <label class="autoplay" ng-class="{'autoplay-checked': ctrl.autoplay}" title="Play automatically on change">
+          <label class="shiny autoplay" ng-class="{'shiny-checked': ctrl.autoplay}" title="Play automatically on change">
             <input type="checkbox" ng-model="ctrl.autoplay"></input>
-            <span>Auto</span>
+            <span class="shinycontent">Auto</span>
           </label>
-          <button ng-click="ctrl.togglePlay()" class="playstop" ng-class="{'playstop-play': ctrl.isPlaying()}" title="{{ctrl.isPlaying() ? 'Stop (space)' : 'Play (space)'}}">
-            <span>&#x25b6;</span>
+          <button ng-click="ctrl.togglePlay()" class="shiny playstop" ng-class="{'shiny-checked': ctrl.isPlaying()}" title="{{ctrl.isPlaying() ? 'Stop (space)' : 'Play (space)'}}">
+            <span class="shinycontent"><span class="playicon">&#x25b6;</span></span>
           </button>
         </div>
       </div>

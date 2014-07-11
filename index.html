@@ -21,7 +21,9 @@
             <input type="checkbox" ng-model="ctrl.autoplay"></input>
             <span>Auto</span>
           </label>
-          <button ng-click="ctrl.togglePlay()" class="playstop" ng-class="{'playstop-play': !ctrl.isPlaying(), 'playstop-stop': ctrl.isPlaying()}" title="{{ctrl.isPlaying() ? 'Stop (space)' : 'Play (space)'}}"></button>
+          <button ng-click="ctrl.togglePlay()" class="playstop" ng-class="{'playstop-play': ctrl.isPlaying()}" title="{{ctrl.isPlaying() ? 'Stop (space)' : 'Play (space)'}}">
+            <span>&#x25b6;</span>
+          </button>
         </div>
       </div>
       <div class="content">

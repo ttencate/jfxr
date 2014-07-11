@@ -183,7 +183,7 @@ h1 {
 }
 
 .autoplay-checked {
-  background-image: linear-gradient(#080810 0%, #202048 100%);
+  background-image: linear-gradient(#080810 0%, #202040 100%);
   color: rgba(255, 255, 255, 0.9);
   box-shadow:
     -1px -1px 0px rgba(224, 224, 255, 0.2) inset,
@@ -205,12 +205,18 @@ h1 {
 }
 
 .autoplay span {
+  position: relative;
   display: block;
   margin-left: -101px;
   width: 200px;
   text-align: center;
   -webkit-transform: rotate(-90deg);
   -webkit-transform-origin: 50% 50%;
+}
+
+.autoplay:active span {
+  left: 1px;
+  top: 1px;
 }
 
 .playstop {
@@ -237,33 +243,38 @@ h1 {
 }
 
 .playstop:hover {
-  box-shadow:
-    0 0 2px rgba(224, 224, 255, 0.5) inset,
-    0 0 8px rgba(0, 0, 0, 1.0) inset,
-    0 12px 4px rgba(192, 192, 255, 0.7) inset;
   color: rgba(240, 240, 255, 1.0);
   text-shadow:
     -1px -2px 4px rgba(0, 0, 0, 0.5),
     1px 2px 4px rgba(128, 128, 255, 1.0);
 }
 
+.playstop-play {
+  background-image: linear-gradient(#080810 0%, #202040 100%);
+  color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    -1px -1px 0px rgba(224, 224, 255, 0.2) inset,
+    1px 1px 8px rgba(0, 0, 0, 1.0) inset,
+    0 6px 4px rgba(192, 192, 255, 0.3) inset;
+}
+
 .playstop:active {
   color: rgba(255, 255, 255, 0.6);
   box-shadow:
-    0 0 2px rgba(224, 224, 255, 0.3) inset,
-    0 0 8px rgba(0, 0, 0, 1.0) inset,
-    0 8px 4px rgba(192, 192, 255, 0.3) inset;
+    -1px -1px 0 rgba(224, 224, 255, 0.3) inset,
+    1px 1px 8px rgba(0, 0, 0, 1.0) inset,
+    0 4px 4px rgba(192, 192, 255, 0.3) inset;
 }
 
-.playstop-play:before {
-  content: '\25b6';
-  vertical-align: 13%;
+.playstop span {
+  position: relative;
+  top: -3px;
 }
 
-.playstop-stop:before {
-  content: '\25fc';
-  font-size: 114%;
-  vertical-align: 10%;
+.playstop:active span,
+.playstop-play span {
+  top: -2px;
+  left: 1px;
 }
 
 .filespane {

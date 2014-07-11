@@ -3,10 +3,9 @@ jfxrApp.service('context', function() {
 });
 
 jfxrApp.service('Player', function($rootScope, $timeout, context) {
-	var Player = function(sound) {
+	var Player = function() {
 		var self = this;
 
-		this.sound = sound;
 		this.position = 0;
 
 		this.playing = false;
@@ -34,14 +33,14 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
 		this.script.connect(this.analyser);
 	};
 
-	Player.prototype.play = function() {
+	Player.prototype.play = function(buffer) {
 		if (this.playing) {
 			this.stop();
 		}
 		var self = this;
 		this.source = context.createBufferSource();
 		this.source.connect(this.script);
-		this.source.buffer = this.sound.getBuffer();
+		this.source.buffer = buffer;
 		this.source.start();
 		this.source.onended = function() {
 			$rootScope.$apply(function() {
@@ -162,6 +161,10 @@ jfxrApp.directive('waveshape', function() {
 		var context = canvas.getContext('2d');
 		context.globalAlpha = 1.0;
 		context.clearRect(0, 0, width, height);
+
+		if (!buffer) {
+			return;
+		}
 
 		var channel = buffer.getChannelData(0);
 

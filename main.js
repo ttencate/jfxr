@@ -1,8 +1,17 @@
-jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, localStorage) {
-	var sound = new jfxr.Sound(context);
-	$scope.sound = sound;
+jfxrApp.controller('JfxrCtrl', function(context, Player, synth, $scope, localStorage) {
+	var self = this;
 
-	var player = new Player(sound);
+	var player = new Player();
+
+	this.synth = synth;
+
+	this.buffer = null;
+
+	this.sound = new jfxr.Sound(context);
+	this.sound.onchange = function() {
+		self.buffer = self.synth.synth(self.sound);
+	};
+	this.sound.onchange();
 
 	var analyserEnabled = localStorage.get('analyserEnabled', true);
 
@@ -16,7 +25,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, localStorage) {
 		if (player.playing) {
 			player.stop();
 		} else {
-			player.play();
+			player.play(this.buffer);
 		}
 	};
 

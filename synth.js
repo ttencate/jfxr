@@ -60,6 +60,7 @@ jfxr.Synth.generate = function(str) {
 	for (var i = 0; i < numSamples; i++) {
 		var sample = 0;
 		var t = i / sampleRate;
+		var fraction = i / numSamples;
 
 		if (waveform == 'whitenoise' || waveform == 'pinknoise' || waveform == 'brownnoise') {
 			switch (waveform) {
@@ -106,7 +107,7 @@ jfxr.Synth.generate = function(str) {
 						h = harmonicPhase < 0.5 ? 2 * harmonicPhase : -2 + 2 * harmonicPhase;
 						break;
 					case 'square':
-						var d = (squareDuty + t * squareDutySweep) / 100;
+						var d = (squareDuty + fraction * squareDutySweep) / 100;
 						h = harmonicPhase < d ? 1 : -1;
 						break;
 					case 'tangent':
@@ -130,14 +131,14 @@ jfxr.Synth.generate = function(str) {
 			}
 		}
 
-		var f = frequency + t * frequencySlide + t * t * frequencyDeltaSlide;
+		var f = frequency + fraction * frequencySlide + fraction * fraction * frequencyDeltaSlide;
 		f += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
 		var periodInSamples = sampleRate / f;
 		phase = jfxr.Math.frac(phase + 1 / periodInSamples);
 
 		sample *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
 
-		var cutoff = jfxr.Math.clamp(0, sampleRate / 2, lowPassCutoff + t * lowPassCutoffSweep);
+		var cutoff = jfxr.Math.clamp(0, sampleRate / 2, lowPassCutoff + fraction * lowPassCutoffSweep);
 		var wc = cutoff / sampleRate * Math.PI; // Don't we need a factor 2pi instead of pi?
 		var cosWc = Math.cos(wc);
 		var lowPassAlpha;
@@ -151,7 +152,7 @@ jfxr.Synth.generate = function(str) {
 		sample = lowPassAlpha * sample + (1 - lowPassAlpha) * lowPassPrev;
 		lowPassPrev = sample;
 
-		cutoff = jfxr.Math.clamp(0, sampleRate / 2, highPassCutoff + t * highPassCutoffSweep);
+		cutoff = jfxr.Math.clamp(0, sampleRate / 2, highPassCutoff + fraction * highPassCutoffSweep);
 		wc = cutoff / sampleRate * Math.PI;
 		// From somewhere on the internet: a = (1 - sin wc) / cos wc
 		var highPassAlpha = (1 - Math.sin(wc)) / Math.cos(wc);

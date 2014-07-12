@@ -124,15 +124,15 @@ jfxr.Sound = function(context) {
 	this.frequency = new jfxr.Parameter({
 		label: 'Frequency',
 		unit: 'Hz',
-		defaultValue: 440,
+		defaultValue: 500,
 		minValue: 10,
 		maxValue: 10000,
-		step: 1,
+		step: 100,
 		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencySlide = new jfxr.Parameter({
 		label: 'Frequency slide',
-		unit: 'Hz/s',
+		unit: 'Hz',
 		defaultValue: 0,
 		minValue: -10000,
 		maxValue: 10000,
@@ -141,11 +141,11 @@ jfxr.Sound = function(context) {
 	});
 	this.frequencyDeltaSlide = new jfxr.Parameter({
 		label: 'Frequency delta slide',
-		unit: 'Hz/s²',
+		unit: 'Hz',
 		defaultValue: 0,
-		minValue: -500000,
-		maxValue: 500000,
-		step: 1000,
+		minValue: -10000,
+		maxValue: 10000,
+		step: 100,
 		disabledReason: frequencyIsMeaningless,
 	});
 	this.vibratoDepth = new jfxr.Parameter({
@@ -172,15 +172,15 @@ jfxr.Sound = function(context) {
 		defaultValue: 50,
 		minValue: 0,
 		maxValue: 100,
-		step: 1,
+		step: 5,
 		disabledReason: isNotSquare,
 	});
 	this.squareDutySweep = new jfxr.Parameter({
 		label: 'Square duty sweep',
-		unit: '%/s',
+		unit: '%',
 		defaultValue: 0,
-		minValue: -1000,
-		maxValue: 1000,
+		minValue: -100,
+		maxValue: 100,
 		step: 5,
 		disabledReason: isNotSquare,
 	});
@@ -198,7 +198,7 @@ jfxr.Sound = function(context) {
 	this.sustain = new jfxr.Parameter({
 		label: 'Sustain',
 		unit: 's',
-		defaultValue: 0.1,
+		defaultValue: 0.0,
 		minValue: 0,
 		maxValue: 5,
 		step: 0.01,
@@ -260,10 +260,10 @@ jfxr.Sound = function(context) {
 	});
 	this.lowPassCutoffSweep = new jfxr.Parameter({
 		label: 'Low-pass cutoff sweep',
-		unit: 'Hz/s',
+		unit: 'Hz',
 		defaultValue: 0,
-		minValue: -50000,
-		maxValue: 50000,
+		minValue: -22050,
+		maxValue: 22050,
 		step: 100,
 	});
 	this.highPassCutoff = new jfxr.Parameter({
@@ -276,10 +276,10 @@ jfxr.Sound = function(context) {
 	});
 	this.highPassCutoffSweep = new jfxr.Parameter({
 		label: 'High-pass cutoff sweep',
-		unit: 'Hz/s',
+		unit: 'Hz',
 		defaultValue: 0,
-		minValue: -50000,
-		maxValue: 50000,
+		minValue: -22050,
+		maxValue: 22050,
 		step: 100,
 	});
 

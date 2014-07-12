@@ -7,7 +7,9 @@ jfxr.Preset.all = [
 	new jfxr.Preset({
 		name: 'Reset',
 		createSound: function() {
-			return new jfxr.Sound();
+			var sound = new jfxr.Sound();
+			sound.sustain.value = 0.2;
+			return sound;
 		},
 	}),
 	new jfxr.Preset({

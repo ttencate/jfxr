@@ -6,7 +6,12 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 	this.buffer = null;
 
 	this.sound = new jfxr.Sound(context);
-	this.sound.parse(localStorage.get('currentSound', '{}'));
+	var str = localStorage.get('currentSound', undefined);
+	if (str) {
+		this.sound.parse(str);
+	} else {
+		this.sound.sustain.value = 0.2;
+	}
 
 	this.analyserEnabled = localStorage.get('analyserEnabled', true);
 	this.autoplay = localStorage.get('autoplayEnabled', true);

@@ -283,8 +283,13 @@ jfxr.Sound = function(context) {
 		maxValue: 10,
 		step: 0.1,
 	});	
-	this.normalization = new jfxr.Parameter({
-		label: 'Normalization level',
+	this.normalize = new jfxr.Parameter({
+		label: 'Normalize',
+		type: 'bool',
+		defaultValue: true,
+	});
+	this.amplification = new jfxr.Parameter({
+		label: 'Amplification',
 		unit: '%',
 		defaultValue: 100,
 		minValue: 0,

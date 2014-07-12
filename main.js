@@ -7,9 +7,8 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 
 	this.sound = new jfxr.Sound(context);
 
-	var analyserEnabled = localStorage.get('analyserEnabled', true);
-
-	this.autoplay = true;
+	this.analyserEnabled = localStorage.get('analyserEnabled', true);
+	this.autoplay = localStorage.get('autoplayEnabled', true);
 
 	this.isPlaying = function() {
 		return player.playing;
@@ -34,14 +33,17 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 		}
 	};
 
-	this.isAnalyserEnabled = function() {
-		return analyserEnabled;
-	};
+	$scope.$watch(function() { return this.analyserEnabled; }.bind(this), function(value) {
+		if (angular.isDefined(value)) {
+			localStorage.set('analyserEnabled', value);
+		}
+	});
 
-	this.toggleAnalyserEnabled = function() {
-		analyserEnabled = !analyserEnabled;
-		localStorage.set('analyserEnabled', analyserEnabled);
-	};
+	$scope.$watch(function() { return this.autoplay; }.bind(this), function(value) {
+		if (angular.isDefined(value)) {
+			localStorage.set('autoplayEnabled', value);
+		}
+	});
 
 	$scope.$watch(function() { return this.sound.serialize(); }.bind(this), function(value) {
 		this.buffer = null;

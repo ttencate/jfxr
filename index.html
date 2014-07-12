@@ -16,7 +16,7 @@
           <h1>jfxr&thinsp;~</h1>
         </div>
         <div class="pane pane-top-right column-right playbackpane">
-          <canvas width="680" height="43" analyser="ctrl.getFrequencyData()" enabled="ctrl.isAnalyserEnabled()" ng-click="ctrl.toggleAnalyserEnabled()" class="analyser" ng-class="{'analyser-disabled': !ctrl.isAnalyserEnabled()}"></canvas>
+          <canvas width="680" height="43" analyser="ctrl.getFrequencyData()" enabled="ctrl.analyserEnabled" ng-click="ctrl.analyserEnabled = !ctrl.analyserEnabled" class="analyser" ng-class="{'analyser-disabled': !ctrl.analyserEnabled}"></canvas>
           <label class="shiny autoplay" ng-class="{'shiny-checked': ctrl.autoplay}" title="Play automatically on change">
             <input type="checkbox" ng-model="ctrl.autoplay"></input>
             <span class="shinycontent">Auto</span>

@@ -48,9 +48,6 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 				}
 				break;
 		}
-		if (this.onchange) {
-			this.onchange();
-		}
 	},
 });
 
@@ -72,8 +69,6 @@ jfxr.Sound = function(context) {
 	var self = this;
 	this.context = context;
 
-	this.sampleRate = 44100;
-
 	var frequencyIsMeaningless = function(sound) {
 		var w = sound.waveform.value;
 		if (w == 'whitenoise' || w == 'pinknoise' || w == 'brownnoise') {
@@ -87,6 +82,17 @@ jfxr.Sound = function(context) {
 		}
 		return null;
 	};
+
+	// Sound properties
+	
+	this.sampleRate = new jfxr.Parameter({
+		label: 'Sample rate',
+		unit: 'Hz',
+		defaultValue: 44100,
+		minValue: 44100,
+		maxValue: 44100,
+		disabledReason: function() { return 'Sample rate is currently not configurable'; },
+	});	
 
 	// Frequency parameters
 
@@ -285,13 +291,6 @@ jfxr.Sound = function(context) {
 		minValue: 0,
 		maxValue: 500,
 		step: 10,
-	});
-
-	var onchange = function() {
-		if (self.onchange) self.onchange();
-	};
-	this.forEachParam(function(key, param) {
-		param.onchange = onchange;
 	});
 };
 

@@ -1,15 +1,29 @@
-var jfxr = {};
+var jfxr = jfxr || {};
 
-importScripts('math.js');
-importScripts('random.js');
+jfxr.Worker = {};
 
-this.addEventListener('message', function(e) {
-	var str = e.data;
-	var msg = run(str);
-	this.postMessage(msg, [msg.arrayBuffer]);
-});
+jfxr.Worker.main = function(worker) {
+	var exception = null;
+	try {
+		importScripts('math.js', 'random.js');
+	} catch (ex) {
+		exception = ex;
+	}
 
-function run(str) {
+	if (!exception) {
+		worker.addEventListener('message', function(e) {
+			var str = e.data;
+			var msg = jfxr.Worker.generate(str);
+			worker.postMessage(msg, [msg.arrayBuffer]);
+		});
+	} else {
+		worker.addEventListener('message', function(e) {
+			worker.postMessage({'error': exception.toString()});
+		});
+	}
+}
+
+jfxr.Worker.generate = function(str) {
 	var startTime = Date.now();
 
 	var json = JSON.parse(str);
@@ -198,3 +212,7 @@ function run(str) {
 		renderTimeMs: renderTimeMs,
 	};
 };
+
+if (typeof WorkerGlobalScope != 'undefined') {
+	jfxr.Worker.main(this);
+}

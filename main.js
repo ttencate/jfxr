@@ -44,10 +44,12 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, synth, $scope, localSto
 	};
 
 	$scope.$watch(function() { return this.sound.serialize(); }.bind(this), function(value) {
+		this.buffer = null;
 		if (value) {
-			this.buffer = synth.synth(value);
-		} else {
-			this.buffer = null;
+			synth.synth(value, function(buffer) {
+				this.buffer = buffer;
+				$scope.$apply();
+			}.bind(this));
 		}
 	}.bind(this));
 });

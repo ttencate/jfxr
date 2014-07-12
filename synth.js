@@ -4,12 +4,28 @@ jfxr.Synth = function(context) {
 	this.renderTimeMs = null;
 };
 
-jfxr.Synth.prototype.synth = function(str) {
+jfxr.Synth.prototype.synth = function(str, finishedCallback) {
+	var json = JSON.parse(str);
+	var numSamples = this.computeNumSamples(json);
+	var buffer = this.context.createBuffer(1, numSamples, json.sampleRate);
+	var data = buffer.getChannelData(0);
+	this.fillBuffer(str, data);
+	window.setTimeout(function() {
+		finishedCallback(buffer);
+	});
+};
+
+jfxr.Synth.prototype.computeNumSamples = function(json) {
+	return Math.max(1, Math.ceil(json.sampleRate * (json.attack + json.sustain + json.decay)));
+};
+
+jfxr.Synth.prototype.fillBuffer = function(str, data) {
 	var json = JSON.parse(str);
 
 	this.renderTimeMs = null;
 	var startTime = Date.now();
 
+	var numSamples = data.length;
 	var sampleRate = json.sampleRate;
 	var waveform = json.waveform;
 	var frequency = json.frequency;
@@ -32,10 +48,6 @@ jfxr.Synth.prototype.synth = function(str) {
 	var highPassCutoffSweep = json.highPassCutoffSweep;
 	var compression = json.compression;
 	var normalization = json.normalization;
-
-	var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
-	var buffer = this.context.createBuffer(1, numSamples, sampleRate);
-	var data = buffer.getChannelData(0);
 
 	// Pink noise parameters
 	var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
@@ -188,10 +200,6 @@ jfxr.Synth.prototype.synth = function(str) {
 	}
 
 	this.renderTimeMs = Date.now() - startTime;
-
-	return buffer;
 };
 
-jfxrApp.service('synth', function(context) {
-	return new jfxr.Synth(context);
-});
+jfxrApp.service('synth', jfxr.Synth);

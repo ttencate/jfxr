@@ -66,10 +66,6 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
 });
 
 jfxrApp.directive('analyser', function() {
-	var clear = function(context, width, height) {
-		context.clearRect(0, 0, width, height);
-	};
-
 	var draw = function(context, width, height, data) {
 		var barWidth = Math.max(2, Math.ceil(width / data.length));
 		var numBars = Math.floor(width / barWidth);
@@ -79,7 +75,7 @@ jfxrApp.directive('analyser', function() {
 		var blockGap = 1;
 		var numBlocks = Math.floor(height / blockHeight);
 
-		clear(context, width, height);
+		context.clearRect(0, 0, width, height);
 
 		var gradient = context.createLinearGradient(0, 0, 0, height);
 		gradient.addColorStop(0, '#f00');
@@ -139,7 +135,7 @@ jfxrApp.directive('analyser', function() {
 				if (enabled) {
 					window.requestAnimationFrame(animFrame);
 				} else {
-					clear(context, width, height);
+					context.clearRect(0, 0, width, height);
 				}
 			});
 		},

@@ -11,6 +11,8 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 	this.analyserEnabled = localStorage.get('analyserEnabled', true);
 	this.autoplay = localStorage.get('autoplayEnabled', true);
 
+	this.presets = jfxr.Preset.all;
+
 	this.isPlaying = function() {
 		return player.playing;
 	};
@@ -25,6 +27,10 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 
 	this.getFrequencyData = function() {
 		return player.getFrequencyData();
+	};
+
+	this.applyPreset = function(preset) {
+		this.sound = preset.createSound();
 	};
 
 	this.keyDown = function(e) {

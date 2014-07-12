@@ -1,15 +1,15 @@
 jfxr.Parameter = function(args) {
 	this.label = args.label || '<unnamed>';
 	this.unit = args.unit || '';
-	this.type_ = args.type || 'float';
-	var numeric = this.type_ == 'float' || this.type_ == 'int';
+	this.type = args.type || 'float';
+	var numeric = this.type == 'float' || this.type == 'int';
 	this.value_ = args.defaultValue;
 	this.defaultValue = this.value_;
-	this.values_ = this.type_ == 'enum' ? (args.values || []) : null;
+	this.values = this.type == 'enum' ? (args.values || {}) : null;
 	this.minValue = numeric ? args.minValue : null;
 	this.maxValue = numeric ? args.maxValue : null;
 	this.step = numeric ? (args.step || 'any') : null;
-	this.digits = this.type_ == 'float' ? Math.max(0, Math.round(-Math.log(this.step) / Math.log(10))) : null;
+	this.digits = this.type == 'float' ? Math.max(0, Math.round(-Math.log(this.step) / Math.log(10))) : null;
 	this.disabledReason_ = args.disabledReason || null;
 };
 
@@ -19,14 +19,14 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 		return this.value_;
 	},
 	set: function(value) {
-		switch (this.type_) {
+		switch (this.type) {
 			case 'float':
 			case 'int':
 				value = parseFloat(value);
 				if (value == NaN) {
 					break;
 				}
-				if (this.type_ == 'int') {
+				if (this.type == 'int') {
 					value = Math.round(value);
 				}
 				if (this.minValue !== null && value < this.minValue) {
@@ -39,7 +39,7 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 				break;
 			case 'enum':
 				var found = false;
-				for (var v in this.values_) {
+				for (var v in this.values) {
 					if (value == v) {
 						this.value_ = v;
 						found = true;
@@ -58,8 +58,11 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 });
 
 jfxr.Parameter.prototype.valueTitle = function() {
-	if (this.type_ == 'enum') {
-		return this.values_[this.value_];
+	if (this.type == 'enum') {
+		return this.values[this.value_];
+	}
+	if (this.type == 'boolean') {
+		return this.value_ ? 'Enabled' : 'Disabled';
 	}
 };
 

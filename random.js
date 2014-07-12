@@ -21,12 +21,20 @@ jfxr.Random.prototype.uint32 = function() {
 };
 
 jfxr.Random.prototype.uniform = function(min, max) {
-	if (max == undefined) {
+	if (min == undefined && max == undefined) {
+		min = 0;
+		max = 1;
+	} else if (max == undefined) {
 		max = min;
 		min = 0;
 	}
-	if (min == undefined) {
-		min = 0;
-	}
 	return min + (max - min) * this.uint32() / 0xffffffff;
+};
+
+jfxr.Random.prototype.int = function(min, max) {
+	return Math.floor(this.uniform(min, max));
+};
+
+jfxr.Random.prototype.fromArray = function(array) {
+	return array[this.int(array.length)];
 };

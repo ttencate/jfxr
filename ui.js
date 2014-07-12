@@ -297,8 +297,8 @@ jfxrApp.directive('booleanParam', function() {
             '  <div class="paramcontrol">' +
 			'    <label class="booleanlabel" ng-class="{\'booleanlabel-checked\': sound[param].value}"><input type="checkbox" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)"></input></label>' +
 			'  </div>' +
-            '  <div class="customparamvalue" ng-switch="sound[param].value">' +
-			'    <span ng-switch-when="true">Enabled</span><span ng-switch-when="false">Disabled</span>' +
+            '  <div class="customparamvalue">' +
+			'    {{sound[param].valueTitle()}}' +
 			'  </div>' +
 			'</div>',
 		link: function(scope, element, attrs, ctrl) {

@@ -28,8 +28,13 @@
       </div>
       <div class="content">
         <div class="pane pane-bottom-left column-left filespane">
+          <div class="presets">
+            <button ng-repeat="preset in ctrl.presets" class="preset" ng-click="ctrl.applyPreset(preset)">
+              <span>{{preset.name}}</span>
+            </button>
+          </div>
           <div class="history">
-            Lorem ipsum
+            Lorem ipsum dolor sit amet
           </div>
           <div class="statusbar">
             Render time: {{ctrl.worker.renderTimeMs}}&nbsp;ms
@@ -93,9 +98,10 @@
       var jfxrApp = angular.module('jfxrApp', []);
       var jfxr = {};
     </script>
-    <script src="shims.js"></script>
     <script src="math.js"></script>
+    <script src="presets.js"></script>
     <script src="random.js"></script>
+    <script src="shims.js"></script>
     <script src="sound.js"></script>
     <script src="synth.js"></script>
     <script src="worker.js"></script>

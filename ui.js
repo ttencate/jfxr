@@ -278,7 +278,7 @@ jfxrApp.directive('floatParam', function() {
 
 			// Something funny is going on with initialization of range elements with float values.
 			// E.g. without this, the sustain slider will start at the 0 position. Angular bug?
-			var unwatch = scope.$watch('param.value', function(value) {
+			var unwatch = scope.$watch('sound[param].value', function(value) {
 				if (value != undefined) {
 					element.find('input')[0].value = value;
 					unwatch();

@@ -166,18 +166,42 @@ jfxrApp.directive('waveshape', function() {
 		}
 
 		var channel = buffer.getChannelData(0);
-
 		var numSamples = buffer.length;
+
 		context.strokeStyle = '#88f';
 		context.lineWidth = 1.0;
 		context.globalAlpha = 1.0;
-		context.beginPath();
-		context.moveTo(0, height / 2);
-		for (var i = 0; i < numSamples; i++) {
-			var sample = channel[i];
-			context.lineTo(i / numSamples * width, (1 - sample) * height / 2);
+
+		if (numSamples < width) {
+			// Draw a line between each pair of successive samples.
+			context.beginPath();
+			context.moveTo(0, height / 2);
+			for (var i = 0; i < numSamples; i++) {
+				var sample = channel[i];
+				context.lineTo(i / numSamples * width, (1 - sample) * height / 2);
+			}
+			context.stroke();
+		} else {
+			// More samples than pixels. At a 5s buffer, drawing all samples
+			// takes 300ms. For performance, draw a vertical line in each pixel
+			// column, representing the range of samples falling into this
+			// column.
+			// TODO: make this look better by taking advantage of antialiasing somehow
+			for (var x = 0; x < width; x++) {
+				var min = 1e99, max = -1e99;
+				var start = Math.floor(x / width * numSamples);
+				var end = Math.ceil((x + 1) / width * numSamples);
+				for (var i = start; i < end; i++) {
+					var sample = channel[i];
+					if (sample < min) min = sample;
+					if (sample > max) max = sample;
+				}
+				context.beginPath();
+				context.moveTo(x + 0.5, (1 - min) * height / 2);
+				context.lineTo(x + 0.5, (1 - max) * height / 2);
+				context.stroke();
+			}
 		}
-		context.stroke();
 
 		context.strokeStyle = '#fff';
 		context.globalAlpha = 0.1;

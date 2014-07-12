@@ -1,7 +1,7 @@
-jfxrApp.controller('JfxrCtrl', function(context, Player, synth, $scope, localStorage) {
+jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localStorage) {
 	var player = new Player();
 
-	this.synth = synth;
+	this.worker = worker;
 
 	this.buffer = null;
 
@@ -46,7 +46,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, synth, $scope, localSto
 	$scope.$watch(function() { return this.sound.serialize(); }.bind(this), function(value) {
 		this.buffer = null;
 		if (value) {
-			synth.synth(value).then(function(buffer) {
+			worker.synth(value).then(function(buffer) {
 				this.buffer = buffer;
 			}.bind(this));
 		}

@@ -271,7 +271,7 @@ jfxrApp.directive('floatParam', function() {
 				var delta = e.deltaX + e.deltaY;
 				scope.$apply(function() {
 					var param = scope.sound[scope.param];
-					param.value -= Math.sign(delta) * param.step;
+					param.value -= jfxr.Math.sign(delta) * param.step;
 				});
 				e.preventDefault();
 			});

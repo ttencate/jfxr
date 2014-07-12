@@ -229,20 +229,20 @@ jfxrApp.directive('floatParam', function() {
 	return {
 		restrict: 'E',
 		scope: {
-			param: '=',
 			sound: '=',
+			param: '@',
 		},
 		template:
-			'<div class="param" ng-class="{\'param-disabled\': param.isDisabled(sound)}" title={{param.whyDisabled(sound)}}>' +
-            '  <div class="paramlabel">{{param.label}}</div>' +
+			'<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
+            '  <div class="paramlabel">{{sound[param].label}}</div>' +
             '  <div class="paramcontrol">' +
-			'    <input type="range" min="{{param.minValue}}" max="{{param.maxValue}}" step="{{param.step}}" ng-model="param.value" ng-disabled="param.isDisabled(sound)" class="floatslider"></input>' +
+			'    <input type="range" min="{{sound[param].minValue}}" max="{{sound[param].maxValue}}" step="{{sound[param].step}}" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)" class="floatslider"></input>' +
 			'  </div>' +
-            '  <div class="paramvalue" ng-switch="param.isDisabled(sound)">' +
-			'    <input ng-switch-when="false" class="floattext" type="text" ng-model="param.value"></input>' +
+            '  <div class="paramvalue" ng-switch="sound[param].isDisabled(sound)">' +
+			'    <input ng-switch-when="false" class="floattext" type="text" ng-model="sound[param].value"></input>' +
 			'    <span ng-switch-when="true">&mdash;</span>' +
 			'  </div>' +
-            '  <div class="paramunit">{{param.unit}}</div>' +
+            '  <div class="paramunit">{{sound[param].unit}}</div>' +
 			'</div>',
 		link: function(scope, element, attrs, ctrl) {
 			element.bind('wheel', function(e) {

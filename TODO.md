@@ -8,6 +8,7 @@ Usability
 - Don't update wave on every slider change
 - Draw amplitude graph
 - Draw frequency graph
+- Persist settings (autoplay only, currently)
 
 Features
 --------

@@ -6,6 +6,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 	this.buffer = null;
 
 	this.sound = new jfxr.Sound(context);
+	this.sound.parse(localStorage.get('currentSound', '{}'));
 
 	this.analyserEnabled = localStorage.get('analyserEnabled', true);
 	this.autoplay = localStorage.get('autoplayEnabled', true);
@@ -48,6 +49,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 	$scope.$watch(function() { return this.sound.serialize(); }.bind(this), function(value) {
 		this.buffer = null;
 		if (value) {
+			localStorage.set('currentSound', value);
 			worker.synth(value).then(function(buffer) {
 				this.buffer = buffer;
 				if (this.buffer && this.autoplay) {

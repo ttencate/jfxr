@@ -23,6 +23,9 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 			case 'float':
 			case 'int':
 				value = parseFloat(value);
+				if (value == NaN) {
+					break;
+				}
 				if (this.type_ == 'int') {
 					value = Math.round(value);
 				}
@@ -327,9 +330,13 @@ jfxr.Sound.prototype.serialize = function() {
 };
 
 jfxr.Sound.prototype.parse = function(str) {
-	var json = JSON.parse(str);
 	this.reset();
-	this.forEachParam(function(key, param) {
-		param.value = json[key];
-	});
+	if (str && str != '') {
+		var json = JSON.parse(str);
+		this.forEachParam(function(key, param) {
+			if (key in json) {
+				param.value = json[key];
+			}
+		});
+	}
 };

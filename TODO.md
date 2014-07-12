@@ -7,8 +7,6 @@ Usability
 - Make text input boxes work better
 - Don't update wave on every slider change
 - Play on change
-- Speed up canvas drawing of long waveforms
-- Use web workers to not block UI
 - Draw amplitude graph
 - Draw frequency graph
 

@@ -213,7 +213,7 @@ jfxrApp.directive('waveshape', function() {
 
 	return {
 		scope: {
-			'waveshape': '=',
+			'buffer': '=waveshape',
 		},
 		link: function(scope, element, attrs, ctrl) {
 			var destroyed = false;
@@ -223,9 +223,8 @@ jfxrApp.directive('waveshape', function() {
 
 			var canvas = element[0];
 
-			scope.$watch(function() {
-				var data = scope.$eval('waveshape');
-				draw(canvas, data);
+			scope.$watch('buffer', function(value) {
+				draw(canvas, value);
 			});
 		},
 	};

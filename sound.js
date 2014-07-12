@@ -66,7 +66,6 @@ jfxr.Parameter.prototype.whyDisabled = function(sound) {
 };
 
 jfxr.Sound = function(context) {
-	var self = this;
 	this.context = context;
 
 	var frequencyIsMeaningless = function(sound) {

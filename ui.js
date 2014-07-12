@@ -4,8 +4,6 @@ jfxrApp.service('context', function() {
 
 jfxrApp.service('Player', function($rootScope, $timeout, context) {
 	var Player = function() {
-		var self = this;
-
 		this.position = 0;
 
 		this.playing = false;
@@ -25,8 +23,8 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
 		// because smoothing is applied only when the data is requested.
 		this.script = context.createScriptProcessor();
 		this.script.onaudioprocess = function(e) {
-			self.analyser.getFloatFrequencyData(self.frequencyData);
-		};
+			this.analyser.getFloatFrequencyData(this.frequencyData);
+		}.bind(this);
 		// Feed zeros into the analyser because otherwise it freezes up as soon
 		// as the sound stops playing.
 		this.script.connect(this.analyser);
@@ -36,16 +34,14 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
 		if (this.playing) {
 			this.stop();
 		}
-		var self = this;
 		this.source = context.createBufferSource();
 		this.source.connect(this.analyser);
 		this.source.buffer = buffer;
 		this.source.start();
 		this.source.onended = function() {
-			$rootScope.$apply(function() {
-				self.playing = false;
-			});
-		};
+			this.playing = false;
+			$rootScope.$apply();
+		}.bind(this);
 		this.playing = true;
 	};
 

@@ -6,7 +6,6 @@ Usability
 
 - Make text input boxes work better
 - Don't update wave on every slider change
-- Play on change
 - Draw amplitude graph
 - Draw frequency graph
 

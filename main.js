@@ -48,6 +48,9 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 		if (value) {
 			worker.synth(value).then(function(buffer) {
 				this.buffer = buffer;
+				if (this.buffer && this.autoplay) {
+					player.play(this.buffer);
+				}
 			}.bind(this));
 		}
 	}.bind(this));

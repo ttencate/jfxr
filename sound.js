@@ -3,7 +3,8 @@ jfxr.Parameter = function(args) {
 	this.unit = args.unit || '';
 	this.type_ = args.type || 'float';
 	var numeric = this.type_ == 'float' || this.type_ == 'int';
-	this.value_ = args.value;
+	this.value_ = args.defaultValue;
+	this.defaultValue = this.value_;
 	this.values_ = this.type_ == 'enum' ? (args.values || []) : null;
 	this.minValue = numeric ? args.minValue : null;
 	this.maxValue = numeric ? args.maxValue : null;
@@ -91,7 +92,7 @@ jfxr.Sound = function(context) {
 
 	this.waveform = new jfxr.Parameter({
 		label: 'Waveform',
-		value: 'sine',
+		defaultValue: 'sine',
 		type: 'enum',
 		values: {
 			'sine': 'Sine',
@@ -109,7 +110,7 @@ jfxr.Sound = function(context) {
 	this.frequency = new jfxr.Parameter({
 		label: 'Frequency',
 		unit: 'Hz',
-		value: 440,
+		defaultValue: 440,
 		minValue: 10,
 		maxValue: 10000,
 		step: 1,
@@ -118,7 +119,7 @@ jfxr.Sound = function(context) {
 	this.frequencySlide = new jfxr.Parameter({
 		label: 'Frequency slide',
 		unit: 'Hz/s',
-		value: 0,
+		defaultValue: 0,
 		minValue: -10000,
 		maxValue: 10000,
 		step: 100,
@@ -127,7 +128,7 @@ jfxr.Sound = function(context) {
 	this.frequencyDeltaSlide = new jfxr.Parameter({
 		label: 'Frequency delta slide',
 		unit: 'Hz/s²',
-		value: 0,
+		defaultValue: 0,
 		minValue: -500000,
 		maxValue: 500000,
 		step: 1000,
@@ -136,7 +137,7 @@ jfxr.Sound = function(context) {
 	this.vibratoDepth = new jfxr.Parameter({
 		label: 'Vibrato depth',
 		unit: 'Hz',
-		value: 0,
+		defaultValue: 0,
 		minValue: 0,
 		maxValue: 1000,
 		step: 10,
@@ -145,7 +146,7 @@ jfxr.Sound = function(context) {
 	this.vibratoFrequency = new jfxr.Parameter({
 		label: 'Vibrato frequency',
 		unit: 'Hz',
-		value: 10,
+		defaultValue: 10,
 		minValue: 1,
 		maxValue: 1000,
 		step: 1,
@@ -154,7 +155,7 @@ jfxr.Sound = function(context) {
 	this.squareDuty = new jfxr.Parameter({
 		label: 'Square duty',
 		unit: '%',
-		value: 50,
+		defaultValue: 50,
 		minValue: 0,
 		maxValue: 100,
 		step: 1,
@@ -163,7 +164,7 @@ jfxr.Sound = function(context) {
 	this.squareDutySweep = new jfxr.Parameter({
 		label: 'Square duty sweep',
 		unit: '%/s',
-		value: 0,
+		defaultValue: 0,
 		minValue: -1000,
 		maxValue: 1000,
 		step: 5,
@@ -175,7 +176,7 @@ jfxr.Sound = function(context) {
 	this.attack = new jfxr.Parameter({
 		label: 'Attack',
 		unit: 's',
-		value: 0,
+		defaultValue: 0,
 		minValue: 0,
 		maxValue: 5,
 		step: 0.01,
@@ -183,7 +184,7 @@ jfxr.Sound = function(context) {
 	this.sustain = new jfxr.Parameter({
 		label: 'Sustain',
 		unit: 's',
-		value: 0.1,
+		defaultValue: 0.1,
 		minValue: 0,
 		maxValue: 5,
 		step: 0.01,
@@ -191,7 +192,7 @@ jfxr.Sound = function(context) {
 	this.decay = new jfxr.Parameter({
 		label: 'Decay',
 		unit: 's',
-		value: 0,
+		defaultValue: 0,
 		minValue: 0,
 		maxValue: 5,
 		step: 0.01,
@@ -199,7 +200,7 @@ jfxr.Sound = function(context) {
 	this.tremoloDepth = new jfxr.Parameter({
 		label: 'Tremolo depth',
 		unit: '%',
-		value: 0,
+		defaultValue: 0,
 		minValue: 0,
 		maxValue: 100,
 		step: 1,
@@ -207,7 +208,7 @@ jfxr.Sound = function(context) {
 	this.tremoloFrequency = new jfxr.Parameter({
 		label: 'Tremolo frequency',
 		unit: 'Hz',
-		value: 10,
+		defaultValue: 10,
 		minValue: 1,
 		maxValue: 1000,
 		step: 1,
@@ -218,7 +219,7 @@ jfxr.Sound = function(context) {
 	this.harmonics = new jfxr.Parameter({
 		label: 'Harmonics',
 		type: 'int',
-		value: 0,
+		defaultValue: 0,
 		minValue: 0,
 		maxValue: 5,
 		step: 1,
@@ -226,7 +227,7 @@ jfxr.Sound = function(context) {
 	});
 	this.harmonicsFalloff = new jfxr.Parameter({
 		label: 'Harmonics falloff',
-		value: 0.5,
+		defaultValue: 0.5,
 		minValue: 0,
 		maxValue: 1,
 		step: 0.01,
@@ -238,7 +239,7 @@ jfxr.Sound = function(context) {
 	this.lowPassCutoff = new jfxr.Parameter({
 		label: 'Low-pass cutoff',
 		unit: 'Hz',
-		value: 22050,
+		defaultValue: 22050,
 		minValue: 0,
 		maxValue: 22050,
 		step: 100,
@@ -246,7 +247,7 @@ jfxr.Sound = function(context) {
 	this.lowPassCutoffSweep = new jfxr.Parameter({
 		label: 'Low-pass cutoff sweep',
 		unit: 'Hz/s',
-		value: 0,
+		defaultValue: 0,
 		minValue: -50000,
 		maxValue: 50000,
 		step: 100,
@@ -254,7 +255,7 @@ jfxr.Sound = function(context) {
 	this.highPassCutoff = new jfxr.Parameter({
 		label: 'High-pass cutoff',
 		unit: 'Hz',
-		value: 0,
+		defaultValue: 0,
 		minValue: 0,
 		maxValue: 22050,
 		step: 100,
@@ -262,7 +263,7 @@ jfxr.Sound = function(context) {
 	this.highPassCutoffSweep = new jfxr.Parameter({
 		label: 'High-pass cutoff sweep',
 		unit: 'Hz/s',
-		value: 0,
+		defaultValue: 0,
 		minValue: -50000,
 		maxValue: 50000,
 		step: 100,
@@ -272,7 +273,7 @@ jfxr.Sound = function(context) {
 	
 	this.compression = new jfxr.Parameter({
 		label: 'Compression exponent',
-		value: 1,
+		defaultValue: 1,
 		minValue: 0,
 		maxValue: 10,
 		step: 0.1,
@@ -280,7 +281,7 @@ jfxr.Sound = function(context) {
 	this.normalization = new jfxr.Parameter({
 		label: 'Normalization level',
 		unit: '%',
-		value: 100,
+		defaultValue: 100,
 		minValue: 0,
 		maxValue: 500,
 		step: 10,
@@ -289,9 +290,40 @@ jfxr.Sound = function(context) {
 	var onchange = function() {
 		if (self.onchange) self.onchange();
 	};
+	this.forEachParam(function(key, param) {
+		param.onchange = onchange;
+	});
+};
+
+jfxr.Sound.prototype.forEachParam = function(func) {
 	for (var key in this) {
-		if (this[key] instanceof jfxr.Parameter) {
-			this[key].onchange = onchange;
+		var value = this[key];
+		if (value instanceof jfxr.Parameter) {
+			func(key, value);
 		}
 	}
+};
+
+jfxr.Sound.prototype.reset = function() {
+	this.forEachParam(function(key, param) {
+		param.value = param.defaultValue;
+	});
+};
+
+jfxr.Sound.prototype.serialize = function() {
+	var json = {
+		_version: 1,
+	};
+	this.forEachParam(function(key, param) {
+		json[key] = param.value;
+	});
+	return JSON.stringify(json);
+};
+
+jfxr.Sound.prototype.parse = function(str) {
+	var json = JSON.parse(str);
+	this.reset();
+	this.forEachParam(function(key, param) {
+		param.value = json[key];
+	});
 };

@@ -284,6 +284,48 @@ jfxrApp.directive('floatParam', function() {
 	};
 });
 
+jfxrApp.directive('booleanParam', function() {
+	return {
+		restrict: 'E',
+		scope: {
+			sound: '=',
+			param: '@',
+		},
+		template:
+			'<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
+            '  <div class="paramlabel">{{sound[param].label}}</div>' +
+            '  <div class="paramcontrol">' +
+			'    <label class="booleanlabel" ng-class="{\'booleanlabel-checked\': sound[param].value}"><input type="checkbox" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)"></input></label>' +
+			'  </div>' +
+            '  <div class="customparamvalue" ng-switch="sound[param].value">' +
+			'    <span ng-switch-when="true">Enabled</span><span ng-switch-when="false">Disabled</span>' +
+			'  </div>' +
+			'</div>',
+		link: function(scope, element, attrs, ctrl) {
+			element.bind('wheel', function(e) {
+				if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey || e.buttons) {
+					return;
+				}
+				var delta = e.deltaX + e.deltaY;
+				scope.$apply(function() {
+					var param = scope.sound[scope.param];
+					param.value -= jfxr.Math.sign(delta) * param.step;
+				});
+				e.preventDefault();
+			});
+
+			// Something funny is going on with initialization of range elements with float values.
+			// E.g. without this, the sustain slider will start at the 0 position. Angular bug?
+			var unwatch = scope.$watch('sound[param].value', function(value) {
+				if (value != undefined) {
+					element.find('input')[0].value = value;
+					unwatch();
+				}
+			});
+		},
+	};
+});
+
 jfxrApp.directive('waveformButton', function() {
 	return {
 		require: 'ngModel',

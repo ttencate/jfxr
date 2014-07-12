@@ -47,6 +47,9 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 					return;
 				}
 				break;
+			case 'boolean':
+				this.value_ = !!value;
+				break;
 		}
 	},
 });
@@ -283,9 +286,9 @@ jfxr.Sound = function(context) {
 		maxValue: 10,
 		step: 0.1,
 	});	
-	this.normalize = new jfxr.Parameter({
-		label: 'Normalize',
-		type: 'bool',
+	this.normalization = new jfxr.Parameter({
+		label: 'Normalization',
+		type: 'boolean',
 		defaultValue: true,
 	});
 	this.amplification = new jfxr.Parameter({

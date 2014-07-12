@@ -37,6 +37,11 @@ input, button {
   outline: 0;
 }
 
+label,
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -461,6 +466,43 @@ h2 {
 
 .floatslider:disabled::-webkit-slider-thumb {
   display: none;
+}
+
+.booleanlabel input {
+  display: none;
+}
+
+.booleanlabel {
+  display: block;
+  width: 13px;
+  height: 13px;
+  color: #000;
+  line-height: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12.5px;
+  background-color: #666;
+  background-image: -webkit-radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+  border-radius: 2px;
+  box-shadow:
+    1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
+    -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
+}
+
+.booleanlabel:hover {
+  background-color: #888;
+}
+
+.booleanlabel:active {
+  background-color: #555;
+  box-shadow:
+    1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
+    -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
+}
+
+.booleanlabel-checked:before {
+  position: relative;
+  left: 1px;
+  content: '\2716';
 }
 
 .floattext {

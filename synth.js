@@ -27,6 +27,7 @@ jfxr.Synth.generate = function(str) {
 	var highPassCutoffSweep = json.highPassCutoffSweep;
 	var compression = json.compression;
 	var normalization = json.normalization;
+	var amplification = json.amplification;
 
 	var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
 	var array = new Float32Array(numSamples);
@@ -175,10 +176,12 @@ jfxr.Synth.generate = function(str) {
 		maxSample = Math.max(maxSample, Math.abs(sample));
 	}
 
-	// TODO re-enable once we have a way to specify absolute amplification as an alternative
-	var amplification = normalization / 100 / maxSample;
+	var factor = amplification / 100;
+	if (normalization) {
+		factor /= maxSample;
+	}
 	for (var i = 0; i < numSamples; i++) {
-		// array[i] *= amplification;
+		array[i] *= factor;
 	}
 
 	var renderTimeMs = Date.now() - startTime;

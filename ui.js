@@ -50,6 +50,7 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
 			return;
 		}
 		this.source.stop();
+		this.source.onended = null;
 		this.source = null;
 		this.playing = false;
 	};

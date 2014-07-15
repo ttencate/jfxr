@@ -38,29 +38,99 @@ jfxr.Preset.all = [
 						break;
 				}
 			}
-
-			sound.forEachParam(function(key, param) {
-				if (random.uniform() > 0.5) {
-					return;
-				}
-				randomize(param);
-			});
-
-			var attackSustainDecay = random.int(1, 8);
-			if (attackSustainDecay & 1) {
-				randomize(sound.attack);
-			} else {
-				sound.attack.value = sound.attack.defaultValue;
+			function reset(param) {
+				param.value = param.defaultValue;
 			}
-			if (attackSustainDecay & 2) {
-				randomize(sound.sustain);
-			} else {
-				sound.sustain.value = sound.sustain.defaultValue;
+
+			var attackSustainDecay = random.int(3, 16);
+			// Attack typically leads to less useful sounds. Reduce probability by requiring two bits.
+			if ((attackSustainDecay & 1) && (attackSustainDecay & 2)) {
+				sound.attack.value = random.uniform(0.0, 2.0);
 			}
+			// For the other parameters, use just one bit.
 			if (attackSustainDecay & 4) {
+				sound.sustain.value = random.uniform(0.0, 1.0);
+			}
+			if (attackSustainDecay & 8) {
 				randomize(sound.decay);
-			} else {
-				sound.decay.value = sound.decay.defaultValue;
+			}
+
+			if (random.boolean(0.5)) {
+				randomize(sound.tremoloDepth);
+				randomize(sound.tremoloFrequency);
+			}
+
+			randomize(sound.frequency);
+			if (random.boolean(0.5)) {
+				randomize(sound.frequencySlide);
+			}
+			if (random.boolean(0.5)) {
+				randomize(sound.frequencyDeltaSlide);
+			}
+
+			var repeatJump = random.int(0, 3);
+			if (repeatJump >= 1) {
+				sound.repeatFrequency.value = random.uniform(
+						1 / (sound.attack.value + sound.sustain.value + sound.decay.value),
+						sound.repeatFrequency.maxValue);
+			}
+			if (repeatJump >= 2) {
+				randomize(sound.frequencyJump1Onset);
+				randomize(sound.frequencyJump1Amount);
+				if (random.boolean(0.5)) {
+					randomize(sound.frequencyJump2Onset);
+					randomize(sound.frequencyJump2Amount);
+					if (sound.frequencyJump2Onset.value < sound.frequencyJump1Onset.value) {
+						var tmp = sound.frequencyJump1Onset.value;
+						sound.frequencyJump1Onset.value = sound.frequencyJump2Onset.value;
+						sound.frequencyJump2Onset.value = tmp;
+					}
+				}
+			}
+
+			if (random.boolean(0.5)) {
+				randomize(sound.harmonics);
+				randomize(sound.harmonicsFalloff);
+			}
+
+			randomize(sound.waveform);
+
+			if (random.boolean(0.5)) {
+				randomize(sound.vibratoDepth);
+				randomize(sound.vibratoFrequency);
+			}
+			if (sound.waveform.value == 'square' && random.boolean(0.5)) {
+				randomize(sound.squareDuty);
+				randomize(sound.squareDutySweep);
+			}
+
+			while (true) {
+				reset(sound.lowPassCutoff);
+				reset(sound.lowPassCutoffSweep);
+				reset(sound.highPassCutoff);
+				reset(sound.highPassCutoffSweep);
+				if (random.boolean(0.5)) {
+					sound.lowPassCutoff.value = random.uniform(0, 10000);
+				}
+				if (random.boolean(0.5)) {
+					sound.highPassCutoffSweep.value = random.uniform(0, 10000);
+				}
+				if (random.boolean(0.5)) {
+					sound.highPassCutoff.value = random.uniform(0, 10000);
+				}
+				if (random.boolean(0.5)) {
+					sound.highPassCutoffSweep.value = random.uniform(0, 10000);
+				}
+				if (sound.lowPassCutoff.value > sound.highPassCutoff.value) {
+					break;
+				}
+				if (sound.lowPassCutoff.value + sound.lowPassCutoffSweep.value > sound.highPassCutoff.value + sound.highPassCutoffSweep.value) {
+					break;
+				}
+			}
+
+			if (random.boolean(0.5)) {
+				randomize(sound.compression);
 			}
 
 			sound.normalization.value = true;

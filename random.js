@@ -35,6 +35,10 @@ jfxr.Random.prototype.int = function(min, max) {
 	return Math.floor(this.uniform(min, max));
 };
 
+jfxr.Random.prototype.boolean = function(trueProbability) {
+	return this.uniform() < trueProbability;
+};
+
 jfxr.Random.prototype.fromArray = function(array) {
 	return array[this.int(array.length)];
 };

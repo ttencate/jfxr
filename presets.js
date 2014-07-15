@@ -17,10 +17,8 @@ jfxr.Preset.all = [
 		createSound: function() {
 			var sound = new jfxr.Sound();
 			var random = new jfxr.Random();
-			sound.forEachParam(function(key, param) {
-				if (random.uniform() > 0.5) {
-					return;
-				}
+
+			function randomize(param) {
 				switch (param.type) {
 					case 'boolean':
 						param.value = (random.uniform() >= 0.5);
@@ -39,9 +37,35 @@ jfxr.Preset.all = [
 						param.value = random.fromArray(values);
 						break;
 				}
+			}
+
+			sound.forEachParam(function(key, param) {
+				if (random.uniform() > 0.5) {
+					return;
+				}
+				randomize(param);
 			});
+
+			var attackSustainDecay = random.int(1, 8);
+			if (attackSustainDecay & 1) {
+				randomize(sound.attack);
+			} else {
+				sound.attack.value = sound.attack.defaultValue;
+			}
+			if (attackSustainDecay & 2) {
+				randomize(sound.sustain);
+			} else {
+				sound.sustain.value = sound.sustain.defaultValue;
+			}
+			if (attackSustainDecay & 4) {
+				randomize(sound.decay);
+			} else {
+				sound.decay.value = sound.decay.defaultValue;
+			}
+
 			sound.normalization.value = true;
 			sound.amplification.value = 100;
+
 			return sound;
 		},
 	}),

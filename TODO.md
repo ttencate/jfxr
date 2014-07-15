@@ -13,6 +13,7 @@ Features
 --------
 
 - Locking sliders
+- Reset buttons
 - Copy link
 - Save/load sounds to local storage
 - Save/load sounds to disk

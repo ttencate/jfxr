@@ -1,3 +1,10 @@
+// This is the version written out to sound files. We maintain backwards
+// compatibility with files written by older versions where possible, but
+// refuse to read files written by newer versions. Only bump the version number
+// if older versions of jfxr would be unable to correctly interpret files
+// written by this version.
+jfxr.VERSION = 1;
+
 jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localStorage) {
 	var player = new Player();
 

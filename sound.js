@@ -74,6 +74,10 @@ jfxr.Parameter.prototype.whyDisabled = function(sound) {
 	return this.disabledReason_ && this.disabledReason_(sound);
 };
 
+jfxr.Parameter.prototype.reset = function() {
+	this.value = this.defaultValue;
+};
+
 jfxr.Sound = function(context) {
 	this.context = context;
 

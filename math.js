@@ -17,3 +17,7 @@ jfxr.Math.clamp = function(min, max, x) {
 	if (x > max) return max;
 	return x;
 };
+
+jfxr.Math.roundTo = function(x, multiple) {
+	return Math.round(x / multiple) * multiple;
+};

@@ -18,16 +18,18 @@ jfxr.Preset.all = [
 			var sound = new jfxr.Sound();
 			var random = new jfxr.Random();
 
-			function randomize(param) {
+			function randomize(param, min, max) {
+				if (min == undefined) min = param.minValue;
+				if (max == undefined) max = param.maxValue;
 				switch (param.type) {
 					case 'boolean':
 						param.value = (random.uniform() >= 0.5);
 						break;
 					case 'float':
-						param.value = random.uniform(param.minValue, param.maxValue);
+						param.value = jfxr.Math.roundTo(random.uniform(min, max), param.step);
 						break;
 					case 'int':
-						param.value = random.int(param.minValue, param.maxValue);
+						param.value = random.int(min, max);
 						break;
 					case 'enum':
 						var values = [];
@@ -38,18 +40,15 @@ jfxr.Preset.all = [
 						break;
 				}
 			}
-			function reset(param) {
-				param.value = param.defaultValue;
-			}
 
 			var attackSustainDecay = random.int(3, 16);
 			// Attack typically leads to less useful sounds. Reduce probability by requiring two bits.
 			if ((attackSustainDecay & 1) && (attackSustainDecay & 2)) {
-				sound.attack.value = random.uniform(0.0, 2.0);
+				randomize(sound.attack, 0.0, 2.0);
 			}
 			// For the other parameters, use just one bit.
 			if (attackSustainDecay & 4) {
-				sound.sustain.value = random.uniform(0.0, 1.0);
+				randomize(sound.sustain, 0.0, 1.0);
 			}
 			if (attackSustainDecay & 8) {
 				randomize(sound.decay);
@@ -70,7 +69,7 @@ jfxr.Preset.all = [
 
 			var repeatJump = random.int(0, 3);
 			if (repeatJump >= 1) {
-				sound.repeatFrequency.value = random.uniform(
+				randomize(sound.repeatFrequency,
 						1 / (sound.attack.value + sound.sustain.value + sound.decay.value),
 						sound.repeatFrequency.maxValue);
 			}
@@ -105,21 +104,21 @@ jfxr.Preset.all = [
 			}
 
 			while (true) {
-				reset(sound.lowPassCutoff);
-				reset(sound.lowPassCutoffSweep);
-				reset(sound.highPassCutoff);
-				reset(sound.highPassCutoffSweep);
+				sound.lowPassCutoff.reset();
+				sound.lowPassCutoffSweep.reset();
+				sound.highPassCutoff.reset();
+				sound.highPassCutoffSweep.reset();
 				if (random.boolean(0.5)) {
-					sound.lowPassCutoff.value = random.uniform(0, 10000);
+					randomize(sound.lowPassCutoff, 0, 10000);
 				}
 				if (random.boolean(0.5)) {
-					sound.highPassCutoffSweep.value = random.uniform(0, 10000);
+					randomize(sound.highPassCutoffSweep, 0, 10000);
 				}
 				if (random.boolean(0.5)) {
-					sound.highPassCutoff.value = random.uniform(0, 10000);
+					randomize(sound.highPassCutoff, 0, 10000);
 				}
 				if (random.boolean(0.5)) {
-					sound.highPassCutoffSweep.value = random.uniform(0, 10000);
+					randomize(sound.highPassCutoffSweep, 0, 10000);
 				}
 				if (sound.lowPassCutoff.value > sound.highPassCutoff.value) {
 					break;

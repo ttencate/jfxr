@@ -28,9 +28,6 @@ bfxr sliders
 ------------
 
 - Punch
-- Pitch jump onset/amount 1/2
-- Pitch jump repeat speed
-- Repeat speed
 - Flanger offset, Flanger sweep
 - Bit Crush, Bit Crush Sweep
 

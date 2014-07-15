@@ -6,21 +6,26 @@ jfxr.Synth.generate = function(str) {
 	var json = JSON.parse(str);
 
 	var sampleRate = json.sampleRate;
-	var waveform = json.waveform;
-	var frequency = json.frequency;
-	var frequencySlide = json.frequencySlide;
-	var frequencyDeltaSlide = json.frequencyDeltaSlide;
-	var vibratoDepth = json.vibratoDepth;
-	var vibratoFrequency = json.vibratoFrequency;
-	var squareDuty = json.squareDuty;
-	var squareDutySweep = json.squareDutySweep;
 	var attack = json.attack;
 	var sustain = json.sustain;
 	var decay = json.decay;
 	var tremoloDepth = json.tremoloDepth;
 	var tremoloFrequency = json.tremoloFrequency;
+	var frequency = json.frequency;
+	var frequencySlide = json.frequencySlide;
+	var frequencyDeltaSlide = json.frequencyDeltaSlide;
+	var repeatFrequency = json.repeatFrequency;
+	var frequencyJump1Onset = json.frequencyJump1Onset;
+	var frequencyJump1Amount = json.frequencyJump1Amount;
+	var frequencyJump2Onset = json.frequencyJump2Onset;
+	var frequencyJump2Amount = json.frequencyJump2Amount;
+	var vibratoDepth = json.vibratoDepth;
+	var vibratoFrequency = json.vibratoFrequency;
 	var harmonics = json.harmonics;
 	var harmonicsFalloff = json.harmonicsFalloff;
+	var waveform = json.waveform;
+	var squareDuty = json.squareDuty;
+	var squareDutySweep = json.squareDutySweep;
 	var lowPassCutoff = json.lowPassCutoff;
 	var lowPassCutoffSweep = json.lowPassCutoffSweep;
 	var highPassCutoff = json.highPassCutoff;
@@ -30,6 +35,12 @@ jfxr.Synth.generate = function(str) {
 	var amplification = json.amplification;
 
 	var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
+	var duration = numSamples / sampleRate;
+
+	if (repeatFrequency < 1 / duration) {
+		repeatFrequency = 1 / duration;
+	}
+
 	var array = new Float32Array(numSamples);
 
 	// Pink noise parameters
@@ -59,8 +70,9 @@ jfxr.Synth.generate = function(str) {
 	var maxSample = 0;
 	for (var i = 0; i < numSamples; i++) {
 		var sample = 0;
-		var t = i / sampleRate;
+		var time = i / sampleRate;
 		var fraction = i / numSamples;
+		var fractionInRepetition = jfxr.Math.frac(time * repeatFrequency);
 
 		if (waveform == 'whitenoise' || waveform == 'pinknoise' || waveform == 'brownnoise') {
 			switch (waveform) {
@@ -131,12 +143,20 @@ jfxr.Synth.generate = function(str) {
 			}
 		}
 
-		var f = frequency + fraction * frequencySlide + fraction * fraction * frequencyDeltaSlide;
-		f += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * t * vibratoFrequency));
-		var periodInSamples = sampleRate / f;
-		phase = jfxr.Math.frac(phase + 1 / periodInSamples);
+		var currentFrequency = frequency;
+		currentFrequency +=
+			fractionInRepetition * frequencySlide +
+			fractionInRepetition * fractionInRepetition * frequencyDeltaSlide;
+		if (fractionInRepetition > frequencyJump1Onset / 100) {
+			currentFrequency *= 1 + frequencyJump1Amount / 100;
+		}
+		if (fractionInRepetition > frequencyJump2Onset / 100) {
+			currentFrequency *= 1 + frequencyJump2Amount / 100;
+		}
+		currentFrequency += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * time * vibratoFrequency));
+		phase = jfxr.Math.frac(phase + currentFrequency / sampleRate);
 
-		sample *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * t * tremoloFrequency));
+		sample *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * time * tremoloFrequency));
 
 		var cutoff = jfxr.Math.clamp(0, sampleRate / 2, lowPassCutoff + fraction * lowPassCutoffSweep);
 		var wc = cutoff / sampleRate * Math.PI; // Don't we need a factor 2pi instead of pi?
@@ -161,10 +181,10 @@ jfxr.Synth.generate = function(str) {
 		highPassPrevIn = origSample;
 		highPassPrevOut = sample;
 
-		if (t < attack) {
-			sample *= t / attack;
-		} else if (t > attack + sustain) {
-			sample *= 1 - (t - attack - sustain) / decay;
+		if (time < attack) {
+			sample *= time / attack;
+		} else if (time > attack + sustain) {
+			sample *= 1 - (time - attack - sustain) / decay;
 		}
 
 		if (sample >= 0) {

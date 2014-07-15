@@ -102,89 +102,6 @@ jfxr.Sound = function(context) {
 		disabledReason: function() { return 'Sample rate is currently not configurable'; },
 	});	
 
-	// Frequency parameters
-
-	this.waveform = new jfxr.Parameter({
-		label: 'Waveform',
-		defaultValue: 'sine',
-		type: 'enum',
-		values: {
-			'sine': 'Sine',
-			'triangle': 'Triangle',
-			'sawtooth': 'Sawtooth',
-			'square': 'Square',
-			'tangent': 'Tangent',
-			'whistle': 'Whistle',
-			'breaker': 'Breaker',
-			'whitenoise': 'White noise',
-			'pinknoise': 'Pink noise',
-			'brownnoise': 'Brown noise',
-		},
-	});
-	this.frequency = new jfxr.Parameter({
-		label: 'Frequency',
-		unit: 'Hz',
-		defaultValue: 500,
-		minValue: 10,
-		maxValue: 10000,
-		step: 100,
-		disabledReason: frequencyIsMeaningless,
-	});
-	this.frequencySlide = new jfxr.Parameter({
-		label: 'Frequency slide',
-		unit: 'Hz',
-		defaultValue: 0,
-		minValue: -10000,
-		maxValue: 10000,
-		step: 100,
-		disabledReason: frequencyIsMeaningless,
-	});
-	this.frequencyDeltaSlide = new jfxr.Parameter({
-		label: 'Frequency delta slide',
-		unit: 'Hz',
-		defaultValue: 0,
-		minValue: -10000,
-		maxValue: 10000,
-		step: 100,
-		disabledReason: frequencyIsMeaningless,
-	});
-	this.vibratoDepth = new jfxr.Parameter({
-		label: 'Vibrato depth',
-		unit: 'Hz',
-		defaultValue: 0,
-		minValue: 0,
-		maxValue: 1000,
-		step: 10,
-		disabledReason: frequencyIsMeaningless,
-	});
-	this.vibratoFrequency = new jfxr.Parameter({
-		label: 'Vibrato frequency',
-		unit: 'Hz',
-		defaultValue: 10,
-		minValue: 1,
-		maxValue: 1000,
-		step: 1,
-		disabledReason: frequencyIsMeaningless,
-	});
-	this.squareDuty = new jfxr.Parameter({
-		label: 'Square duty',
-		unit: '%',
-		defaultValue: 50,
-		minValue: 0,
-		maxValue: 100,
-		step: 5,
-		disabledReason: isNotSquare,
-	});
-	this.squareDutySweep = new jfxr.Parameter({
-		label: 'Square duty sweep',
-		unit: '%',
-		defaultValue: 0,
-		minValue: -100,
-		maxValue: 100,
-		step: 5,
-		disabledReason: isNotSquare,
-	});
-
 	// Amplitude parameters
 	
 	this.attack = new jfxr.Parameter({
@@ -228,6 +145,81 @@ jfxr.Sound = function(context) {
 		step: 1,
 	});
 
+	// Pitch parameters
+
+	this.frequency = new jfxr.Parameter({
+		label: 'Frequency',
+		unit: 'Hz',
+		defaultValue: 500,
+		minValue: 10,
+		maxValue: 10000,
+		step: 100,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.frequencySlide = new jfxr.Parameter({
+		label: 'Frequency slide',
+		unit: 'Hz',
+		defaultValue: 0,
+		minValue: -10000,
+		maxValue: 10000,
+		step: 100,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.frequencyDeltaSlide = new jfxr.Parameter({
+		label: 'Frequency delta slide',
+		unit: 'Hz',
+		defaultValue: 0,
+		minValue: -10000,
+		maxValue: 10000,
+		step: 100,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.repeatFrequency = new jfxr.Parameter({
+		label: 'Repeat frequency',
+		unit: 'Hz',
+		defaultValue: 0,
+		minValue: 0,
+		maxValue: 100,
+		step: 0.1,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.frequencyJump1Onset = new jfxr.Parameter({
+		label: 'Frequency jump 1 onset',
+		unit: '%',
+		defaultValue: 33,
+		minValue: 0,
+		maxValue: 100,
+		step: 5,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.frequencyJump1Amount = new jfxr.Parameter({
+		label: 'Frequency jump 1 amount',
+		unit: '%',
+		defaultValue: 0,
+		minValue: -100,
+		maxValue: 100,
+		step: 5,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.frequencyJump2Onset = new jfxr.Parameter({
+		label: 'Frequency jump 2 onset',
+		unit: '%',
+		defaultValue: 66,
+		minValue: 0,
+		maxValue: 100,
+		step: 5,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.frequencyJump2Amount = new jfxr.Parameter({
+		label: 'Frequency jump 2 amount',
+		unit: '%',
+		defaultValue: 0,
+		minValue: -100,
+		maxValue: 100,
+		step: 5,
+		disabledReason: frequencyIsMeaningless,
+	});
+
 	// Harmonics parameters
 	
 	this.harmonics = new jfxr.Parameter({
@@ -246,6 +238,62 @@ jfxr.Sound = function(context) {
 		maxValue: 1,
 		step: 0.01,
 		disabledReason: frequencyIsMeaningless,
+	});
+
+	// Tone parameters
+
+	this.waveform = new jfxr.Parameter({
+		label: 'Waveform',
+		defaultValue: 'sine',
+		type: 'enum',
+		values: {
+			'sine': 'Sine',
+			'triangle': 'Triangle',
+			'sawtooth': 'Sawtooth',
+			'square': 'Square',
+			'tangent': 'Tangent',
+			'whistle': 'Whistle',
+			'breaker': 'Breaker',
+			'whitenoise': 'White noise',
+			'pinknoise': 'Pink noise',
+			'brownnoise': 'Brown noise',
+		},
+	});
+	this.vibratoDepth = new jfxr.Parameter({
+		label: 'Vibrato depth',
+		unit: 'Hz',
+		defaultValue: 0,
+		minValue: 0,
+		maxValue: 1000,
+		step: 10,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.vibratoFrequency = new jfxr.Parameter({
+		label: 'Vibrato frequency',
+		unit: 'Hz',
+		defaultValue: 10,
+		minValue: 1,
+		maxValue: 1000,
+		step: 1,
+		disabledReason: frequencyIsMeaningless,
+	});
+	this.squareDuty = new jfxr.Parameter({
+		label: 'Square duty',
+		unit: '%',
+		defaultValue: 50,
+		minValue: 0,
+		maxValue: 100,
+		step: 5,
+		disabledReason: isNotSquare,
+	});
+	this.squareDutySweep = new jfxr.Parameter({
+		label: 'Square duty sweep',
+		unit: '%',
+		defaultValue: 0,
+		minValue: -100,
+		maxValue: 100,
+		step: 5,
+		disabledReason: isNotSquare,
 	});
 
 	// Filter parameters

@@ -33,9 +33,11 @@
               <span>{{preset.name}}</span>
             </button>
           </div>
-          <div class="history">
-            Lorem ipsum dolor sit amet
-          </div>
+          <ul class="history">
+            <li ng-repeat="sound in ctrl.sounds" class="sound" ng-class="{'sound-current': $index == ctrl.soundIndex}" ng-click="ctrl.soundIndex = $index">
+              {{sound.name}}
+            </li>
+          </ul>
           <div class="statusbar">
             Render time: {{ctrl.worker.renderTimeMs}}&nbsp;ms
           </div>
@@ -45,53 +47,53 @@
           <div class="parameters vertical-scroll">
             <div class="parameters-column">
               <h2>Amplitude</h2>
-              <float-param sound="ctrl.sound" param="attack"></float-param>
-              <float-param sound="ctrl.sound" param="sustain"></float-param>
-              <float-param sound="ctrl.sound" param="decay"></float-param>
-              <float-param sound="ctrl.sound" param="tremoloDepth"></float-param>
-              <float-param sound="ctrl.sound" param="tremoloFrequency"></float-param>
+              <float-param sound="ctrl.getSound()" param="attack"></float-param>
+              <float-param sound="ctrl.getSound()" param="sustain"></float-param>
+              <float-param sound="ctrl.getSound()" param="decay"></float-param>
+              <float-param sound="ctrl.getSound()" param="tremoloDepth"></float-param>
+              <float-param sound="ctrl.getSound()" param="tremoloFrequency"></float-param>
               <h2>Pitch</h2>
-              <float-param sound="ctrl.sound" param="frequency"></float-param>
-              <float-param sound="ctrl.sound" param="frequencySlide"></float-param>
-              <float-param sound="ctrl.sound" param="frequencyDeltaSlide"></float-param>
-              <float-param sound="ctrl.sound" param="repeatFrequency"></float-param>
-              <float-param sound="ctrl.sound" param="frequencyJump1Onset"></float-param>
-              <float-param sound="ctrl.sound" param="frequencyJump1Amount"></float-param>
-              <float-param sound="ctrl.sound" param="frequencyJump2Onset"></float-param>
-              <float-param sound="ctrl.sound" param="frequencyJump2Amount"></float-param>
+              <float-param sound="ctrl.getSound()" param="frequency"></float-param>
+              <float-param sound="ctrl.getSound()" param="frequencySlide"></float-param>
+              <float-param sound="ctrl.getSound()" param="frequencyDeltaSlide"></float-param>
+              <float-param sound="ctrl.getSound()" param="repeatFrequency"></float-param>
+              <float-param sound="ctrl.getSound()" param="frequencyJump1Onset"></float-param>
+              <float-param sound="ctrl.getSound()" param="frequencyJump1Amount"></float-param>
+              <float-param sound="ctrl.getSound()" param="frequencyJump2Onset"></float-param>
+              <float-param sound="ctrl.getSound()" param="frequencyJump2Amount"></float-param>
               <h2>Harmonics</h2>
-              <float-param sound="ctrl.sound" param="harmonics"></float-param>
-              <float-param sound="ctrl.sound" param="harmonicsFalloff"></float-param>
+              <float-param sound="ctrl.getSound()" param="harmonics"></float-param>
+              <float-param sound="ctrl.getSound()" param="harmonicsFalloff"></float-param>
             </div>
             <div class="parameters-column">
               <h2>Tone</h2>
-              <custom-param label="ctrl.sound.waveform.label" value="ctrl.sound.waveform.valueTitle()">
+              <custom-param label="ctrl.getSound().waveform.label" value="ctrl.getSound().waveform.valueTitle()">
                 <div class="waveforms">
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="sine" title="Sine"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="triangle" title="Triangle"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="sawtooth" title="Sawtooth"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="square" title="Square"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="tangent" title="Tangent"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="whistle" title="Whistle"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="breaker" title="Breaker"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="whitenoise" title="White noise"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="pinknoise" title="Pink noise"></span>
-                  <span ng-model="ctrl.sound.waveform.value" waveform-button="brownnoise" title="Brown noise"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="sine" title="Sine"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="triangle" title="Triangle"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="sawtooth" title="Sawtooth"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="square" title="Square"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="tangent" title="Tangent"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="whistle" title="Whistle"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="breaker" title="Breaker"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="whitenoise" title="White noise"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="pinknoise" title="Pink noise"></span>
+                  <span ng-model="ctrl.getSound().waveform.value" waveform-button="brownnoise" title="Brown noise"></span>
                 </div>
               </custom-param>
-              <float-param sound="ctrl.sound" param="vibratoDepth"></float-param>
-              <float-param sound="ctrl.sound" param="vibratoFrequency"></float-param>
-              <float-param sound="ctrl.sound" param="squareDuty"></float-param>
-              <float-param sound="ctrl.sound" param="squareDutySweep"></float-param>
+              <float-param sound="ctrl.getSound()" param="vibratoDepth"></float-param>
+              <float-param sound="ctrl.getSound()" param="vibratoFrequency"></float-param>
+              <float-param sound="ctrl.getSound()" param="squareDuty"></float-param>
+              <float-param sound="ctrl.getSound()" param="squareDutySweep"></float-param>
               <h2>Filters</h2>
-              <float-param sound="ctrl.sound" param="lowPassCutoff"></float-param>
-              <float-param sound="ctrl.sound" param="lowPassCutoffSweep"></float-param>
-              <float-param sound="ctrl.sound" param="highPassCutoff"></float-param>
-              <float-param sound="ctrl.sound" param="highPassCutoffSweep"></float-param>
+              <float-param sound="ctrl.getSound()" param="lowPassCutoff"></float-param>
+              <float-param sound="ctrl.getSound()" param="lowPassCutoffSweep"></float-param>
+              <float-param sound="ctrl.getSound()" param="highPassCutoff"></float-param>
+              <float-param sound="ctrl.getSound()" param="highPassCutoffSweep"></float-param>
               <h2>Output</h2>
-              <float-param sound="ctrl.sound" param="compression"></float-param>
-              <boolean-param sound="ctrl.sound" param="normalization"></boolean-param>
-              <float-param sound="ctrl.sound" param="amplification"></float-param>
+              <float-param sound="ctrl.getSound()" param="compression"></float-param>
+              <boolean-param sound="ctrl.getSound()" param="normalization"></boolean-param>
+              <float-param sound="ctrl.getSound()" param="amplification"></float-param>
             </div>
         </div>
       </div>

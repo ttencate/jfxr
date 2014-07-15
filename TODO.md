@@ -15,7 +15,8 @@ Features
 - Locking sliders
 - Reset buttons
 - Copy link
-- Save/load sounds to local storage
+- Delete sound from history
+- Rename sound
 - Save/load sounds to disk
 - Save WAV
 

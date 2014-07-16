@@ -393,6 +393,33 @@ h2 {
   padding-right: 8px;
 }
 
+.parambuttons {
+  padding-right: 8px;
+}
+
+.parambutton {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background-image: url(sprites.png);
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  opacity: 0.4;
+}
+
+.parambutton:hover {
+  opacity: 0.7;
+}
+
+.parambutton:active {
+  opacity: 0.5;
+}
+
+.parambutton-reset {
+  background-position: -45px -15px;
+}
+
 .paramcontrol {
   box-sizing: border-box;
   flex-grow: 1;
@@ -429,7 +456,7 @@ h2 {
   display: inline-block;
   width: 15px;
   height: 15px;
-  background: url(waveforms.png);
+  background: url(sprites.png);
   opacity: 0.7;
 }
 

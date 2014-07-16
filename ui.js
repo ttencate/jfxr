@@ -227,14 +227,17 @@ jfxrApp.directive('customParam', function() {
 	return {
 		restrict: 'E',
 		scope: {
-			'label': '=',
-			'value': '=',
-			'unit': '=',
+			sound: '=',
+			param: '@',
+			value: '=',
 		},
 		transclude: true,
 		template: 
-			'<div class="param">' +
-            '  <div class="paramlabel">{{label}}</div>' +
+			'<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
+            '  <div class="paramlabel">{{sound[param].label}}</div>' +
+			'  <div class="parambuttons">' +
+			'    <button class="parambutton parambutton-reset" title="Reset to default value" ng-click="sound[param].reset()"></button>' +
+			'  </div>' +
             '  <div class="paramcontrol" ng-transclude></div>' +
             '  <div class="customparamvalue">{{value}}</div>' +
 			'</div>',
@@ -251,6 +254,9 @@ jfxrApp.directive('floatParam', function() {
 		template:
 			'<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
             '  <div class="paramlabel">{{sound[param].label}}</div>' +
+			'  <div class="parambuttons">' +
+			'    <button class="parambutton parambutton-reset" title="Reset to default value" ng-click="sound[param].reset()"></button>' +
+			'  </div>' +
             '  <div class="paramcontrol">' +
 			'    <input type="range" min="{{sound[param].minValue}}" max="{{sound[param].maxValue}}" step="{{sound[param].step}}" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)" class="floatslider"></input>' +
 			'  </div>' +
@@ -295,6 +301,9 @@ jfxrApp.directive('booleanParam', function() {
 		template:
 			'<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
             '  <div class="paramlabel">{{sound[param].label}}</div>' +
+			'  <div class="parambuttons">' +
+			'    <button class="parambutton parambutton-reset" title="Reset to default value" ng-click="sound[param].reset()"></button>' +
+			'  </div>' +
             '  <div class="paramcontrol">' +
 			'    <label class="booleanlabel" ng-class="{\'booleanlabel-checked\': sound[param].value}"><input type="checkbox" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)"></input></label>' +
 			'  </div>' +

@@ -13,7 +13,6 @@ Features
 --------
 
 - Locking sliders
-- Reset buttons
 - Copy link
 - Delete sound from history
 - Rename sound

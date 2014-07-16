@@ -11,6 +11,7 @@ jfxr.Parameter = function(args) {
 	this.step = numeric ? (args.step || 'any') : null;
 	this.digits = this.type == 'float' ? Math.max(0, Math.round(-Math.log(this.step) / Math.log(10))) : null;
 	this.disabledReason_ = args.disabledReason || null;
+	this.locked = false;
 };
 
 Object.defineProperty(jfxr.Parameter.prototype, 'value', {
@@ -72,6 +73,10 @@ jfxr.Parameter.prototype.isDisabled = function(sound) {
 
 jfxr.Parameter.prototype.whyDisabled = function(sound) {
 	return this.disabledReason_ && this.disabledReason_(sound);
+};
+
+jfxr.Parameter.prototype.toggleLocked = function() {
+	this.locked = !this.locked;
 };
 
 jfxr.Parameter.prototype.reset = function() {

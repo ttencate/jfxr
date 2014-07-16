@@ -229,17 +229,16 @@ jfxrApp.directive('customParam', function() {
 		scope: {
 			sound: '=',
 			param: '@',
-			value: '=',
 		},
 		transclude: true,
 		template: 
 			'<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
             '  <div class="paramlabel">{{sound[param].label}}</div>' +
+            '  <div class="paramcontent" ng-transclude></div>' +
 			'  <div class="parambuttons">' +
-			'    <button class="parambutton parambutton-reset" title="Reset to default value" ng-click="sound[param].reset()"></button>' +
+			'    <button class="parambutton parambutton-lock" ng-class="{\'parambutton-lock-locked\': sound[param].locked}" title="Lock from mutations" ng-click="sound[param].toggleLocked()" ng-disabled="sound[param].isDisabled(sound)"></button>' +
+			'    <button class="parambutton parambutton-reset" title="Reset to default value" ng-click="sound[param].reset()" ng-disabled="sound[param].isDisabled(sound)"></button>' +
 			'  </div>' +
-            '  <div class="paramcontrol" ng-transclude></div>' +
-            '  <div class="customparamvalue">{{value}}</div>' +
 			'</div>',
 	};
 });
@@ -252,12 +251,8 @@ jfxrApp.directive('floatParam', function() {
 			param: '@',
 		},
 		template:
-			'<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
-            '  <div class="paramlabel">{{sound[param].label}}</div>' +
-			'  <div class="parambuttons">' +
-			'    <button class="parambutton parambutton-reset" title="Reset to default value" ng-click="sound[param].reset()"></button>' +
-			'  </div>' +
-            '  <div class="paramcontrol">' +
+			'<custom-param sound="sound" param="{{param}}" value="sound[param].value">' +
+			'  <div class="paramcontrol">' +
 			'    <input type="range" min="{{sound[param].minValue}}" max="{{sound[param].maxValue}}" step="{{sound[param].step}}" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)" class="floatslider"></input>' +
 			'  </div>' +
             '  <div class="paramvalue" ng-switch="sound[param].isDisabled(sound)">' +
@@ -299,11 +294,7 @@ jfxrApp.directive('booleanParam', function() {
 			param: '@',
 		},
 		template:
-			'<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
-            '  <div class="paramlabel">{{sound[param].label}}</div>' +
-			'  <div class="parambuttons">' +
-			'    <button class="parambutton parambutton-reset" title="Reset to default value" ng-click="sound[param].reset()"></button>' +
-			'  </div>' +
+			'<custom-param sound="sound" param="{{param}}">' +
             '  <div class="paramcontrol">' +
 			'    <label class="booleanlabel" ng-class="{\'booleanlabel-checked\': sound[param].value}"><input type="checkbox" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)"></input></label>' +
 			'  </div>' +

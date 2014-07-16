@@ -25,11 +25,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.5889904"
-     inkscape:cx="51.978539"
-     inkscape:cy="4.6705777"
+     inkscape:zoom="17.177981"
+     inkscape:cx="31.850963"
+     inkscape:cy="4.4967735"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="1280"
      inkscape:window-height="776"
@@ -160,7 +160,8 @@
      inkscape:label="background (HIDE BEFORE EXPORT)"
      id="layer2"
      inkscape:groupmode="layer"
-     transform="translate(0,15)">
+     transform="translate(0,15)"
+     sodipodi:insensitive="true">
     <rect
        y="-30"
        x="-15"
@@ -301,7 +302,7 @@
        sodipodi:nodetypes="cc" />
     <path
        sodipodi:type="arc"
-       style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
        id="path3869"
        sodipodi:cx="22.5"
        sodipodi:cy="18"
@@ -313,7 +314,7 @@
        sodipodi:end="3.1369421"
        sodipodi:open="true" />
     <path
-       style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 40,1045.8622 0,-3"
        id="path3871"
        inkscape:connector-curvature="0"
@@ -322,7 +323,7 @@
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path3873"
-       d="m 35,1043.8622 0,-1"
+       d="m 35,1043.3622 0,-0.5"
        style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     <path
        sodipodi:open="true"

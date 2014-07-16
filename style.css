@@ -393,8 +393,17 @@ h2 {
   padding-right: 8px;
 }
 
-.parambuttons {
+.paramcontent {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  height: 16px;
   padding-right: 8px;
+}
+
+.parambuttons {
+  display: flex;
+  flex-direction: row;
 }
 
 .parambutton {
@@ -404,16 +413,27 @@ h2 {
   background-image: url(sprites.png);
   border: 0;
   background-color: transparent;
+  opacity: 0.3;
+}
+
+.parambutton:not(:disabled) {
   cursor: pointer;
+}
+
+.parambutton:not(:disabled):hover {
+  opacity: 0.6;
+}
+
+.parambutton:not(:disabled):active {
   opacity: 0.4;
 }
 
-.parambutton:hover {
-  opacity: 0.7;
+.parambutton-lock {
+  background-position: -30px -15px;
 }
 
-.parambutton:active {
-  opacity: 0.5;
+.parambutton-lock-locked {
+  background-position: -15px -15px;
 }
 
 .parambutton-reset {
@@ -435,13 +455,7 @@ h2 {
 
 .paramunit {
   box-sizing: border-box;
-  width: 32px;
-  text-align: left;
-}
-
-.customparamvalue {
-  box-sizing: border-box;
-  width: 67px;
+  width: 24px;
   text-align: left;
 }
 

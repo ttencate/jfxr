@@ -12,7 +12,6 @@ Usability
 Features
 --------
 
-- Locking sliders
 - Copy link
 - Delete sound from history
 - Rename sound

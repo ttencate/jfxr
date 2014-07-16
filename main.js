@@ -24,12 +24,15 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 		this.sounds.push(sound);
 	}
 
-	if (this.sounds.length == 0) {
-		var sound = new jfxr.Sound(context);
-		sound.name = 'Default sound';
-		sound.sustain.value = 0.2;
-		this.sounds.push(sound);
-	}
+	var maybeAddDefaultSound = function() {
+		if (this.sounds.length == 0) {
+			var sound = new jfxr.Sound(context);
+			sound.name = 'Default sound';
+			sound.sustain.value = 0.2;
+			this.sounds.push(sound);
+		}
+	}.bind(this);
+	maybeAddDefaultSound();
 
 	this.soundIndex = jfxr.Math.clamp(0, this.sounds.length - 1, localStorage.get('soundIndex', 0));
 
@@ -40,6 +43,14 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 
 	this.getSound = function() {
 		return this.sounds[this.soundIndex];
+	};
+
+	this.deleteSound = function(index) {
+		this.sounds.splice(index, 1);
+		maybeAddDefaultSound();
+		if (this.soundIndex >= this.sounds.length) {
+			this.soundIndex = this.sounds.length - 1;
+		}
 	};
 
 	this.isPlaying = function() {

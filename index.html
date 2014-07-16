@@ -37,6 +37,7 @@
           <ul class="history">
             <li ng-repeat="sound in ctrl.sounds" class="sound" ng-class="{'sound-current': $index == ctrl.soundIndex}" ng-click="ctrl.soundIndex = $index">
               {{sound.name}}
+              <button class="iconbutton iconbutton-delete deletebutton" ng-click="ctrl.deleteSound($index)"></button>
             </li>
           </ul>
           <div class="statusbar">

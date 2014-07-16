@@ -13,7 +13,6 @@ Features
 --------
 
 - Copy link
-- Delete sound from history
 - Rename sound
 - Save/load sounds to disk
 - Save WAV

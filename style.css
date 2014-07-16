@@ -328,6 +328,7 @@ h1 {
 
 .sound {
   cursor: pointer;
+  position: relative;
 }
 
 .sound:hover {
@@ -340,6 +341,43 @@ h1 {
 
 .sound-current {
   background: #111;
+}
+
+.iconbutton {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background-image: url(sprites.png);
+  border: 0;
+  background-color: transparent;
+  opacity: 0.3;
+}
+
+.iconbutton:not(:disabled) {
+  cursor: pointer;
+}
+
+.iconbutton:not(:disabled):hover {
+  opacity: 0.6;
+}
+
+.iconbutton:not(:disabled):active {
+  opacity: 0.4;
+}
+
+.iconbutton-delete {
+  background-position: 0px -15px;
+}
+
+.deletebutton {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.sound:hover .deletebutton {
+  display: block;
 }
 
 .statusbar {
@@ -429,38 +467,16 @@ h2 {
   flex-direction: row;
 }
 
-.parambutton {
-  display: block;
-  width: 15px;
-  height: 15px;
-  background-image: url(sprites.png);
-  border: 0;
-  background-color: transparent;
-  opacity: 0.3;
-}
-
-.parambutton:not(:disabled) {
-  cursor: pointer;
-}
-
-.parambutton:not(:disabled):hover {
-  opacity: 0.6;
-}
-
-.parambutton:not(:disabled):active {
-  opacity: 0.4;
-}
-
-.parambutton-lock {
+.iconbutton-lock {
   background-position: -30px -15px;
 }
 
-.parambutton-lock-locked {
+.iconbutton-lock-locked {
   background-position: -15px -15px;
   background-color: #555;
 }
 
-.parambutton-reset {
+.iconbutton-reset {
   background-position: -45px -15px;
 }
 

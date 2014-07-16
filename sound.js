@@ -371,16 +371,21 @@ jfxr.Sound.prototype.forEachParam = function(func) {
 
 jfxr.Sound.prototype.reset = function() {
 	this.forEachParam(function(key, param) {
-		param.value = param.defaultValue;
+		param.reset();
+		param.locked = false;
 	});
 };
 
 jfxr.Sound.prototype.serialize = function() {
 	var json = {
 		_version: 1,
+		_locked: [],
 	};
 	this.forEachParam(function(key, param) {
 		json[key] = param.value;
+		if (param.locked) {
+			json._locked.push(key);
+		}
 	});
 	json.name = this.name;
 	return JSON.stringify(json);
@@ -401,5 +406,13 @@ jfxr.Sound.prototype.parse = function(str) {
 				param.value = json[key];
 			}
 		});
+
+		var locked = json._locked || [];
+		for (var i = 0; i < locked.length; i++) {
+			var param = this[locked[i]];
+			if (param instanceof jfxr.Parameter) {
+				param.locked = true;
+			}
+		}
 	}
 };

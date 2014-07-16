@@ -193,7 +193,7 @@ jfxr.Sound = function() {
 		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyJump1Onset = new jfxr.Parameter({
-		label: 'Frequency jump 1 onset',
+		label: 'Freq. jump 1 onset',
 		unit: '%',
 		defaultValue: 33,
 		minValue: 0,
@@ -202,7 +202,7 @@ jfxr.Sound = function() {
 		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyJump1Amount = new jfxr.Parameter({
-		label: 'Frequency jump 1 amount',
+		label: 'Freq. jump 1 amount',
 		unit: '%',
 		defaultValue: 0,
 		minValue: -100,
@@ -211,7 +211,7 @@ jfxr.Sound = function() {
 		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyJump2Onset = new jfxr.Parameter({
-		label: 'Frequency jump 2 onset',
+		label: 'Freq. jump 2 onset',
 		unit: '%',
 		defaultValue: 66,
 		minValue: 0,
@@ -220,7 +220,7 @@ jfxr.Sound = function() {
 		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyJump2Amount = new jfxr.Parameter({
-		label: 'Frequency jump 2 amount',
+		label: 'Freq. jump 2 amount',
 		unit: '%',
 		defaultValue: 0,
 		minValue: -100,
@@ -316,7 +316,7 @@ jfxr.Sound = function() {
 		step: 100,
 	});
 	this.lowPassCutoffSweep = new jfxr.Parameter({
-		label: 'Low-pass cutoff sweep',
+		label: 'Low-pass sweep',
 		unit: 'Hz',
 		defaultValue: 0,
 		minValue: -22050,
@@ -332,7 +332,7 @@ jfxr.Sound = function() {
 		step: 100,
 	});
 	this.highPassCutoffSweep = new jfxr.Parameter({
-		label: 'High-pass cutoff sweep',
+		label: 'High-pass sweep',
 		unit: 'Hz',
 		defaultValue: 0,
 		minValue: -22050,

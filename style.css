@@ -388,7 +388,7 @@ h2 {
 
 .paramlabel {
   box-sizing: border-box;
-  width: 136px;
+  width: 112px;
   text-align: right;
   padding-right: 8px;
 }
@@ -455,8 +455,14 @@ h2 {
 
 .paramunit {
   box-sizing: border-box;
-  width: 24px;
+  width: 13px;
   text-align: left;
+}
+
+.customparamvalue {
+  box-sizing: border-box;
+  width: 60px; /* paramvalue + padding + paramunit */
+  text-align: right;
 }
 
 .waveforms {

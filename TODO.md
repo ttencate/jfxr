@@ -41,4 +41,3 @@ bfxr presets
 - Hit/Hurt
 - Jump
 - Blip/Select
-- Mutation

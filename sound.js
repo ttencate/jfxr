@@ -23,8 +23,10 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 		switch (this.type) {
 			case 'float':
 			case 'int':
-				value = parseFloat(value);
-				if (value == NaN) {
+				if (typeof value == 'string') {
+					value = parseFloat(value);
+				}
+				if (value != value) { // NaN
 					break;
 				}
 				if (this.type == 'int') {
@@ -39,17 +41,11 @@ Object.defineProperty(jfxr.Parameter.prototype, 'value', {
 				this.value_ = value;
 				break;
 			case 'enum':
-				var found = false;
-				for (var v in this.values) {
-					if (value == v) {
-						this.value_ = v;
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
+				value = '' + value;
+				if (!this.values[value]) {
 					return;
 				}
+				this.value_ = value;
 				break;
 			case 'boolean':
 				this.value_ = !!value;

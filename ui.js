@@ -161,8 +161,15 @@ jfxrApp.directive('waveshape', function() {
 		var channel = buffer.getChannelData(0);
 		var numSamples = buffer.length;
 
-		context.strokeStyle = '#88f';
+		context.strokeStyle = '#fff';
+		context.globalAlpha = 0.1;
 		context.lineWidth = 1.0;
+		context.beginPath();
+		context.moveTo(0, height / 2);
+		context.lineTo(width, height / 2);
+		context.stroke();
+
+		context.strokeStyle = '#88f';
 		context.globalAlpha = 1.0;
 
 		if (numSamples < width) {
@@ -190,18 +197,11 @@ jfxrApp.directive('waveshape', function() {
 					if (sample > max) max = sample;
 				}
 				context.beginPath();
-				context.moveTo(x + 0.5, (1 - min) * height / 2);
-				context.lineTo(x + 0.5, (1 - max) * height / 2);
+				context.moveTo(x + 0.5, (1 - min) * height / 2 - 0.5);
+				context.lineTo(x + 0.5, (1 - max) * height / 2 + 0.5);
 				context.stroke();
 			}
 		}
-
-		context.strokeStyle = '#fff';
-		context.globalAlpha = 0.1;
-		context.beginPath();
-		context.moveTo(0, height / 2);
-		context.lineTo(width, height / 2);
-		context.stroke();
 	};
 
 	return {

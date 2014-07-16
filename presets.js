@@ -1,6 +1,7 @@
 jfxr.Preset = function(args) {
 	this.name = args.name;
-	this.createSound = args.createSound;
+	this.createSound = args.createSound || null;
+	this.modifySound = args.modifySound || null;
 };
 
 jfxr.Preset.all = [
@@ -136,6 +137,41 @@ jfxr.Preset.all = [
 			sound.amplification.value = 100;
 
 			return sound;
+		},
+	}),
+	new jfxr.Preset({
+		name: 'Mutate',
+		modifySound: function(sound) {
+			var random = new jfxr.Random();
+			sound.forEachParam(function(key, param) {
+				if (param.locked) return;
+				if (key == 'normalization' || key == 'amplification') return;
+				switch (param.type) {
+					case 'boolean':
+						if (random.boolean(0.1)) {
+							param.value = !param.value;
+						}
+						break;
+					case 'float':
+						if (param.value != param.defaultValue || random.boolean(0.3)) {
+							var range = 0.05 * (param.maxValue - param.minValue);
+							param.value = jfxr.Math.roundTo(param.value + random.uniform(-range, range), param.step);
+						}
+						break;
+					case 'int':
+						param.value += random.int(-1, 1);
+						break;
+					case 'enum':
+						if (random.boolean(0.1)) {
+							var values = [];
+							for (var v in param.values) {
+								values.push(v);
+							}
+							param.value = random.fromArray(values);
+						}
+						break;
+				}
+			});
 		},
 	}),
 ];

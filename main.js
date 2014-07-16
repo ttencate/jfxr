@@ -59,19 +59,23 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 	};
 
 	this.applyPreset = function(preset) {
-		var sound = preset.createSound();
-		var max = 0;
-		for (var i = 0; i < this.sounds.length; i++) {
-			var m = this.sounds[i].name.match('^' + preset.name + ' (\\d+)$');
-			if (m) {
-			   max = Math.max(max, parseInt(m[1]));
+		if (preset.createSound) {
+			var sound = preset.createSound();
+			var max = 0;
+			for (var i = 0; i < this.sounds.length; i++) {
+				var m = this.sounds[i].name.match('^' + preset.name + ' (\\d+)$');
+				if (m) {
+				   max = Math.max(max, parseInt(m[1]));
+				}
 			}
-		}
-		sound.name = preset.name + ' ' + (max + 1);
+			sound.name = preset.name + ' ' + (max + 1);
 
-		this.sounds.unshift(sound);
-		this.sounds.splice(maxSounds, this.sounds.length - maxSounds);
-		this.soundIndex = 0;
+			this.sounds.unshift(sound);
+			this.sounds.splice(maxSounds, this.sounds.length - maxSounds);
+			this.soundIndex = 0;
+		} else {
+			preset.modifySound(this.getSound());
+		}
 	};
 
 	this.keyDown = function(e) {

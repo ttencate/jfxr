@@ -624,12 +624,11 @@ h2 {
   display: block;
   width: 13px;
   height: 13px;
+  margin: 1px 0;
   color: #000;
-  line-height: 13px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12.5px;
   background-color: #666;
-  background-image: -webkit-radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+  background-image: -webkit-radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, transparent 100%), url(sprites.png);
+  background-position: 0 0, -61px -16px;
   border-radius: 2px;
   box-shadow:
     1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
@@ -647,10 +646,8 @@ h2 {
     -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
 }
 
-.booleanlabel-checked:before {
-  position: relative;
-  left: 1px;
-  content: '\2716';
+.booleanlabel-checked {
+  background-position: 0 0, -76px -16px;
 }
 
 .floattext {

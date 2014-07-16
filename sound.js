@@ -165,8 +165,8 @@ jfxr.Sound = function() {
 		step: 100,
 		disabledReason: frequencyIsMeaningless,
 	});
-	this.frequencySlide = new jfxr.Parameter({
-		label: 'Frequency slide',
+	this.frequencySweep = new jfxr.Parameter({
+		label: 'Frequency sweep',
 		unit: 'Hz',
 		defaultValue: 0,
 		minValue: -10000,
@@ -174,8 +174,8 @@ jfxr.Sound = function() {
 		step: 100,
 		disabledReason: frequencyIsMeaningless,
 	});
-	this.frequencyDeltaSlide = new jfxr.Parameter({
-		label: 'Frequency delta slide',
+	this.frequencyDeltaSweep = new jfxr.Parameter({
+		label: 'Freq. delta sweep',
 		unit: 'Hz',
 		defaultValue: 0,
 		minValue: -10000,

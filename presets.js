@@ -61,10 +61,10 @@ jfxr.Preset.all = [
 
 			randomize(sound.frequency);
 			if (random.boolean(0.5)) {
-				randomize(sound.frequencySlide);
+				randomize(sound.frequencySweep);
 			}
 			if (random.boolean(0.5)) {
-				randomize(sound.frequencyDeltaSlide);
+				randomize(sound.frequencyDeltaSweep);
 			}
 
 			var repeatJump = random.int(0, 3);

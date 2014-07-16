@@ -12,8 +12,8 @@ jfxr.Synth.generate = function(str) {
 	var tremoloDepth = json.tremoloDepth;
 	var tremoloFrequency = json.tremoloFrequency;
 	var frequency = json.frequency;
-	var frequencySlide = json.frequencySlide;
-	var frequencyDeltaSlide = json.frequencyDeltaSlide;
+	var frequencySweep = json.frequencySweep;
+	var frequencyDeltaSweep = json.frequencyDeltaSweep;
 	var repeatFrequency = json.repeatFrequency;
 	var frequencyJump1Onset = json.frequencyJump1Onset;
 	var frequencyJump1Amount = json.frequencyJump1Amount;
@@ -145,8 +145,8 @@ jfxr.Synth.generate = function(str) {
 
 		var currentFrequency = frequency;
 		currentFrequency +=
-			fractionInRepetition * frequencySlide +
-			fractionInRepetition * fractionInRepetition * frequencyDeltaSlide;
+			fractionInRepetition * frequencySweep +
+			fractionInRepetition * fractionInRepetition * frequencyDeltaSweep;
 		if (fractionInRepetition > frequencyJump1Onset / 100) {
 			currentFrequency *= 1 + frequencyJump1Amount / 100;
 		}

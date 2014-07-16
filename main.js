@@ -108,7 +108,6 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 		}
 	}.bind(this));
 
-	console.log(this.sounds, this.soundIndex);
 	$scope.$watch(function() { return this.getSound().serialize(); }.bind(this), function(value) {
 		this.buffer = null;
 		if (value != undefined && value != '') {

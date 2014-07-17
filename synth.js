@@ -38,7 +38,7 @@ jfxr.Synth = function(str, callback) {
 	this.startTime = Date.now();
 
 	this.startSample = 0;
-	this.blockSize = 44100;
+	this.blockSize = 10240;
 
 	this.tick();
 };
@@ -59,9 +59,11 @@ jfxr.Synth.prototype.tick = function() {
 		this.renderTimeMs = Date.now() - this.startTime;
 		var callback = this.callback;
 		this.callback = null;
-		window.requestAnimationFrame(function() { callback(this.array, this.json.sampleRate); }.bind(this));
+		window.setTimeout(function() { callback(this.array, this.json.sampleRate); }.bind(this), 0);
 	} else {
-		window.requestAnimationFrame(this.tick.bind(this));
+		// TODO be smarter about block size (sync with animation frames)
+		// window.requestAnimationFrame(this.tick.bind(this));
+		this.tick();
 	}
 };
 

@@ -18,7 +18,7 @@ jfxr.Synth.prototype.generate = function(str) {
 
 	var startTime = Date.now();
 
-	this.transform(jfxr.Synth.generate);
+	this.transform(jfxr.Synth.base);
 	this.transform(jfxr.Synth.tremolo);
 	this.transform(jfxr.Synth.lowPass);
 	this.transform(jfxr.Synth.highPass);
@@ -40,20 +40,20 @@ jfxr.Synth.prototype.transform = function(func) {
 	this.array = func(this.json, this.array, 0, this.array.length);
 };
 
-jfxr.Synth.generate = function(json, array, startSample, endSample) {
+jfxr.Synth.base = function(json, array, startSample, endSample) {
 	switch (json.waveform) {
 		case 'whitenoise':
-			return jfxr.Synth.generateWhiteNoise.apply(this, arguments);
+			return jfxr.Synth.whiteNoise.apply(this, arguments);
 		case 'pinknoise':
-			return jfxr.Synth.generatePinkNoise.apply(this, arguments);
+			return jfxr.Synth.pinkNoise.apply(this, arguments);
 		case 'brownnoise':
-			return jfxr.Synth.generateBrownNoise.apply(this, arguments);
+			return jfxr.Synth.brownNoise.apply(this, arguments);
 		default:
-			return jfxr.Synth.generateOsc.apply(this, arguments);
+			return jfxr.Synth.oscillator.apply(this, arguments);
 	}
 };
 
-jfxr.Synth.generateOsc = function(json, array, startSample, endSample) {
+jfxr.Synth.oscillator = function(json, array, startSample, endSample) {
 	var numSamples = array.length;
 	var sampleRate = json.sampleRate;
 	var frequency = json.frequency;
@@ -111,7 +111,9 @@ jfxr.Synth.generateOsc = function(json, array, startSample, endSample) {
 		if (fractionInRepetition > frequencyJump2Onset / 100) {
 			currentFrequency *= 1 + frequencyJump2Amount / 100;
 		}
-		currentFrequency += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * time * vibratoFrequency));
+		if (vibratoDepth != 0) {
+			currentFrequency += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * time * vibratoFrequency));
+		}
 		phase = jfxr.Math.frac(phase + currentFrequency / sampleRate);
 
 		var sample = 0;
@@ -160,7 +162,7 @@ jfxr.Synth.breakerTone = function(phase) {
 	return -1 + 2 * Math.abs(1 - p*p*2);
 };
 
-jfxr.Synth.generateWhiteNoise = function(json, array, startSample, endSample) {
+jfxr.Synth.whiteNoise = function(json, array, startSample, endSample) {
 	var random = new jfxr.Random(0x3cf78ba3);
 
 	for (var i = startSample; i < endSample; i++) {
@@ -170,7 +172,7 @@ jfxr.Synth.generateWhiteNoise = function(json, array, startSample, endSample) {
 	return array;
 };
 
-jfxr.Synth.generatePinkNoise = function(json, array, startSample, endSample) {
+jfxr.Synth.pinkNoise = function(json, array, startSample, endSample) {
 	var random = new jfxr.Random(0x3cf78ba3);
 
 	var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
@@ -193,7 +195,7 @@ jfxr.Synth.generatePinkNoise = function(json, array, startSample, endSample) {
 	return array;
 };
 
-jfxr.Synth.generateBrownNoise = function(json, array, startSample, endSample) {
+jfxr.Synth.brownNoise = function(json, array, startSample, endSample) {
 	var random = new jfxr.Random(0x3cf78ba3);
 
 	var prevSample = 0;
@@ -214,6 +216,10 @@ jfxr.Synth.tremolo = function(json, array, startSample, endSample) {
 	var sampleRate = json.sampleRate;
 	var tremoloDepth = json.tremoloDepth;
 	var tremoloFrequency = json.tremoloFrequency;
+
+	if (tremoloDepth == 0) {
+		return array;
+	}
 
 	for (var i = startSample; i < endSample; i++) {
 		var time = i / sampleRate;

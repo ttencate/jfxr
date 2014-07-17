@@ -1,6 +1,7 @@
-jfxr.Synth = {};
+jfxr.Synth = function() {
+};
 
-jfxr.Synth.generate = function(str) {
+jfxr.Synth.prototype.generate = function(str) {
 	var startTime = Date.now();
 
 	var json = JSON.parse(str);
@@ -9,8 +10,32 @@ jfxr.Synth.generate = function(str) {
 	var attack = json.attack;
 	var sustain = json.sustain;
 	var decay = json.decay;
-	var tremoloDepth = json.tremoloDepth;
-	var tremoloFrequency = json.tremoloFrequency;
+
+	var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
+	var duration = numSamples / sampleRate;
+
+	var array = new Float32Array(numSamples);
+
+	array = this.generateTone(json, array);
+	array = this.tremolo(json, array);
+	array = this.lowPass(json, array);
+	array = this.highPass(json, array);
+	array = this.envelope(json, array);
+	array = this.compress(json, array);
+	array = this.amplify(json, array);
+
+	var renderTimeMs = Date.now() - startTime;
+
+	return {
+		arrayBuffer: array.buffer,
+		sampleRate: sampleRate,
+		renderTimeMs: renderTimeMs,
+	};
+};
+
+jfxr.Synth.prototype.generateTone = function(json, array) {
+	var numSamples = array.length;
+	var sampleRate = json.sampleRate;
 	var frequency = json.frequency;
 	var frequencySweep = json.frequencySweep;
 	var frequencyDeltaSweep = json.frequencyDeltaSweep;
@@ -26,36 +51,9 @@ jfxr.Synth.generate = function(str) {
 	var waveform = json.waveform;
 	var squareDuty = json.squareDuty;
 	var squareDutySweep = json.squareDutySweep;
-	var lowPassCutoff = json.lowPassCutoff;
-	var lowPassCutoffSweep = json.lowPassCutoffSweep;
-	var highPassCutoff = json.highPassCutoff;
-	var highPassCutoffSweep = json.highPassCutoffSweep;
-	var compression = json.compression;
-	var normalization = json.normalization;
-	var amplification = json.amplification;
 
-	var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
 	var duration = numSamples / sampleRate;
-
-	if (repeatFrequency < 1 / duration) {
-		repeatFrequency = 1 / duration;
-	}
-
-	var array = new Float32Array(numSamples);
-
-	// Pink noise parameters
-	var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-
-	// Brown noise parameters
-	var prevSample = 0;
-
-	// Low-pass filter parameters
-	var lowPassPrev = 0;
-
-	// High-pass filter parameters
-	var highPassPrevIn = 0;
-	var highPassPrevOut = 0;
-
+	var phase = 0;
 	var random = new jfxr.Random(0x3cf78ba3); // Chosen by fair dice roll. Guaranteed to be random.
 
 	var amp = 1;
@@ -66,14 +64,34 @@ jfxr.Synth.generate = function(str) {
 	}
 	var firstHarmonicAmp = 1 / totalAmp;
 
-	var phase = 0;
-	var maxSample = 0;
+	if (repeatFrequency < 1 / duration) {
+		repeatFrequency = 1 / duration;
+	}
+
+	// Pink noise parameters
+	var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+
+	// Brown noise parameters
+	var prevSample = 0;
+
 	for (var i = 0; i < numSamples; i++) {
-		var sample = 0;
 		var time = i / sampleRate;
-		var fraction = i / numSamples;
 		var fractionInRepetition = jfxr.Math.frac(time * repeatFrequency);
 
+		var currentFrequency = frequency;
+		currentFrequency +=
+			fractionInRepetition * frequencySweep +
+			fractionInRepetition * fractionInRepetition * frequencyDeltaSweep;
+		if (fractionInRepetition > frequencyJump1Onset / 100) {
+			currentFrequency *= 1 + frequencyJump1Amount / 100;
+		}
+		if (fractionInRepetition > frequencyJump2Onset / 100) {
+			currentFrequency *= 1 + frequencyJump2Amount / 100;
+		}
+		currentFrequency += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * time * vibratoFrequency));
+		phase = jfxr.Math.frac(phase + currentFrequency / sampleRate);
+
+		var sample = 0;
 		if (waveform == 'whitenoise' || waveform == 'pinknoise' || waveform == 'brownnoise') {
 			switch (waveform) {
 				case 'whitenoise':
@@ -119,7 +137,7 @@ jfxr.Synth.generate = function(str) {
 						h = harmonicPhase < 0.5 ? 2 * harmonicPhase : -2 + 2 * harmonicPhase;
 						break;
 					case 'square':
-						var d = (squareDuty + fraction * squareDutySweep) / 100;
+						var d = (squareDuty + fractionInRepetition * squareDutySweep) / 100;
 						h = harmonicPhase < d ? 1 : -1;
 						break;
 					case 'tangent':
@@ -142,22 +160,36 @@ jfxr.Synth.generate = function(str) {
 				amp *= harmonicsFalloff;
 			}
 		}
+		array[i] = sample;
+	}
 
-		var currentFrequency = frequency;
-		currentFrequency +=
-			fractionInRepetition * frequencySweep +
-			fractionInRepetition * fractionInRepetition * frequencyDeltaSweep;
-		if (fractionInRepetition > frequencyJump1Onset / 100) {
-			currentFrequency *= 1 + frequencyJump1Amount / 100;
-		}
-		if (fractionInRepetition > frequencyJump2Onset / 100) {
-			currentFrequency *= 1 + frequencyJump2Amount / 100;
-		}
-		currentFrequency += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * time * vibratoFrequency));
-		phase = jfxr.Math.frac(phase + currentFrequency / sampleRate);
+	return array;
+};
 
-		sample *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * time * tremoloFrequency));
+jfxr.Synth.prototype.tremolo = function(json, array) {
+	var numSamples = array.length;
+	var sampleRate = json.sampleRate;
+	var tremoloDepth = json.tremoloDepth;
+	var tremoloFrequency = json.tremoloFrequency;
 
+	for (var i = 0; i < numSamples; i++) {
+		var time = i / sampleRate;
+		array[i] *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * time * tremoloFrequency));
+	}
+
+	return array;
+};
+
+jfxr.Synth.prototype.lowPass = function(json, array) {
+	var numSamples = array.length;
+	var sampleRate = json.sampleRate;
+	var lowPassCutoff = json.lowPassCutoff;
+	var lowPassCutoffSweep = json.lowPassCutoffSweep;
+
+	var lowPassPrev = 0;
+
+	for (var i = 0; i < numSamples; i++) {
+		var fraction = i / numSamples;
 		var cutoff = jfxr.Math.clamp(0, sampleRate / 2, lowPassCutoff + fraction * lowPassCutoffSweep);
 		var wc = cutoff / sampleRate * Math.PI; // Don't we need a factor 2pi instead of pi?
 		var cosWc = Math.cos(wc);
@@ -169,32 +201,85 @@ jfxr.Synth.generate = function(str) {
 			var lowPassAlpha = 1 / cosWc - Math.sqrt(1 / (cosWc * cosWc) - 1);
 			lowPassAlpha = 1 - lowPassAlpha; // Probably the internet's definition of alpha is different.
 		}
+		var sample = array[i];
 		sample = lowPassAlpha * sample + (1 - lowPassAlpha) * lowPassPrev;
 		lowPassPrev = sample;
+		array[i] = sample;
+	}
 
-		cutoff = jfxr.Math.clamp(0, sampleRate / 2, highPassCutoff + fraction * highPassCutoffSweep);
-		wc = cutoff / sampleRate * Math.PI;
+	return array;
+};
+
+jfxr.Synth.prototype.highPass = function(json, array) {
+	var numSamples = array.length;
+	var sampleRate = json.sampleRate;
+	var highPassCutoff = json.highPassCutoff;
+	var highPassCutoffSweep = json.highPassCutoffSweep;
+
+	var highPassPrevIn = 0;
+	var highPassPrevOut = 0;
+
+	for (var i = 0; i < numSamples; i++) {
+		var fraction = i / numSamples;
+		var cutoff = jfxr.Math.clamp(0, sampleRate / 2, highPassCutoff + fraction * highPassCutoffSweep);
+		var wc = cutoff / sampleRate * Math.PI;
 		// From somewhere on the internet: a = (1 - sin wc) / cos wc
 		var highPassAlpha = (1 - Math.sin(wc)) / Math.cos(wc);
+		var sample = array[i];
 		var origSample = sample;
 		sample = highPassAlpha * (highPassPrevOut - highPassPrevIn + sample);
 		highPassPrevIn = origSample;
 		highPassPrevOut = sample;
+		array[i] = sample;
+	}
 
+	return array;
+};
+
+jfxr.Synth.prototype.envelope = function(json, array) {
+	var numSamples = array.length;
+	var sampleRate = json.sampleRate;
+	var attack = json.attack;
+	var sustain = json.sustain;
+	var decay = json.decay;
+
+	for (var i = 0; i < numSamples; i++) {
+		var time = i / sampleRate;
 		if (time < attack) {
-			sample *= time / attack;
+			array[i] *= time / attack;
 		} else if (time > attack + sustain) {
-			sample *= 1 - (time - attack - sustain) / decay;
+			array[i] *= 1 - (time - attack - sustain) / decay;
 		}
+	}
 
+	return array;
+};
+
+jfxr.Synth.prototype.compress = function(json, array) {
+	var numSamples = array.length;
+	var compression = json.compression;
+
+	for (var i = 0; i < numSamples; i++) {
+		var sample = array[i];
 		if (sample >= 0) {
 			sample = Math.pow(sample, compression);
 		} else {
 			sample = -Math.pow(-sample, compression);
 		}
-
 		array[i] = sample;
-		maxSample = Math.max(maxSample, Math.abs(sample));
+	}
+
+	return array;
+};
+
+jfxr.Synth.prototype.amplify = function(json, array) {
+	var numSamples = array.length;
+	var normalization = json.normalization;
+	var amplification = json.amplification;
+
+	var maxSample = 0;
+	for (var i = 0; i < numSamples; i++) {
+		maxSample = Math.max(maxSample, Math.abs(array[i]));
 	}
 
 	var factor = amplification / 100;
@@ -205,11 +290,5 @@ jfxr.Synth.generate = function(str) {
 		array[i] *= factor;
 	}
 
-	var renderTimeMs = Date.now() - startTime;
-
-	return {
-		arrayBuffer: array.buffer,
-		sampleRate: sampleRate,
-		renderTimeMs: renderTimeMs,
-	};
+	return array;
 };

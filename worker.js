@@ -33,7 +33,7 @@ jfxr.Worker.prototype.synth = function(str, finishedCallback) {
 		}.bind(this));
 		this.worker.postMessage(str);
 	} else {
-		var msg = jfxr.Synth.generate(str);
+		var msg = (new jfxr.Synth()).generate(str);
 		deferred.resolve(msg);
 	}
 
@@ -61,7 +61,7 @@ jfxr.Worker.main = function(worker) {
 	if (!exception) {
 		worker.addEventListener('message', function(e) {
 			var str = e.data;
-			var msg = jfxr.Synth.generate(str);
+			var msg = (new jfxr.Synth()).generate(str);
 			worker.postMessage(msg, [msg.arrayBuffer]);
 		});
 	} else {

@@ -13,13 +13,12 @@ jfxr.Synth.prototype.generate = function(str) {
 	var decay = json.decay;
 
 	var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
-	var duration = numSamples / sampleRate;
 
 	this.array = new Float32Array(numSamples);
 
 	var startTime = Date.now();
 
-	this.transform(jfxr.Synth.generateTone);
+	this.transform(jfxr.Synth.generate);
 	this.transform(jfxr.Synth.tremolo);
 	this.transform(jfxr.Synth.lowPass);
 	this.transform(jfxr.Synth.highPass);
@@ -41,7 +40,20 @@ jfxr.Synth.prototype.transform = function(func) {
 	this.array = func(this.json, this.array, 0, this.array.length);
 };
 
-jfxr.Synth.generateTone = function(json, array, startSample, endSample) {
+jfxr.Synth.generate = function(json, array, startSample, endSample) {
+	switch (json.waveform) {
+		case 'whitenoise':
+			return jfxr.Synth.generateWhiteNoise.apply(this, arguments);
+		case 'pinknoise':
+			return jfxr.Synth.generatePinkNoise.apply(this, arguments);
+		case 'brownnoise':
+			return jfxr.Synth.generateBrownNoise.apply(this, arguments);
+		default:
+			return jfxr.Synth.generateOsc.apply(this, arguments);
+	}
+};
+
+jfxr.Synth.generateOsc = function(json, array, startSample, endSample) {
 	var numSamples = array.length;
 	var sampleRate = json.sampleRate;
 	var frequency = json.frequency;
@@ -61,8 +73,19 @@ jfxr.Synth.generateTone = function(json, array, startSample, endSample) {
 	var squareDutySweep = json.squareDutySweep;
 
 	var duration = numSamples / sampleRate;
-	var phase = 0;
-	var random = new jfxr.Random(0x3cf78ba3); // Chosen by fair dice roll. Guaranteed to be random.
+	if (repeatFrequency < 1 / duration) {
+		repeatFrequency = 1 / duration;
+	}
+
+	switch (waveform) {
+		case 'sine': tone = jfxr.Synth.sineTone; break;
+		case 'triangle': tone = jfxr.Synth.triangleTone; break;
+		case 'sawtooth': tone = jfxr.Synth.sawtoothTone; break;
+		case 'square': tone = jfxr.Synth.squareTone; break;
+		case 'tangent': tone = jfxr.Synth.tangentTone; break;
+		case 'whistle': tone = jfxr.Synth.whistleTone; break;
+		case 'breaker': tone = jfxr.Synth.breakerTone; break;
+	}
 
 	var amp = 1;
 	var totalAmp = 0;
@@ -72,22 +95,14 @@ jfxr.Synth.generateTone = function(json, array, startSample, endSample) {
 	}
 	var firstHarmonicAmp = 1 / totalAmp;
 
-	if (repeatFrequency < 1 / duration) {
-		repeatFrequency = 1 / duration;
-	}
-
-	// Pink noise parameters
-	var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-
-	// Brown noise parameters
-	var prevSample = 0;
+	var phase = 0;
 
 	for (var i = startSample; i < endSample; i++) {
 		var time = i / sampleRate;
 		var fractionInRepetition = jfxr.Math.frac(time * repeatFrequency);
 
-		var currentFrequency = frequency;
-		currentFrequency +=
+		var currentFrequency =
+			frequency +
 			fractionInRepetition * frequencySweep +
 			fractionInRepetition * fractionInRepetition * frequencyDeltaSweep;
 		if (fractionInRepetition > frequencyJump1Onset / 100) {
@@ -100,74 +115,95 @@ jfxr.Synth.generateTone = function(json, array, startSample, endSample) {
 		phase = jfxr.Math.frac(phase + currentFrequency / sampleRate);
 
 		var sample = 0;
-		if (waveform == 'whitenoise' || waveform == 'pinknoise' || waveform == 'brownnoise') {
-			switch (waveform) {
-				case 'whitenoise':
-					sample = random.uniform(-1, 1);
-					break;
-				case 'pinknoise':
-					// Method pk3 from http://www.firstpr.com.au/dsp/pink-noise/,
-					// due to Paul Kellet.
-					var white = random.uniform(-1, 1);
-					b0 = 0.99886 * b0 + white * 0.0555179;
-					b1 = 0.99332 * b1 + white * 0.0750759;
-					b2 = 0.96900 * b2 + white * 0.1538520;
-					b3 = 0.86650 * b3 + white * 0.3104856;
-					b4 = 0.55000 * b4 + white * 0.5329522;
-					b5 = -0.7616 * b5 + white * 0.0168980;
-					sample = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) / 7;
-					b6 = white * 0.115926;
-					break;
-				case 'brownnoise':
-					var white = random.uniform(-1, 1);
-					sample = prevSample + 0.1 * white;
-					if (sample < -1) sample = -1;
-					if (sample > 1) sample = 1;
-					prevSample = sample;
-					break;
-			}
-		} else {
-			var amp = firstHarmonicAmp;
-			for (var harmonicIndex = 0; harmonicIndex <= harmonics; harmonicIndex++) {
-				var harmonicPhase = jfxr.Math.frac(phase * (harmonicIndex + 1));
-				var h;
-				switch (waveform) {
-					case 'sine':
-						h = Math.sin(2 * Math.PI * harmonicPhase);
-						break;
-					case 'triangle':
-						h =
-							harmonicPhase < 0.25 ? 4 * harmonicPhase :
-							harmonicPhase < 0.75 ? 2 - 4 * harmonicPhase :
-							-4 + 4 * harmonicPhase;
-						break;
-					case 'sawtooth':
-						h = harmonicPhase < 0.5 ? 2 * harmonicPhase : -2 + 2 * harmonicPhase;
-						break;
-					case 'square':
-						var d = (squareDuty + fractionInRepetition * squareDutySweep) / 100;
-						h = harmonicPhase < d ? 1 : -1;
-						break;
-					case 'tangent':
-						h = 0.3 * Math.tan(Math.PI * harmonicPhase);
-						// Arbitrary cutoff value to make normalization behave.
-						if (h > 2) h = 2;
-						if (h < -2) h = -2;
-						break;
-					case 'whistle':
-						h = 0.75 * Math.sin(2 * Math.PI * harmonicPhase) + 0.25 * Math.sin(40 * Math.PI * harmonicPhase);
-						break;
-					case 'breaker':
-						// Make sure to start at a zero crossing.
-						var p = harmonicPhase + Math.sqrt(0.75);
-						if (p >= 1) p -= 1;
-						h = -1 + 2 * Math.abs(1 - p*p*2);
-						break;
-				}
-				sample += amp * h;
-				amp *= harmonicsFalloff;
-			}
+		var amp = firstHarmonicAmp;
+		for (var harmonicIndex = 0; harmonicIndex <= harmonics; harmonicIndex++) {
+			var harmonicPhase = jfxr.Math.frac(phase * (harmonicIndex + 1));
+			sample += amp * tone(harmonicPhase, fractionInRepetition, squareDuty, squareDutySweep);
+			amp *= harmonicsFalloff;
 		}
+		array[i] = sample;
+	}
+
+	return array;
+};
+
+jfxr.Synth.sineTone = function(phase) {
+	return Math.sin(2 * Math.PI * phase);
+};
+
+jfxr.Synth.triangleTone = function(phase) {
+	if (phase < 0.25) return 4 * phase;
+	if (phase < 0.75) return 2 - 4 * phase;
+	return -4 + 4 * phase;
+};
+
+jfxr.Synth.sawtoothTone = function(phase) {
+	return phase < 0.5 ? 2 * phase : -2 + 2 * phase;
+};
+
+jfxr.Synth.squareTone = function(phase, fractionInRepetition, squareDuty, squareDutySweep) {
+	return phase < ((squareDuty + fractionInRepetition * squareDutySweep) / 100) ? 1 : -1;
+};
+
+jfxr.Synth.tangentTone = function(phase) {
+	// Arbitrary cutoff value to make normalization behave.
+	return jfxr.Math.clamp(-2, 2, 0.3 * Math.tan(Math.PI * phase));
+};
+
+jfxr.Synth.whistleTone = function(phase) {
+	return 0.75 * Math.sin(2 * Math.PI * phase) + 0.25 * Math.sin(40 * Math.PI * phase);
+};
+
+jfxr.Synth.breakerTone = function(phase) {
+	// Make sure to start at a zero crossing.
+	var p = jfxr.Math.frac(phase + Math.sqrt(0.75));
+	return -1 + 2 * Math.abs(1 - p*p*2);
+};
+
+jfxr.Synth.generateWhiteNoise = function(json, array, startSample, endSample) {
+	var random = new jfxr.Random(0x3cf78ba3);
+
+	for (var i = startSample; i < endSample; i++) {
+		array[i] = random.uniform(-1, 1);
+	}
+
+	return array;
+};
+
+jfxr.Synth.generatePinkNoise = function(json, array, startSample, endSample) {
+	var random = new jfxr.Random(0x3cf78ba3);
+
+	var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+
+	for (var i = startSample; i < endSample; i++) {
+		// Method pk3 from http://www.firstpr.com.au/dsp/pink-noise/,
+		// due to Paul Kellet.
+		var white = random.uniform(-1, 1);
+		b0 = 0.99886 * b0 + white * 0.0555179;
+		b1 = 0.99332 * b1 + white * 0.0750759;
+		b2 = 0.96900 * b2 + white * 0.1538520;
+		b3 = 0.86650 * b3 + white * 0.3104856;
+		b4 = 0.55000 * b4 + white * 0.5329522;
+		b5 = -0.7616 * b5 + white * 0.0168980;
+		var sample = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) / 7;
+		b6 = white * 0.115926;
+		array[i] = sample;
+	}
+
+	return array;
+};
+
+jfxr.Synth.generateBrownNoise = function(json, array, startSample, endSample) {
+	var random = new jfxr.Random(0x3cf78ba3);
+
+	var prevSample = 0;
+
+	for (var i = startSample; i < endSample; i++) {
+		var white = random.uniform(-1, 1);
+		var sample = prevSample + 0.1 * white;
+		if (sample < -1) sample = -1;
+		if (sample > 1) sample = 1;
+		prevSample = sample;
 		array[i] = sample;
 	}
 

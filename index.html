@@ -40,12 +40,13 @@
               <button class="iconbutton iconbutton-delete deletebutton" ng-click="ctrl.deleteSound($index)"></button>
             </li>
           </ul>
-          <div class="statusbar">
-            Render time: {{ctrl.worker.renderTimeMs}}&nbsp;ms
+          <div class="statusbar" ng-switch="ctrl.synth.isRunning()">
+            <span ng-switch-when="true">Rendering&hellip;</span>
+            <span ng-switch-when="false">Render time: {{ctrl.synth.renderTimeMs}}&nbsp;ms</span>
           </div>
         </div>
         <div class="pane pane-bottom-right column-right mainpane">
-          <canvas waveshape="ctrl.buffer" class="waveshape"></canvas>
+          <canvas waveshape="ctrl.buffer" class="waveshape" ng-class="{'waveshape-rendering': ctrl.synth.isRunning()}"></canvas>
           <div class="parameters vertical-scroll">
             <div class="parameters-column">
               <h2>Amplitude</h2>
@@ -117,7 +118,6 @@
     <script src="shims.js"></script>
     <script src="sound.js"></script>
     <script src="synth.js"></script>
-    <script src="worker.js"></script>
     <script src="ui.js"></script>
     <script src="main.js"></script>
   </body>

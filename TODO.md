@@ -5,7 +5,6 @@ Usability
 ---------
 
 - Make text input boxes work better
-- Don't update wave on every slider change
 - Draw amplitude graph
 - Draw frequency graph
 
@@ -21,7 +20,6 @@ Polish
 ------
 
 - Play/stop button animation
-- Animation while generating waveform
 
 bfxr sliders
 ------------

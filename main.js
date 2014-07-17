@@ -5,13 +5,12 @@
 // written by this version.
 jfxr.VERSION = 1;
 
-jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localStorage) {
+jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, localStorage) {
 	var player = new Player();
 	var maxSounds = 50;
 
-	this.worker = worker;
-
 	this.buffer = null;
+	this.synth = null;
 
 	this.sounds = [];
 	for (var i = 0; i < maxSounds; i++) {
@@ -124,12 +123,19 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, worker, $scope, localSt
 	}.bind(this));
 
 	$scope.$watch(function() { return this.getSound().serialize(); }.bind(this), function(value) {
+		if (this.synth) {
+			this.synth.cancel();
+			this.synth = null;
+		}
+		player.stop();
 		this.buffer = null;
 		if (value != undefined && value != '') {
 			saveSound(this.soundIndex, value);
-			worker.synth(value).then(function(buffer) {
-				this.buffer = buffer;
-				if (this.buffer && this.autoplay) {
+			this.synth = new jfxr.Synth(value, function(array, sampleRate) {
+				this.buffer = context.createBuffer(1, array.length, sampleRate);
+				this.buffer.getChannelData(0).set(array);
+				$scope.$apply();
+				if (this.autoplay) {
 					player.play(this.buffer);
 				}
 			}.bind(this));

@@ -217,7 +217,9 @@ jfxrApp.directive('waveshape', function() {
 			var canvas = element[0];
 
 			scope.$watch('buffer', function(value) {
-				draw(canvas, value);
+				if (value) {
+					draw(canvas, value);
+				}
 			});
 		},
 	};

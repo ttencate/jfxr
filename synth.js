@@ -225,9 +225,13 @@ jfxr.Synth.tremolo = function(json, array, startSample, endSample) {
 
 jfxr.Synth.lowPass = function(json, array, startSample, endSample) {
 	var numSamples = array.length;
-	var sampleRate = json.sampleRate;
 	var lowPassCutoff = json.lowPassCutoff;
 	var lowPassCutoffSweep = json.lowPassCutoffSweep;
+	var sampleRate = json.sampleRate;
+
+	if (lowPassCutoff >= sampleRate / 2 && lowPassCutoff + lowPassCutoffSweep >= sampleRate / 2) {
+		return array;
+	}
 
 	var lowPassPrev = 0;
 
@@ -259,6 +263,10 @@ jfxr.Synth.highPass = function(json, array, startSample, endSample) {
 	var highPassCutoff = json.highPassCutoff;
 	var highPassCutoffSweep = json.highPassCutoffSweep;
 
+	if (highPassCutoff <= 0 && highPassCutoff + highPassCutoffSweep <= 0) {
+		return array;
+	}
+
 	var highPassPrevIn = 0;
 	var highPassPrevOut = 0;
 
@@ -285,6 +293,10 @@ jfxr.Synth.envelope = function(json, array, startSample, endSample) {
 	var sustain = json.sustain;
 	var decay = json.decay;
 
+	if (attack == 0 && decay == 0) {
+		return array;
+	}
+
 	for (var i = startSample; i < endSample; i++) {
 		var time = i / sampleRate;
 		if (time < attack) {
@@ -300,6 +312,10 @@ jfxr.Synth.envelope = function(json, array, startSample, endSample) {
 jfxr.Synth.compress = function(json, array, startSample, endSample) {
 	var compression = json.compression;
 
+	if (compression == 1) {
+		return array;
+	}
+
 	for (var i = startSample; i < endSample; i++) {
 		var sample = array[i];
 		if (sample >= 0) {
@@ -314,17 +330,15 @@ jfxr.Synth.compress = function(json, array, startSample, endSample) {
 };
 
 jfxr.Synth.normalize = function(json, array, startSample, endSample) {
-	var normalization = json.normalization;
+	if (!json.normalization) {
+		return array;
+	}
 
 	var maxSample = 0;
 	for (var i = startSample; i < endSample; i++) {
 		maxSample = Math.max(maxSample, Math.abs(array[i]));
 	}
-
-	var factor = 1;
-	if (normalization) {
-		factor /= maxSample;
-	}
+	var factor = 1 / maxSample;
 
 	for (var i = startSample; i < endSample; i++) {
 		array[i] *= factor;
@@ -334,9 +348,12 @@ jfxr.Synth.normalize = function(json, array, startSample, endSample) {
 };
 
 jfxr.Synth.amplify = function(json, array, startSample, endSample) {
-	var amplification = json.amplification;
+	var factor = json.amplification / 100;
 
-	var factor = amplification / 100;
+	if (factor == 1) {
+		return array;
+	}
+
 	for (var i = startSample; i < endSample; i++) {
 		array[i] *= factor;
 	}

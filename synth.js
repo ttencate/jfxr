@@ -2,9 +2,10 @@ jfxr.Synth = function() {
 };
 
 jfxr.Synth.prototype.generate = function(str) {
-	var startTime = Date.now();
+	this.generate = null; // Avoid accidental reuse.
 
 	var json = JSON.parse(str);
+	this.json = json;
 
 	var sampleRate = json.sampleRate;
 	var attack = json.attack;
@@ -14,26 +15,33 @@ jfxr.Synth.prototype.generate = function(str) {
 	var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
 	var duration = numSamples / sampleRate;
 
-	var array = new Float32Array(numSamples);
+	this.array = new Float32Array(numSamples);
 
-	array = this.generateTone(json, array);
-	array = this.tremolo(json, array);
-	array = this.lowPass(json, array);
-	array = this.highPass(json, array);
-	array = this.envelope(json, array);
-	array = this.compress(json, array);
-	array = this.amplify(json, array);
+	var startTime = Date.now();
+
+	this.transform(jfxr.Synth.generateTone);
+	this.transform(jfxr.Synth.tremolo);
+	this.transform(jfxr.Synth.lowPass);
+	this.transform(jfxr.Synth.highPass);
+	this.transform(jfxr.Synth.envelope);
+	this.transform(jfxr.Synth.compress);
+	this.transform(jfxr.Synth.normalize);
+	this.transform(jfxr.Synth.amplify);
 
 	var renderTimeMs = Date.now() - startTime;
 
 	return {
-		arrayBuffer: array.buffer,
+		arrayBuffer: this.array.buffer,
 		sampleRate: sampleRate,
 		renderTimeMs: renderTimeMs,
 	};
 };
 
-jfxr.Synth.prototype.generateTone = function(json, array) {
+jfxr.Synth.prototype.transform = function(func) {
+	this.array = func(this.json, this.array, 0, this.array.length);
+};
+
+jfxr.Synth.generateTone = function(json, array, startSample, endSample) {
 	var numSamples = array.length;
 	var sampleRate = json.sampleRate;
 	var frequency = json.frequency;
@@ -74,7 +82,7 @@ jfxr.Synth.prototype.generateTone = function(json, array) {
 	// Brown noise parameters
 	var prevSample = 0;
 
-	for (var i = 0; i < numSamples; i++) {
+	for (var i = startSample; i < endSample; i++) {
 		var time = i / sampleRate;
 		var fractionInRepetition = jfxr.Math.frac(time * repeatFrequency);
 
@@ -166,13 +174,12 @@ jfxr.Synth.prototype.generateTone = function(json, array) {
 	return array;
 };
 
-jfxr.Synth.prototype.tremolo = function(json, array) {
-	var numSamples = array.length;
+jfxr.Synth.tremolo = function(json, array, startSample, endSample) {
 	var sampleRate = json.sampleRate;
 	var tremoloDepth = json.tremoloDepth;
 	var tremoloFrequency = json.tremoloFrequency;
 
-	for (var i = 0; i < numSamples; i++) {
+	for (var i = startSample; i < endSample; i++) {
 		var time = i / sampleRate;
 		array[i] *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * time * tremoloFrequency));
 	}
@@ -180,7 +187,7 @@ jfxr.Synth.prototype.tremolo = function(json, array) {
 	return array;
 };
 
-jfxr.Synth.prototype.lowPass = function(json, array) {
+jfxr.Synth.lowPass = function(json, array, startSample, endSample) {
 	var numSamples = array.length;
 	var sampleRate = json.sampleRate;
 	var lowPassCutoff = json.lowPassCutoff;
@@ -188,7 +195,7 @@ jfxr.Synth.prototype.lowPass = function(json, array) {
 
 	var lowPassPrev = 0;
 
-	for (var i = 0; i < numSamples; i++) {
+	for (var i = startSample; i < endSample; i++) {
 		var fraction = i / numSamples;
 		var cutoff = jfxr.Math.clamp(0, sampleRate / 2, lowPassCutoff + fraction * lowPassCutoffSweep);
 		var wc = cutoff / sampleRate * Math.PI; // Don't we need a factor 2pi instead of pi?
@@ -210,7 +217,7 @@ jfxr.Synth.prototype.lowPass = function(json, array) {
 	return array;
 };
 
-jfxr.Synth.prototype.highPass = function(json, array) {
+jfxr.Synth.highPass = function(json, array, startSample, endSample) {
 	var numSamples = array.length;
 	var sampleRate = json.sampleRate;
 	var highPassCutoff = json.highPassCutoff;
@@ -219,7 +226,7 @@ jfxr.Synth.prototype.highPass = function(json, array) {
 	var highPassPrevIn = 0;
 	var highPassPrevOut = 0;
 
-	for (var i = 0; i < numSamples; i++) {
+	for (var i = startSample; i < endSample; i++) {
 		var fraction = i / numSamples;
 		var cutoff = jfxr.Math.clamp(0, sampleRate / 2, highPassCutoff + fraction * highPassCutoffSweep);
 		var wc = cutoff / sampleRate * Math.PI;
@@ -236,14 +243,13 @@ jfxr.Synth.prototype.highPass = function(json, array) {
 	return array;
 };
 
-jfxr.Synth.prototype.envelope = function(json, array) {
-	var numSamples = array.length;
+jfxr.Synth.envelope = function(json, array, startSample, endSample) {
 	var sampleRate = json.sampleRate;
 	var attack = json.attack;
 	var sustain = json.sustain;
 	var decay = json.decay;
 
-	for (var i = 0; i < numSamples; i++) {
+	for (var i = startSample; i < endSample; i++) {
 		var time = i / sampleRate;
 		if (time < attack) {
 			array[i] *= time / attack;
@@ -255,11 +261,10 @@ jfxr.Synth.prototype.envelope = function(json, array) {
 	return array;
 };
 
-jfxr.Synth.prototype.compress = function(json, array) {
-	var numSamples = array.length;
+jfxr.Synth.compress = function(json, array, startSample, endSample) {
 	var compression = json.compression;
 
-	for (var i = 0; i < numSamples; i++) {
+	for (var i = startSample; i < endSample; i++) {
 		var sample = array[i];
 		if (sample >= 0) {
 			sample = Math.pow(sample, compression);
@@ -272,21 +277,31 @@ jfxr.Synth.prototype.compress = function(json, array) {
 	return array;
 };
 
-jfxr.Synth.prototype.amplify = function(json, array) {
-	var numSamples = array.length;
+jfxr.Synth.normalize = function(json, array, startSample, endSample) {
 	var normalization = json.normalization;
-	var amplification = json.amplification;
 
 	var maxSample = 0;
-	for (var i = 0; i < numSamples; i++) {
+	for (var i = startSample; i < endSample; i++) {
 		maxSample = Math.max(maxSample, Math.abs(array[i]));
 	}
 
-	var factor = amplification / 100;
+	var factor = 1;
 	if (normalization) {
 		factor /= maxSample;
 	}
-	for (var i = 0; i < numSamples; i++) {
+
+	for (var i = startSample; i < endSample; i++) {
+		array[i] *= factor;
+	}
+
+	return array;
+};
+
+jfxr.Synth.amplify = function(json, array, startSample, endSample) {
+	var amplification = json.amplification;
+
+	var factor = amplification / 100;
+	for (var i = startSample; i < endSample; i++) {
 		array[i] *= factor;
 	}
 

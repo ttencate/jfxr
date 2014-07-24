@@ -5,7 +5,7 @@
 // written by this version.
 jfxr.VERSION = 1;
 
-jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, localStorage) {
+jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, localStorage, synthFactory) {
 	var player = new Player();
 	var maxSounds = 50;
 
@@ -22,6 +22,12 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 		sound.parse(str);
 		this.sounds.push(sound);
 	}
+
+  var addSound = function(sound) {
+    this.sounds.unshift(sound);
+    this.sounds.splice(maxSounds, this.sounds.length - maxSounds);
+    this.soundIndex = 0;
+  }.bind(this);
 
 	var maybeAddDefaultSound = function() {
 		if (this.sounds.length == 0) {
@@ -68,6 +74,24 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 		return player.getFrequencyData();
 	};
 
+  this.newSound = function() {
+    this.applyPreset(jfxr.Preset.reset);
+  };
+
+  this.openSound = function() {
+    // TODO
+  };
+
+  this.saveSound = function() {
+    // TODO
+  };
+
+  this.exportSound = function() {
+    this.synth.run().then(function(msg) {
+      jfxr.export.download(jfxr.export.toWavBlob(msg.array, msg.sampleRate), this.getSound().name);
+    }.bind(this));
+  };
+
 	this.applyPreset = function(preset) {
 		if (preset.createSound) {
 			var sound = preset.createSound();
@@ -79,10 +103,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 				}
 			}
 			sound.name = preset.name + ' ' + (max + 1);
-
-			this.sounds.unshift(sound);
-			this.sounds.splice(maxSounds, this.sounds.length - maxSounds);
-			this.soundIndex = 0;
+			addSound(sound);
 		} else {
 			preset.modifySound(this.getSound());
 		}
@@ -107,7 +128,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 		}
 	});
 
-	var saveSound = function(index, value) {
+	var storeSound = function(index, value) {
 		if (value == undefined && index < this.sounds.length) {
 			value = this.sounds[index].serialize();
 		}
@@ -118,7 +139,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 	$scope.$watchCollection(function() { return this.sounds; }.bind(this), function(value) {
 		// The entire array might have shifted, so we need to save them all.
 		for (var i = 0; i < maxSounds; i++) {
-			saveSound(i);
+			storeSound(i);
 		}
 	}.bind(this));
 
@@ -130,15 +151,17 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 		player.stop();
 		this.buffer = null;
 		if (value != undefined && value != '') {
-			saveSound(this.soundIndex, value);
-			this.synth = new jfxr.Synth(value, function(array, sampleRate) {
-				this.buffer = context.createBuffer(1, array.length, sampleRate);
-				this.buffer.getChannelData(0).set(array);
-				$scope.$apply();
+			storeSound(this.soundIndex, value);
+			this.synth = synthFactory(value);
+      this.synth.run().then(function(msg) {
+				this.buffer = context.createBuffer(1, msg.array.length, msg.sampleRate);
+				this.buffer.getChannelData(0).set(msg.array);
 				if (this.autoplay) {
 					player.play(this.buffer);
 				}
-			}.bind(this));
+			}.bind(this), function() {
+        // Cancelled.
+      });
 		}
 	}.bind(this));
 

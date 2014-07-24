@@ -1,6 +1,13 @@
-jfxr.Synth = function(str, callback) {
+jfxrApp.service('synthFactory', function($q, $timeout) {
+  return function(str) {
+    return new jfxr.Synth($q, $timeout, str);
+  };
+});
+
+jfxr.Synth = function($q, $timeout, str) {
+  this.$q = $q;
+  this.$timeout = $timeout;
 	this.json = JSON.parse(str);
-	this.callback = callback;
 
 	var sampleRate = this.json.sampleRate;
 	var attack = this.json.attack;
@@ -39,12 +46,20 @@ jfxr.Synth = function(str, callback) {
 
 	this.startSample = 0;
 	this.blockSize = 10240;
+}
 
+jfxr.Synth.prototype.run = function() {
+  if (this.deferred) {
+    return this.deferred.promise;
+  }
+	this.deferred = this.$q.defer();
+  var promise = this.deferred.promise;
 	this.tick();
+  return promise;
 };
 
 jfxr.Synth.prototype.tick = function() {
-	if (!this.callback) {
+	if (!this.deferred) {
 		return;
 	}
 
@@ -57,9 +72,10 @@ jfxr.Synth.prototype.tick = function() {
 
 	if (this.startSample == numSamples) {
 		this.renderTimeMs = Date.now() - this.startTime;
-		var callback = this.callback;
-		this.callback = null;
-		window.setTimeout(function() { callback(this.array, this.json.sampleRate); }.bind(this), 0);
+    this.$timeout(function() {
+      this.deferred.resolve({array: this.array, sampleRate: this.json.sampleRate});
+      this.deferred = null;
+    }.bind(this));
 	} else {
 		// TODO be smarter about block size (sync with animation frames)
 		// window.requestAnimationFrame(this.tick.bind(this));
@@ -68,11 +84,15 @@ jfxr.Synth.prototype.tick = function() {
 };
 
 jfxr.Synth.prototype.isRunning = function() {
-	return !!this.callback;
+	return !!this.deferred;
 };
 
 jfxr.Synth.prototype.cancel = function() {
-	this.callback = null;
+  if (!this.isRunning()) {
+    return;
+  }
+	this.deferred.reject();
+  this.deferred = null;
 };
 
 jfxr.Synth.Oscillator = function(json, array) {

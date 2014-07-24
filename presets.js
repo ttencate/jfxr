@@ -4,15 +4,17 @@ jfxr.Preset = function(args) {
 	this.modifySound = args.modifySound || null;
 };
 
+jfxr.Preset.reset = new jfxr.Preset({
+  name: 'Reset',
+  createSound: function() {
+    var sound = new jfxr.Sound();
+    sound.sustain.value = 0.2;
+    return sound;
+  },
+});
+
 jfxr.Preset.all = [
-	new jfxr.Preset({
-		name: 'Reset',
-		createSound: function() {
-			var sound = new jfxr.Sound();
-			sound.sustain.value = 0.2;
-			return sound;
-		},
-	}),
+  jfxr.Preset.reset,
 	new jfxr.Preset({
 		name: 'Randomize',
 		createSound: function() {

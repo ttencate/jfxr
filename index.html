@@ -11,11 +11,14 @@
   </head>
   <body ng-controller="JfxrCtrl as ctrl" ng-keydown="ctrl.keyDown($event)">
     <div class="main position-relative">
+
       <div class="topbar">
+
         <div class="titlepane column-left">
           <h1>jfxr&thinsp;~</h1>
           <p class="credits">by <a href="http://twitter.com/frozenfractal">@frozenfractal</a></p>
         </div>
+
         <div class="pane pane-top-right column-right playbackpane">
           <canvas width="680" height="43" analyser="ctrl.getFrequencyData()" enabled="ctrl.analyserEnabled" ng-click="ctrl.analyserEnabled = !ctrl.analyserEnabled" class="analyser" ng-class="{'analyser-disabled': !ctrl.analyserEnabled}"></canvas>
           <label class="shiny autoplay" ng-class="{'shiny-checked': ctrl.autoplay}" title="Play automatically on change">
@@ -26,11 +29,28 @@
             <span class="shinycontent"><span class="playicon">&#x25b6;</span></span>
           </button>
         </div>
+
       </div>
+
       <div class="content">
+
         <div class="pane pane-bottom-left column-left filespane">
+          <div class="toolbar">
+            <button class="button button-tool" ng-click="ctrl.newSound()" title="Create new, default sound">
+              <span>New</span>
+            </button>
+            <button class="button button-tool" ng-click="ctrl.openSound()" disabled title="Load sound from file">
+              <span>Open</span>
+            </button>
+            <button class="button button-tool" ng-click="ctrl.saveSound()" disabled title="Save current sound to file">
+              <span>Save</span>
+            </button>
+            <button class="button button-tool" ng-click="ctrl.exportSound()" title="Export current sound to WAV">
+              <span>Export</span>
+            </button>
+          </div>
           <div class="presets">
-            <button ng-repeat="preset in ctrl.presets" class="preset" ng-click="ctrl.applyPreset(preset)">
+            <button ng-repeat="preset in ctrl.presets" class="button button-preset" ng-click="ctrl.applyPreset(preset)">
               <span>{{preset.name}}</span>
             </button>
           </div>
@@ -45,6 +65,7 @@
             <span ng-switch-when="false">Render time: {{ctrl.synth.renderTimeMs}}&nbsp;ms</span>
           </div>
         </div>
+
         <div class="pane pane-bottom-right column-right mainpane">
           <canvas waveshape="ctrl.buffer" class="waveshape" ng-class="{'waveshape-rendering': ctrl.synth.isRunning()}"></canvas>
           <div class="parameters vertical-scroll">
@@ -55,6 +76,7 @@
               <float-param sound="ctrl.getSound()" param="decay"></float-param>
               <float-param sound="ctrl.getSound()" param="tremoloDepth"></float-param>
               <float-param sound="ctrl.getSound()" param="tremoloFrequency"></float-param>
+
               <h2>Pitch</h2>
               <float-param sound="ctrl.getSound()" param="frequency"></float-param>
               <float-param sound="ctrl.getSound()" param="frequencySweep"></float-param>
@@ -64,6 +86,7 @@
               <float-param sound="ctrl.getSound()" param="frequencyJump1Amount"></float-param>
               <float-param sound="ctrl.getSound()" param="frequencyJump2Onset"></float-param>
               <float-param sound="ctrl.getSound()" param="frequencyJump2Amount"></float-param>
+
               <h2>Harmonics</h2>
               <float-param sound="ctrl.getSound()" param="harmonics"></float-param>
               <float-param sound="ctrl.getSound()" param="harmonicsFalloff"></float-param>
@@ -91,11 +114,13 @@
               <float-param sound="ctrl.getSound()" param="vibratoFrequency"></float-param>
               <float-param sound="ctrl.getSound()" param="squareDuty"></float-param>
               <float-param sound="ctrl.getSound()" param="squareDutySweep"></float-param>
+
               <h2>Filters</h2>
               <float-param sound="ctrl.getSound()" param="lowPassCutoff"></float-param>
               <float-param sound="ctrl.getSound()" param="lowPassCutoffSweep"></float-param>
               <float-param sound="ctrl.getSound()" param="highPassCutoff"></float-param>
               <float-param sound="ctrl.getSound()" param="highPassCutoffSweep"></float-param>
+
               <h2>Output</h2>
               <float-param sound="ctrl.getSound()" param="compression"></float-param>
               <boolean-param sound="ctrl.getSound()" param="normalization"></boolean-param>
@@ -103,6 +128,7 @@
             </div>
         </div>
       </div>
+
     </div>
     <!--
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
@@ -112,6 +138,7 @@
       var jfxrApp = angular.module('jfxrApp', []);
       var jfxr = {};
     </script>
+    <script src="export.js"></script>
     <script src="math.js"></script>
     <script src="presets.js"></script>
     <script src="random.js"></script>

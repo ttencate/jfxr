@@ -382,5 +382,9 @@ jfxrApp.service('localStorage', function() {
 		this.data[key] = JSON.stringify(value);
 	};
 
+  LocalStorage.prototype.delete = function(key) {
+    this.data.removeItem(key);
+  };
+
 	return new LocalStorage();
 });

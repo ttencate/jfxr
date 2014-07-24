@@ -134,11 +134,14 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 		localStorage.set('sounds[' + index + ']', value);
 	}.bind(this);
 
-	$scope.$watchCollection(function() { return this.sounds; }.bind(this), function(value) {
+	$scope.$watchCollection(function() { return this.sounds; }.bind(this), function(value, oldValue) {
 		// The entire array might have shifted, so we need to save them all.
-		for (var i = 0; i < this.sounds.length; i++) {
+		for (var i = 0; i < value.length; i++) {
 			storeSound(i);
 		}
+    for (var i = value.length; i < oldValue.length; i++) {
+      localStorage.delete('sounds[' + i + ']');
+    }
 	}.bind(this));
 
 	$scope.$watch(function() { return this.getSound().serialize(); }.bind(this), function(value) {

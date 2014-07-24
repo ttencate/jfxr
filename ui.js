@@ -169,7 +169,7 @@ jfxrApp.directive('waveshape', function() {
 		context.lineTo(width, height / 2);
 		context.stroke();
 
-		context.strokeStyle = '#88f';
+		context.strokeStyle = '#57d';
 		context.globalAlpha = 1.0;
 
 		if (numSamples < width) {

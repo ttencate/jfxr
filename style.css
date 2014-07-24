@@ -466,27 +466,27 @@ h2:first-child {
 }
 
 .amplitude {
-  color: #c55;
+  color: #d66;
 }
 
 .pitch {
-  color: #5b5;
+  color: #bb5;
 }
 
 .harmonics {
-  color: #995;
+  color: #5b5;
 }
 
 .tone {
-  color: #b5b;
+  color: #b6b;
 }
 
 .filters {
-  color: #66d;
+  color: #7bb;
 }
 
 .output {
-  color: #5bb;
+  color: #57d;
 }
 
 .param {

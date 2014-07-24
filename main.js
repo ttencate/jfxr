@@ -7,13 +7,12 @@ jfxr.VERSION = 1;
 
 jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, localStorage, synthFactory) {
 	var player = new Player();
-	var maxSounds = 50;
 
 	this.buffer = null;
 	this.synth = null;
 
 	this.sounds = [];
-	for (var i = 0; i < maxSounds; i++) {
+	for (var i = 0;; i++) {
 		var str = localStorage.get('sounds[' + i + ']', undefined);
 		if (!str) {
 			break;
@@ -25,7 +24,6 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 
   var addSound = function(sound) {
     this.sounds.unshift(sound);
-    this.sounds.splice(maxSounds, this.sounds.length - maxSounds);
     this.soundIndex = 0;
   }.bind(this);
 
@@ -138,7 +136,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
 
 	$scope.$watchCollection(function() { return this.sounds; }.bind(this), function(value) {
 		// The entire array might have shifted, so we need to save them all.
-		for (var i = 0; i < maxSounds; i++) {
+		for (var i = 0; i < this.sounds.length; i++) {
 			storeSound(i);
 		}
 	}.bind(this));

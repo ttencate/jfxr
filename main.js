@@ -5,7 +5,7 @@
 // written by this version.
 jfxr.VERSION = 1;
 
-jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, localStorage, synthFactory) {
+jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, localStorage, fileStorage, synthFactory) {
 	var player = new Player();
 
 	this.buffer = null;
@@ -77,16 +77,19 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   };
 
   this.openSound = function() {
-    // TODO
+    fileStorage.loadJfxr().then(function(sound) {
+      this.sounds.unshift(sound);
+      this.soundIndex = 0;
+    }.bind(this));
   };
 
   this.saveSound = function() {
-    // TODO
+    fileStorage.saveJfxr(this.getSound(), this.getSound().name);
   };
 
   this.exportSound = function() {
     this.synth.run().then(function(msg) {
-      jfxr.export.download(jfxr.export.toWavBlob(msg.array, msg.sampleRate), this.getSound().name);
+      fileStorage.downloadWav(msg.array, msg.sampleRate, this.getSound().name);
     }.bind(this));
   };
 

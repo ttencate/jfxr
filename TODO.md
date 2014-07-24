@@ -13,7 +13,6 @@ Features
 
 - Copy link
 - Rename sound
-- Save/load sounds to disk
 
 Polish
 ------

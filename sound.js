@@ -379,6 +379,7 @@ jfxr.Sound.prototype.reset = function() {
 jfxr.Sound.prototype.serialize = function() {
 	var json = {
 		_version: 1,
+    _name: this.name,
 		_locked: [],
 	};
 	this.forEachParam(function(key, param) {
@@ -387,7 +388,6 @@ jfxr.Sound.prototype.serialize = function() {
 			json._locked.push(key);
 		}
 	});
-	json.name = this.name;
 	return JSON.stringify(json);
 };
 
@@ -400,7 +400,7 @@ jfxr.Sound.prototype.parse = function(str) {
 					' but we support only up to version ' + jfxr.VERSION + '. Please update jfxr.');
 		}
 
-		this.name = json.name || 'Unnamed';
+		this.name = json._name || 'Unnamed';
 		this.forEachParam(function(key, param) {
 			if (key in json) {
 				param.value = json[key];

@@ -70,14 +70,14 @@
           <canvas waveshape="ctrl.buffer" class="waveshape" ng-class="{'waveshape-rendering': ctrl.synth.isRunning()}"></canvas>
           <div class="parameters vertical-scroll">
             <div class="parameters-column">
-              <h2>Amplitude</h2>
+              <h2 class="amplitude">Amplitude</h2>
               <float-param sound="ctrl.getSound()" param="attack"></float-param>
               <float-param sound="ctrl.getSound()" param="sustain"></float-param>
               <float-param sound="ctrl.getSound()" param="decay"></float-param>
               <float-param sound="ctrl.getSound()" param="tremoloDepth"></float-param>
               <float-param sound="ctrl.getSound()" param="tremoloFrequency"></float-param>
 
-              <h2>Pitch</h2>
+              <h2 class="pitch">Pitch</h2>
               <float-param sound="ctrl.getSound()" param="frequency"></float-param>
               <float-param sound="ctrl.getSound()" param="frequencySweep"></float-param>
               <float-param sound="ctrl.getSound()" param="frequencyDeltaSweep"></float-param>
@@ -87,12 +87,12 @@
               <float-param sound="ctrl.getSound()" param="frequencyJump2Onset"></float-param>
               <float-param sound="ctrl.getSound()" param="frequencyJump2Amount"></float-param>
 
-              <h2>Harmonics</h2>
+              <h2 class="harmonics">Harmonics</h2>
               <float-param sound="ctrl.getSound()" param="harmonics"></float-param>
               <float-param sound="ctrl.getSound()" param="harmonicsFalloff"></float-param>
             </div>
             <div class="parameters-column">
-              <h2>Tone</h2>
+              <h2 class="tone">Tone</h2>
               <custom-param sound="ctrl.getSound()" param="waveform">
                 <div class="paramcontrol waveforms">
                   <span ng-model="ctrl.getSound().waveform.value" waveform-button="sine" title="Sine"></span>
@@ -115,13 +115,13 @@
               <float-param sound="ctrl.getSound()" param="squareDuty"></float-param>
               <float-param sound="ctrl.getSound()" param="squareDutySweep"></float-param>
 
-              <h2>Filters</h2>
+              <h2 class="filters">Filters</h2>
               <float-param sound="ctrl.getSound()" param="lowPassCutoff"></float-param>
               <float-param sound="ctrl.getSound()" param="lowPassCutoffSweep"></float-param>
               <float-param sound="ctrl.getSound()" param="highPassCutoff"></float-param>
               <float-param sound="ctrl.getSound()" param="highPassCutoffSweep"></float-param>
 
-              <h2>Output</h2>
+              <h2 class="output">Output</h2>
               <float-param sound="ctrl.getSound()" param="compression"></float-param>
               <boolean-param sound="ctrl.getSound()" param="normalization"></boolean-param>
               <float-param sound="ctrl.getSound()" param="amplification"></float-param>

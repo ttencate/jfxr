@@ -453,11 +453,40 @@ h2 {
   text-transform: uppercase;
   font-weight: 400;
   font-size: 100%;
+  padding-top: 8px;
   line-height: 16px;
   box-sizing: border-box;
   color: #555;
   text-shadow: 0 0 1px #333;
   border-bottom: 1px solid #111;
+}
+
+h2:first-child {
+  padding-top: 0;
+}
+
+.amplitude {
+  color: #c55;
+}
+
+.pitch {
+  color: #5b5;
+}
+
+.harmonics {
+  color: #995;
+}
+
+.tone {
+  color: #b5b;
+}
+
+.filters {
+  color: #66d;
+}
+
+.output {
+  color: #5bb;
 }
 
 .param {

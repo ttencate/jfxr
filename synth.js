@@ -449,10 +449,10 @@ jfxr.Synth.Envelope.prototype.run = function(json, array, startSample, endSample
     var time = i / sampleRate;
     if (time < attack) {
       array[i] *= time / attack;
-    } else if (time > attack + sustain) {
-      array[i] *= 1 - (time - attack - sustain) / decay;
-    } else {
+    } else if (time < attack + sustain) {
       array[i] *= 1 + sustainPunch / 100 * (1 - (time - attack) / sustain);
+    } else {
+      array[i] *= 1 - (time - attack - sustain) / decay;
     }
   }
 };

@@ -9,17 +9,17 @@ jfxr.Math.sign = function(x) {
 };
 
 jfxr.Math.frac = function(x) {
-	return x - Math.floor(x);
+  return x - Math.floor(x);
 };
 
 jfxr.Math.clamp = function(min, max, x) {
-	if (x < min) return min;
-	if (x > max) return max;
-	return x;
+  if (x < min) return min;
+  if (x > max) return max;
+  return x;
 };
 
 jfxr.Math.roundTo = function(x, multiple) {
-	return Math.round(x / multiple) * multiple;
+  return Math.round(x / multiple) * multiple;
 };
 
 jfxr.Math.lerp = function(a, b, f) {

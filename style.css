@@ -8,14 +8,16 @@
   background-image: url(https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67);
   text-indent: -9999px;
   opacity: 0.3;
-  transition: opacity 0.2s ease-out, background-position 0.2s ease-out;
   background-position: 10px -10px;
+  background-repeat: no-repeat;
+  transition: background-position 0.05s linear, opacity 0.05s linear;
 }
 
 .github:hover {
   opacity: 0.8;
   background-position: 0 0;
   z-index: 1;
+  transition: background-position 0.2 linear, opacity 0.2 linear;
 }
 
 .github:active {
@@ -179,11 +181,13 @@ h1 {
 .credits a {
   color: inherit;
   text-decoration: none;
+  transition: color 0.1s linear;
 }
 
 .credits a:hover {
   text-decoration: underline;
   color: #666;
+  transition: none;
 }
 
 .credits a:active {
@@ -325,11 +329,14 @@ h1 {
   box-shadow:
     2px 2px 4px rgba(255, 255, 255, 0.05) inset,
     -2px -2px 4px rgba(0, 0, 0, 0.4) inset;
+
+  transition: color 0.1s linear, background-color 0.1s linear;
 }
 
 .button:hover:not(:disabled) {
   color: #888;
   background-color: #222;
+  transition: none;
 }
 
 .button:active:not(:disabled) {
@@ -376,10 +383,12 @@ h1 {
 .sound {
   cursor: pointer;
   position: relative;
+  transition: color 0.1s linear, background-color 0.1s linear;
 }
 
 .sound:hover {
   color: #ddd;
+  transition: none;
 }
 
 .sound:active {
@@ -398,6 +407,7 @@ h1 {
   border: 0;
   background-color: transparent;
   opacity: 0.3;
+  transition: opacity 0.1s linear;
 }
 
 .iconbutton:not(:disabled) {
@@ -406,6 +416,7 @@ h1 {
 
 .iconbutton:not(:disabled):hover {
   opacity: 0.6;
+  transition: none;
 }
 
 .iconbutton:not(:disabled):active {
@@ -598,10 +609,12 @@ h2:first-child {
   height: 15px;
   background: url(sprites.png);
   opacity: 0.7;
+  transition: opacity 0.2s linear;
 }
 
 .waveform:hover {
   opacity: 1.0;
+  transition: none;
 }
 
 .waveform.checked {
@@ -679,10 +692,12 @@ h2:first-child {
   box-shadow:
     1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
     -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
+  transition: background-color 0.2s linear;
 }
 
 .floatslider::-webkit-slider-thumb:hover {
   background-color: #888;
+  transition: none;
 }
 
 .floatslider::-webkit-slider-thumb:active {
@@ -713,10 +728,12 @@ h2:first-child {
   box-shadow:
     1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
     -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
+  transition: background-color 0.2s linear;
 }
 
 .booleanlabel:hover {
   background-color: #888;
+  transition: none;
 }
 
 .booleanlabel:active {

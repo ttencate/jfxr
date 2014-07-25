@@ -207,6 +207,8 @@ jfxr.Preset.all = [
       var randomize = this.randomize.bind(this);
 
       sound.waveform.value = random.fromArray(['sine', 'square', 'whistle', 'breaker']);
+      randomize(sound.squareDuty);
+      randomize(sound.squareDutySweep);
 
       randomize(sound.sustain, 0.02, 0.1);
       if (random.boolean(0.5)) {
@@ -218,6 +220,15 @@ jfxr.Preset.all = [
       if (random.boolean(0.7)) {
         randomize(sound.frequencyJump1Onset, 10, 30);
         randomize(sound.frequencyJump1Amount, 10, 100);
+        if (random.boolean(0.3)) {
+        randomize(sound.frequencyJump2Onset, 20, 40);
+        randomize(sound.frequencyJump2Amount, 10, 100);
+        }
+      }
+
+      if (random.boolean(0.5)) {
+        randomize(sound.flangerOffset, 0, 10);
+        randomize(sound.flangerOffsetSweep, -10, 10);
       }
 
       return sound;
@@ -232,6 +243,8 @@ jfxr.Preset.all = [
       var randomize = this.randomize.bind(this);
 
       sound.waveform.value = random.fromArray(['sine', 'triangle', 'sawtooth', 'square', 'tangent', 'whistle', 'breaker']);
+      randomize(sound.squareDuty);
+      randomize(sound.squareDutySweep);
 
       randomize(sound.sustain, 0.02, 0.1);
       if (random.boolean(0.5)) {
@@ -242,6 +255,11 @@ jfxr.Preset.all = [
       randomize(sound.frequency, 500, 2000);
       randomize(sound.frequencySweep, -100, -2000);
       randomize(sound.frequencyDeltaSweep, -100, -2000);
+
+      if (random.boolean(0.5)) {
+        randomize(sound.flangerOffset, 0, 10);
+        randomize(sound.flangerOffsetSweep, -10, 10);
+      }
 
       return sound;
     }

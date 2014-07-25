@@ -5,15 +5,6 @@ jfxr.Preset = function(args) {
   this.random = new jfxr.Random();
 };
 
-jfxr.Preset.reset = new jfxr.Preset({
-  name: 'Reset',
-  createSound: function() {
-    var sound = new jfxr.Sound();
-    sound.sustain.value = 0.2;
-    return sound;
-  },
-});
-
 jfxr.Preset.prototype.randomize = function(param, min, max) {
   if (min == undefined) min = param.minValue;
   if (max == undefined) max = param.maxValue;
@@ -38,8 +29,6 @@ jfxr.Preset.prototype.randomize = function(param, min, max) {
 };
 
 jfxr.Preset.all = [
-  jfxr.Preset.reset,
-
   new jfxr.Preset({
     name: 'Randomize',
     createSound: function() {

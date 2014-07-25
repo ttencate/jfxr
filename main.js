@@ -27,12 +27,20 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
     this.soundIndex = 0;
   }.bind(this);
 
+  var getFreeName = function(basename) {
+    var max = 0;
+    for (var i = 0; i < this.sounds.length; i++) {
+      var m = this.sounds[i].name.match('^' + basename + ' (\\d+)$');
+      if (m) {
+         max = Math.max(max, parseInt(m[1]));
+      }
+    }
+    return basename + ' ' + (max + 1);
+  }.bind(this);
+
   var maybeAddDefaultSound = function() {
     if (this.sounds.length == 0) {
-      var sound = new jfxr.Sound(context);
-      sound.name = 'Default sound';
-      sound.sustain.value = 0.2;
-      this.sounds.push(sound);
+      this.newSound();
     }
   }.bind(this);
   maybeAddDefaultSound();
@@ -73,7 +81,11 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   };
 
   this.newSound = function() {
-    this.applyPreset(jfxr.Preset.reset);
+    var sound = new jfxr.Sound(context);
+    sound.name = getFreeName('New');
+    sound.sustain.value = 0.2;
+    this.sounds.unshift(sound);
+    this.soundIndex = 0;
   };
 
   this.openSound = function() {
@@ -96,14 +108,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   this.applyPreset = function(preset) {
     if (preset.createSound) {
       var sound = preset.createSound();
-      var max = 0;
-      for (var i = 0; i < this.sounds.length; i++) {
-        var m = this.sounds[i].name.match('^' + preset.name + ' (\\d+)$');
-        if (m) {
-           max = Math.max(max, parseInt(m[1]));
-        }
-      }
-      sound.name = preset.name + ' ' + (max + 1);
+      sound.name = this.getFreeName(preset.name);
       addSound(sound);
     } else {
       preset.modifySound(this.getSound());

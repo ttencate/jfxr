@@ -82,13 +82,6 @@ jfxr.Parameter.prototype.reset = function() {
 jfxr.Sound = function() {
 	this.name = 'Unnamed';
 
-	var frequencyIsMeaningless = function(sound) {
-		var w = sound.waveform.value;
-		if (w == 'whitenoise' || w == 'pinknoise' || w == 'brownnoise') {
-			return 'Frequency and harmonics settings do not apply to noise';
-		}
-		return null;
-	};
 	var isNotSquare = function(sound) {
 		if (sound.waveform.value != 'square') {
 			return 'Duty cycle only applies to square waveforms';
@@ -159,7 +152,6 @@ jfxr.Sound = function() {
 		minValue: 10,
 		maxValue: 10000,
 		step: 100,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencySweep = new jfxr.Parameter({
 		label: 'Frequency sweep',
@@ -168,7 +160,6 @@ jfxr.Sound = function() {
 		minValue: -10000,
 		maxValue: 10000,
 		step: 100,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyDeltaSweep = new jfxr.Parameter({
 		label: 'Freq. delta sweep',
@@ -177,7 +168,6 @@ jfxr.Sound = function() {
 		minValue: -10000,
 		maxValue: 10000,
 		step: 100,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.repeatFrequency = new jfxr.Parameter({
 		label: 'Repeat frequency',
@@ -186,7 +176,6 @@ jfxr.Sound = function() {
 		minValue: 0,
 		maxValue: 100,
 		step: 0.1,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyJump1Onset = new jfxr.Parameter({
 		label: 'Freq. jump 1 onset',
@@ -195,7 +184,6 @@ jfxr.Sound = function() {
 		minValue: 0,
 		maxValue: 100,
 		step: 5,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyJump1Amount = new jfxr.Parameter({
 		label: 'Freq. jump 1 amount',
@@ -204,7 +192,6 @@ jfxr.Sound = function() {
 		minValue: -100,
 		maxValue: 100,
 		step: 5,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyJump2Onset = new jfxr.Parameter({
 		label: 'Freq. jump 2 onset',
@@ -213,7 +200,6 @@ jfxr.Sound = function() {
 		minValue: 0,
 		maxValue: 100,
 		step: 5,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.frequencyJump2Amount = new jfxr.Parameter({
 		label: 'Freq. jump 2 amount',
@@ -222,7 +208,6 @@ jfxr.Sound = function() {
 		minValue: -100,
 		maxValue: 100,
 		step: 5,
-		disabledReason: frequencyIsMeaningless,
 	});
 
 	// Harmonics parameters
@@ -234,7 +219,6 @@ jfxr.Sound = function() {
 		minValue: 0,
 		maxValue: 5,
 		step: 1,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.harmonicsFalloff = new jfxr.Parameter({
 		label: 'Harmonics falloff',
@@ -242,7 +226,6 @@ jfxr.Sound = function() {
 		minValue: 0,
 		maxValue: 1,
 		step: 0.01,
-		disabledReason: frequencyIsMeaningless,
 	});
 
 	// Tone parameters
@@ -264,6 +247,17 @@ jfxr.Sound = function() {
 			'brownnoise': 'Brown noise',
 		},
 	});
+  this.interpolateNoise = new jfxr.Parameter({
+    label: 'Interpolate noise',
+    defaultValue: true,
+    type: 'boolean',
+    disabledReason: function(sound) {
+      var waveform = sound.waveform.value;
+      if (waveform != 'whitenoise' && waveform != 'pinknoise' && waveform != 'brownnoise') {
+        return 'Noise interpolation only applies to noise waveforms';
+      }
+    },
+  });
 	this.vibratoDepth = new jfxr.Parameter({
 		label: 'Vibrato depth',
 		unit: 'Hz',
@@ -271,7 +265,6 @@ jfxr.Sound = function() {
 		minValue: 0,
 		maxValue: 1000,
 		step: 10,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.vibratoFrequency = new jfxr.Parameter({
 		label: 'Vibrato frequency',
@@ -280,7 +273,6 @@ jfxr.Sound = function() {
 		minValue: 1,
 		maxValue: 1000,
 		step: 1,
-		disabledReason: frequencyIsMeaningless,
 	});
 	this.squareDuty = new jfxr.Parameter({
 		label: 'Square duty',

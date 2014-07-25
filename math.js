@@ -21,3 +21,7 @@ jfxr.Math.clamp = function(min, max, x) {
 jfxr.Math.roundTo = function(x, multiple) {
 	return Math.round(x / multiple) * multiple;
 };
+
+jfxr.Math.lerp = function(a, b, f) {
+  return (1 - f) * a + f * b;
+};

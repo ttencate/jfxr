@@ -96,6 +96,7 @@ jfxr.Preset.all = [
 			}
 
 			randomize(sound.waveform);
+      randomize(sound.interpolateNoise);
 
 			if (random.boolean(0.5)) {
 				randomize(sound.vibratoDepth);

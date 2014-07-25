@@ -112,7 +112,16 @@ jfxr.Preset.all = [
 
       if (random.boolean(0.5)) {
         randomize(sound.flangerOffset);
-        randomize(sound.flangerOffsetSweep);
+        if (random.boolean(0.5)) {
+          randomize(sound.flangerOffsetSweep);
+        }
+      }
+
+      if (random.boolean(0.2)) {
+        randomize(sound.bitCrush);
+        if (random.boolean(0.5)) {
+          randomize(sound.bitCrushSweep);
+        }
       }
 
       while (true) {

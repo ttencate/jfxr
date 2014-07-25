@@ -16,11 +16,6 @@ Features
 - Duplicate sound
 - Undo
 
-bfxr sliders
-------------
-
-- Bit Crush, Bit Crush Sweep
-
 bfxr presets
 ------------
 

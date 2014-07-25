@@ -22,6 +22,7 @@ jfxr.Synth = function($q, $timeout, str) {
     jfxr.Synth.Generator,
     jfxr.Synth.Tremolo,
     jfxr.Synth.Flanger,
+    jfxr.Synth.BitCrush,
     jfxr.Synth.LowPass,
     jfxr.Synth.HighPass,
     jfxr.Synth.Envelope,
@@ -355,6 +356,26 @@ jfxr.Synth.Flanger.prototype.run = function(json, array, startSample, endSample)
   }
 
   this.bufferPos = bufferPos;
+};
+
+jfxr.Synth.BitCrush = function(json, array) {
+};
+
+jfxr.Synth.BitCrush.prototype.run = function(json, array, startSample, endSample) {
+  var numSamples = array.length;
+  var bitCrush = json.bitCrush;
+  var bitCrushSweep = json.bitCrushSweep;
+
+  if (bitCrush == 0 && bitCrushSweep == 0) {
+    return;
+  }
+
+  for (var i = startSample; i < endSample; i++) {
+    var bits = bitCrush + i / numSamples * bitCrushSweep;
+    bits = jfxr.Math.clamp(1, 16, Math.round(bits));
+    var steps = Math.pow(2, bits);
+    array[i] = -1 + 2 * Math.round((0.5 + 0.5 * array[i]) * steps) / steps;
+  }
 };
 
 jfxr.Synth.LowPass = function(json, array) {

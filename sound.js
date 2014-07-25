@@ -319,6 +319,22 @@ jfxr.Sound = function() {
     maxValue: 50,
     step: 1,
   });
+  this.bitCrush = new jfxr.Parameter({
+    label: 'Bit crush',
+    unit: 'bits',
+    defaultValue: 16,
+    minValue: 1,
+    maxValue: 16,
+    step: 1,
+  });
+  this.bitCrushSweep = new jfxr.Parameter({
+    label: 'Bit crush sweep',
+    unit: 'bits',
+    defaultValue: 0,
+    minValue: -16,
+    maxValue: 16,
+    step: 1,
+  });
   this.lowPassCutoff = new jfxr.Parameter({
     label: 'Low-pass cutoff',
     unit: 'Hz',

@@ -234,6 +234,8 @@ jfxr.Synth.WhiteNoiseOscillator = function(json) {
   this.currRandom = 0;
 };
 jfxr.Synth.WhiteNoiseOscillator.prototype.getSample = function(phase) {
+  // Need two samples per phase in order to include the desired frequencies.
+  phase = jfxr.Math.frac(phase * 2);
   if (phase < this.prevPhase) {
     this.prevRandom = this.currRandom;
     this.currRandom = this.random.uniform(-1, 1);
@@ -255,6 +257,8 @@ jfxr.Synth.PinkNoiseOscillator = function(json, array) {
   this.currRandom = 0;
 };
 jfxr.Synth.PinkNoiseOscillator.prototype.getSample = function(phase) {
+  // Need two samples per phase in order to include the desired frequencies.
+  phase = jfxr.Math.frac(phase * 2);
   if (phase < this.prevPhase) {
     this.prevRandom = this.currRandom;
     // Method pk3 from http://www.firstpr.com.au/dsp/pink-noise/,
@@ -285,6 +289,8 @@ jfxr.Synth.BrownNoiseOscillator = function(json, array) {
   this.currRandom = 0;
 };
 jfxr.Synth.BrownNoiseOscillator.prototype.getSample = function(phase) {
+  // Need two samples per phase in order to include the desired frequencies.
+  phase = jfxr.Math.frac(phase * 2);
   if (phase < this.prevPhase) {
     this.prevRandom = this.currRandom;
     this.currRandom = jfxr.Math.clamp(-1, 1, this.currRandom + 0.1 * this.random.uniform(-1, 1));

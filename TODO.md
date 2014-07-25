@@ -16,11 +16,6 @@ Features
 - Duplicate sound
 - Undo
 
-Polish
-------
-
-- Play/stop button animation
-
 bfxr sliders
 ------------
 

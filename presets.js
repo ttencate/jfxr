@@ -206,16 +206,42 @@ jfxr.Preset.all = [
       var random = this.random;
       var randomize = this.randomize.bind(this);
 
-      sound.waveform.value = random.fromArray(['sine', 'triangle', 'sawtooth', 'square', 'whistle', 'breaker']);
+      sound.waveform.value = random.fromArray(['sine', 'square', 'whistle', 'breaker']);
+
       randomize(sound.sustain, 0.02, 0.1);
       if (random.boolean(0.5)) {
         randomize(sound.sustainPunch, 0, 100);
       }
       randomize(sound.decay, 0.05, 0.4);
+
+      randomize(sound.frequency, 100, 2000);
       if (random.boolean(0.7)) {
         randomize(sound.frequencyJump1Onset, 10, 30);
         randomize(sound.frequencyJump1Amount, 10, 100);
       }
+
+      return sound;
+    }
+  }),
+
+  new jfxr.Preset({
+    name: 'Laser/shoot',
+    createSound: function(sound) {
+      var sound = new jfxr.Sound();
+      var random = this.random;
+      var randomize = this.randomize.bind(this);
+
+      sound.waveform.value = random.fromArray(['sine', 'triangle', 'sawtooth', 'square', 'tangent', 'whistle', 'breaker']);
+
+      randomize(sound.sustain, 0.02, 0.1);
+      if (random.boolean(0.5)) {
+        randomize(sound.sustainPunch, 0, 100);
+      }
+      randomize(sound.decay, 0.02, 0.1);
+
+      randomize(sound.frequency, 500, 2000);
+      randomize(sound.frequencySweep, -100, -2000);
+      randomize(sound.frequencyDeltaSweep, -100, -2000);
 
       return sound;
     }

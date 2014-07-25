@@ -311,4 +311,36 @@ jfxr.Preset.all = [
       return sound;
     }
   }),
+
+  new jfxr.Preset({
+    name: 'Powerup',
+    createSound: function(sound) {
+      var sound = new jfxr.Sound();
+      var random = this.random;
+      var randomize = this.randomize.bind(this);
+
+      sound.waveform.value = random.fromArray(['sine', 'triangle', 'sawtooth', 'square', 'tangent', 'whistle', 'breaker']);
+      randomize(sound.squareDuty);
+      randomize(sound.squareDutySweep);
+
+      randomize(sound.sustain, 0.05, 0.2);
+      if (random.boolean(0.5)) {
+        randomize(sound.sustainPunch, 0, 100);
+      }
+      randomize(sound.decay, 0.1, 0.4);
+
+      randomize(sound.frequency, 500, 2000);
+      randomize(sound.frequencySweep, 0, 2000);
+      randomize(sound.frequencyDeltaSweep, 0, 2000);
+      if (random.boolean(0.5)) {
+        randomize(sound.repeatFrequency, 0, 20);
+      }
+      if (random.boolean(0.5)) {
+        randomize(sound.vibratoDepth);
+        randomize(sound.vibratoFrequency);
+      }
+
+      return sound;
+    }
+  }),
 ];

@@ -253,8 +253,13 @@ jfxr.Preset.all = [
       randomize(sound.decay, 0.02, 0.1);
 
       randomize(sound.frequency, 500, 2000);
-      randomize(sound.frequencySweep, -100, -2000);
-      randomize(sound.frequencyDeltaSweep, -100, -2000);
+      randomize(sound.frequencySweep, -200, -2000);
+      randomize(sound.frequencyDeltaSweep, -200, -2000);
+
+      if (random.boolean(0.5)) {
+        randomize(sound.vibratoDepth, 0, 0.5 * sound.frequency.value);
+        randomize(sound.vibratoFrequency, 0, 100);
+      }
 
       if (random.boolean(0.5)) {
         randomize(sound.flangerOffset, 0, 10);
@@ -273,6 +278,7 @@ jfxr.Preset.all = [
       var randomize = this.randomize.bind(this);
 
       sound.waveform.value = random.fromArray(['whitenoise', 'pinknoise', 'brownnoise']);
+      randomize(sound.interpolateNoise);
 
       randomize(sound.sustain, 0.05, 0.1);
       if (random.boolean(0.5)) {

@@ -409,4 +409,28 @@ jfxr.Preset.all = [
       return sound;
     }
   }),
+
+  new jfxr.Preset({
+    name: 'Blip/select',
+    createSound: function(sound) {
+      var sound = new jfxr.Sound();
+      var random = this.random;
+      var randomize = this.randomize.bind(this);
+
+      sound.waveform.value = random.fromArray(['sine', 'triangle', 'sawtooth', 'square', 'tangent', 'whistle', 'breaker']);
+      randomize(sound.squareDuty, 10, 90);
+
+      randomize(sound.sustain, 0.01, 0.07);
+      randomize(sound.decay, 0, 0.03);
+
+      randomize(sound.frequency, 100, 3000);
+
+      if (random.boolean(0.5)) {
+        randomize(sound.harmonics);
+        randomize(sound.harmonicsFalloff);
+      }
+
+      return sound;
+    }
+  }),
 ];

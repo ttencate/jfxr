@@ -343,4 +343,34 @@ jfxr.Preset.all = [
       return sound;
     }
   }),
+
+  new jfxr.Preset({
+    name: 'Hit/hurt',
+    createSound: function(sound) {
+      var sound = new jfxr.Sound();
+      var random = this.random;
+      var randomize = this.randomize.bind(this);
+
+      sound.waveform.value = random.fromArray(['sawtooth', 'square', 'tangent', 'whitenoise', 'pinknoise', 'brownnoise']);
+
+      randomize(sound.sustain, 0.02, 0.1);
+      if (random.boolean(0.5)) {
+        randomize(sound.sustainPunch, 0, 100);
+      }
+      randomize(sound.decay, 0.02, 0.1);
+
+      randomize(sound.frequency, 500, 1000);
+      randomize(sound.frequencySweep, -200, -1000);
+      randomize(sound.frequencyDeltaSweep, -200, -1000);
+
+      if (random.boolean(0.5)) {
+        randomize(sound.flangerOffset, 0, 10);
+        randomize(sound.flangerOffsetSweep, -10, 10);
+      }
+
+      randomize(sound.lowPassCutoffSweep);
+
+      return sound;
+    }
+  }),
 ];

@@ -2,6 +2,7 @@ jfxr.Preset = function(args) {
   this.name = args.name;
   this.createSound = args.createSound || null;
   this.modifySound = args.modifySound || null;
+  this.random = new jfxr.Random();
 };
 
 jfxr.Preset.reset = new jfxr.Preset({
@@ -13,36 +14,38 @@ jfxr.Preset.reset = new jfxr.Preset({
   },
 });
 
+jfxr.Preset.prototype.randomize = function(param, min, max) {
+  if (min == undefined) min = param.minValue;
+  if (max == undefined) max = param.maxValue;
+  switch (param.type) {
+    case 'boolean':
+      param.value = (this.random.uniform() >= 0.5);
+      break;
+    case 'float':
+      param.value = jfxr.Math.roundTo(this.random.uniform(min, max), param.step);
+      break;
+    case 'int':
+      param.value = this.random.int(min, max);
+      break;
+    case 'enum':
+      var values = [];
+      for (var v in param.values) {
+        values.push(v);
+      }
+      param.value = this.random.fromArray(values);
+      break;
+  }
+};
+
 jfxr.Preset.all = [
   jfxr.Preset.reset,
+
   new jfxr.Preset({
     name: 'Randomize',
     createSound: function() {
       var sound = new jfxr.Sound();
-      var random = new jfxr.Random();
-
-      function randomize(param, min, max) {
-        if (min == undefined) min = param.minValue;
-        if (max == undefined) max = param.maxValue;
-        switch (param.type) {
-          case 'boolean':
-            param.value = (random.uniform() >= 0.5);
-            break;
-          case 'float':
-            param.value = jfxr.Math.roundTo(random.uniform(min, max), param.step);
-            break;
-          case 'int':
-            param.value = random.int(min, max);
-            break;
-          case 'enum':
-            var values = [];
-            for (var v in param.values) {
-              values.push(v);
-            }
-            param.value = random.fromArray(values);
-            break;
-        }
-      }
+      var random = this.random;
+      var randomize = this.randomize.bind(this);
 
       var attackSustainDecay = random.int(3, 16);
       // Attack typically leads to less useful sounds. Reduce probability by requiring two bits.
@@ -159,6 +162,7 @@ jfxr.Preset.all = [
       return sound;
     },
   }),
+
   new jfxr.Preset({
     name: 'Mutate',
     modifySound: function(sound) {
@@ -193,5 +197,27 @@ jfxr.Preset.all = [
         }
       });
     },
+  }),
+
+  new jfxr.Preset({
+    name: 'Pickup/coin',
+    createSound: function(sound) {
+      var sound = new jfxr.Sound();
+      var random = this.random;
+      var randomize = this.randomize.bind(this);
+
+      sound.waveform.value = random.fromArray(['sine', 'triangle', 'sawtooth', 'square', 'whistle', 'breaker']);
+      randomize(sound.sustain, 0.02, 0.1);
+      if (random.boolean(0.5)) {
+        randomize(sound.sustainPunch, 0, 100);
+      }
+      randomize(sound.decay, 0.05, 0.4);
+      if (random.boolean(0.7)) {
+        randomize(sound.frequencyJump1Onset, 10, 30);
+        randomize(sound.frequencyJump1Amount, 10, 100);
+      }
+
+      return sound;
+    }
   }),
 ];

@@ -19,7 +19,6 @@ Features
 bfxr presets
 ------------
 
-- Pickup/Coin
 - Laser/Shoot
 - Explosion
 - Powerup

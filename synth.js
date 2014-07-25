@@ -20,12 +20,12 @@ jfxr.Synth = function($q, $timeout, str) {
 
   var classes = [
     jfxr.Synth.Generator,
+    jfxr.Synth.Envelope,
     jfxr.Synth.Tremolo,
     jfxr.Synth.Flanger,
     jfxr.Synth.BitCrush,
     jfxr.Synth.LowPass,
     jfxr.Synth.HighPass,
-    jfxr.Synth.Envelope,
     jfxr.Synth.Compress,
     jfxr.Synth.Normalize,
     jfxr.Synth.Amplify,

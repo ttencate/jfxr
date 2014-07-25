@@ -19,7 +19,6 @@ Features
 bfxr presets
 ------------
 
-- Explosion
 - Powerup
 - Hit/Hurt
 - Jump

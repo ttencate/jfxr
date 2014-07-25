@@ -264,4 +264,40 @@ jfxr.Preset.all = [
       return sound;
     }
   }),
+
+  new jfxr.Preset({
+    name: 'Explosion',
+    createSound: function(sound) {
+      var sound = new jfxr.Sound();
+      var random = this.random;
+      var randomize = this.randomize.bind(this);
+
+      sound.waveform.value = random.fromArray(['whitenoise', 'pinknoise', 'brownnoise']);
+
+      randomize(sound.sustain, 0.05, 0.1);
+      if (random.boolean(0.5)) {
+        randomize(sound.sustainPunch, 0, 100);
+      }
+      randomize(sound.decay, 0.3, 0.5);
+
+      if (sound.waveform.value == 'brownnoise') {
+        randomize(sound.frequency, 10000, 20000);
+      } else {
+        randomize(sound.frequency, 1000, 10000);
+      }
+      randomize(sound.frequencySweep, -1000, -5000);
+      randomize(sound.frequencyDeltaSweep, -1000, -5000);
+
+      if (random.boolean(0.5)) {
+        randomize(sound.flangerOffset, 0, 10);
+        randomize(sound.flangerOffsetSweep, -10, 10);
+      }
+
+      if (random.boolean(0.5)) {
+        randomize(sound.compression, 0.5, 2.0);
+      }
+
+      return sound;
+    }
+  }),
 ];

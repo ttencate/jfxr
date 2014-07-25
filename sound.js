@@ -118,6 +118,14 @@ jfxr.Sound = function() {
 		maxValue: 5,
 		step: 0.01,
 	});
+  this.sustainPunch = new jfxr.Parameter({
+    label: 'Sustain punch',
+    unit: '%',
+    defaultValue: 0,
+    minValue: 0,
+    maxValue: 100,
+    step: 10,
+  });
 	this.decay = new jfxr.Parameter({
 		label: 'Decay',
 		unit: 's',

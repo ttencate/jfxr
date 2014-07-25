@@ -395,6 +395,7 @@ jfxr.Synth.Envelope.prototype.run = function(json, array, startSample, endSample
 	var sampleRate = json.sampleRate;
 	var attack = json.attack;
 	var sustain = json.sustain;
+  var sustainPunch = json.sustainPunch;
 	var decay = json.decay;
 
 	if (attack == 0 && decay == 0) {
@@ -407,7 +408,9 @@ jfxr.Synth.Envelope.prototype.run = function(json, array, startSample, endSample
 			array[i] *= time / attack;
 		} else if (time > attack + sustain) {
 			array[i] *= 1 - (time - attack - sustain) / decay;
-		}
+		} else {
+      array[i] *= 1 + sustainPunch / 100 * (1 - (time - attack) / sustain);
+    }
 	}
 };
 

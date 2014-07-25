@@ -19,7 +19,6 @@ Features
 bfxr sliders
 ------------
 
-- Punch
 - Flanger offset, Flanger sweep
 - Bit Crush, Bit Crush Sweep
 

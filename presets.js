@@ -52,6 +52,9 @@ jfxr.Preset.all = [
 			// For the other parameters, use just one bit.
 			if (attackSustainDecay & 4) {
 				randomize(sound.sustain, 0.0, 1.0);
+        if (random.boolean(0.5)) {
+          randomize(sound.sustainPunch);
+        }
 			}
 			if (attackSustainDecay & 8) {
 				randomize(sound.decay);

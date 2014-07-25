@@ -289,6 +289,11 @@ jfxr.Preset.all = [
       randomize(sound.frequencyDeltaSweep, -1000, -5000);
 
       if (random.boolean(0.5)) {
+        randomize(sound.tremoloDepth, 0, 50);
+        randomize(sound.tremoloFrequency, 0, 100);
+      }
+
+      if (random.boolean(0.5)) {
         randomize(sound.flangerOffset, 0, 10);
         randomize(sound.flangerOffsetSweep, -10, 10);
       }

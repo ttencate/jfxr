@@ -257,11 +257,11 @@ jfxrApp.directive('floatParam', function() {
       '  <div class="paramcontrol">' +
       '    <input type="range" min="{{sound[param].minValue}}" max="{{sound[param].maxValue}}" step="{{sound[param].step}}" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)" class="floatslider"></input>' +
       '  </div>' +
-            '  <div class="paramvalue" ng-switch="sound[param].isDisabled(sound)">' +
+      '  <div class="paramvalue" ng-switch="sound[param].isDisabled(sound)">' +
       '    <input ng-switch-when="false" class="floattext" type="text" ng-model="sound[param].value"></input>' +
       '    <span ng-switch-when="true">&mdash;</span>' +
       '  </div>' +
-            '  <div class="paramunit">{{sound[param].unit}}</div>' +
+      '  <div class="paramunit">{{sound[param].unit}}</div>' +
       '</div>',
     link: function(scope, element, attrs, ctrl) {
       element.bind('wheel', function(e) {
@@ -297,11 +297,12 @@ jfxrApp.directive('booleanParam', function() {
     },
     template:
       '<custom-param sound="sound" param="{{param}}">' +
-            '  <div class="paramcontrol">' +
+      '  <div class="paramcontrol">' +
       '    <label class="booleanlabel" ng-class="{\'booleanlabel-checked\': sound[param].value}"><input type="checkbox" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)"></input></label>' +
       '  </div>' +
-            '  <div class="customparamvalue">' +
-      '    {{sound[param].valueTitle()}}' +
+      '  <div class="customparamvalue" ng-switch="sound[param].isDisabled(sound)">' +
+      '    <span ng-switch-when="false">{{sound[param].valueTitle()}}</span>' +
+      '    <span ng-switch-when="true">&mdash;</span>' +
       '  </div>' +
       '</div>',
     link: function(scope, element, attrs, ctrl) {

@@ -21,6 +21,7 @@ jfxr.Synth = function($q, $timeout, str) {
   var classes = [
     jfxr.Synth.Generator,
     jfxr.Synth.Tremolo,
+    jfxr.Synth.Flanger,
     jfxr.Synth.LowPass,
     jfxr.Synth.HighPass,
     jfxr.Synth.Envelope,
@@ -318,6 +319,42 @@ jfxr.Synth.Tremolo.prototype.run = function(json, array, startSample, endSample)
     var time = i / sampleRate;
     array[i] *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * time * tremoloFrequency));
   }
+};
+
+jfxr.Synth.Flanger = function(json, array) {
+  if (json.flangerOffset == 0 && json.flangerOffsetSweep == 0) {
+    return;
+  }
+
+  // Maximum 100ms offset
+  this.buffer = new Float32Array(Math.ceil(json.sampleRate * 0.1));
+  this.bufferPos = 0;
+};
+
+jfxr.Synth.Flanger.prototype.run = function(json, array, startSample, endSample) {
+  if (!this.buffer) {
+    return;
+  }
+
+  var numSamples = array.length;
+  var sampleRate = json.sampleRate;
+  var flangerOffset = json.flangerOffset;
+  var flangerOffsetSweep = json.flangerOffsetSweep;
+
+  var buffer = this.buffer;
+  var bufferPos = this.bufferPos;
+  var bufferLength = buffer.length;
+
+  for (var i = startSample; i < endSample; i++) {
+    buffer[bufferPos] = array[i];
+
+    var offsetSamples = Math.round((flangerOffset + i / numSamples * flangerOffsetSweep) / 1000 * sampleRate);
+    offsetSamples = jfxr.Math.clamp(0, bufferLength - 1, offsetSamples);
+    array[i] += buffer[(bufferPos - offsetSamples + bufferLength) % bufferLength];
+    bufferPos = (bufferPos + 1) % bufferLength;
+  }
+
+  this.bufferPos = bufferPos;
 };
 
 jfxr.Synth.LowPass = function(json, array) {

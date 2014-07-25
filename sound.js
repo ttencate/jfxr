@@ -303,6 +303,22 @@ jfxr.Sound = function() {
 
   // Filter parameters
 
+  this.flangerOffset = new jfxr.Parameter({
+    label: 'Flanger offset',
+    unit: 'ms',
+    defaultValue: 0,
+    minValue: 0,
+    maxValue: 50,
+    step: 1,
+  });
+  this.flangerOffsetSweep = new jfxr.Parameter({
+    label: 'Flanger offset sweep',
+    unit: 'ms',
+    defaultValue: 0,
+    minValue: -50,
+    maxValue: 50,
+    step: 1,
+  });
   this.lowPassCutoff = new jfxr.Parameter({
     label: 'Low-pass cutoff',
     unit: 'Hz',

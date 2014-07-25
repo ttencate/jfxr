@@ -110,6 +110,11 @@ jfxr.Preset.all = [
         randomize(sound.squareDutySweep);
       }
 
+      if (random.boolean(0.5)) {
+        randomize(sound.flangerOffset);
+        randomize(sound.flangerOffsetSweep);
+      }
+
       while (true) {
         sound.lowPassCutoff.reset();
         sound.lowPassCutoffSweep.reset();

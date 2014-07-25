@@ -57,6 +57,11 @@
               <span>{{preset.name}}</span>
             </button>
           </div>
+          <div class="presets">
+            <button class="button button-preset" ng-click="ctrl.mutate()" title="Slightly change all parameters, except those which are locked">
+              <span>Mutate</span>
+            </button>
+          </div>
           <ul class="history">
             <li ng-repeat="sound in ctrl.sounds" class="sound" ng-class="{'sound-current': $index == ctrl.soundIndex}" ng-click="ctrl.soundIndex = $index">
               {{sound.name}}

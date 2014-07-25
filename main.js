@@ -106,13 +106,13 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   };
 
   this.applyPreset = function(preset) {
-    if (preset.createSound) {
-      var sound = preset.createSound();
-      sound.name = this.getFreeName(preset.name);
-      addSound(sound);
-    } else {
-      preset.modifySound(this.getSound());
-    }
+    var sound = preset.createSound();
+    sound.name = getFreeName(preset.name);
+    addSound(sound);
+  };
+
+  this.mutate = function() {
+    jfxr.Preset.mutate(this.getSound());
   };
 
   this.keyDown = function(e) {

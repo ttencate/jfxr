@@ -370,7 +370,10 @@ h1 {
 .toolbar {
   display: flex;
   flex-direction: row;
-  margin-bottom: 8px;
+}
+
+.presets {
+  margin-top: 8px;
 }
 
 .history {

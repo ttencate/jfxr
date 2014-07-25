@@ -373,4 +373,40 @@ jfxr.Preset.all = [
       return sound;
     }
   }),
+
+  new jfxr.Preset({
+    name: 'Jump',
+    createSound: function(sound) {
+      var sound = new jfxr.Sound();
+      var random = this.random;
+      var randomize = this.randomize.bind(this);
+
+      sound.waveform.value = random.fromArray(['sine', 'square', 'whistle', 'breaker']);
+      randomize(sound.squareDuty);
+      randomize(sound.squareDutySweep);
+
+      randomize(sound.sustain, 0.02, 0.1);
+      if (random.boolean(0.5)) {
+        randomize(sound.sustainPunch, 0, 100);
+      }
+      randomize(sound.decay, 0.05, 0.4);
+
+      randomize(sound.frequency, 100, 2000);
+      randomize(sound.frequencySweep, 200, 2000);
+
+      if (random.boolean(0.3)) {
+        randomize(sound.flangerOffset, 0, 10);
+        randomize(sound.flangerOffsetSweep, -10, 10);
+      }
+
+      if (random.boolean(0.5)) {
+        randomize(sound.lowPassCutoff);
+      }
+      if (random.boolean(0.5)) {
+        randomize(sound.highPassCutoff);
+      }
+
+      return sound;
+    }
+  }),
 ];

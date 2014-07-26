@@ -239,7 +239,7 @@ jfxrApp.directive('customParam', function() {
             '  <div class="paramcontent" ng-transclude></div>' +
       '  <div class="parambuttons">' +
       '    <button class="iconbutton iconbutton-lock" ng-class="{\'iconbutton-lock-locked\': sound[param].locked}" title="Lock from mutations" ng-click="sound[param].toggleLocked()" ng-disabled="sound[param].isDisabled(sound)"></button>' +
-      '    <button class="iconbutton iconbutton-reset" title="Reset to default value" ng-click="sound[param].reset()" ng-disabled="sound[param].isDisabled(sound)"></button>' +
+      '    <button class="iconbutton iconbutton-reset" title="Reset to default value" ng-click="sound[param].reset()" ng-disabled="sound[param].isDisabled(sound) || sound[param].hasDefaultValue()"></button>' +
       '  </div>' +
       '</div>',
   };

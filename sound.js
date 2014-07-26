@@ -79,6 +79,10 @@ jfxr.Parameter.prototype.reset = function() {
   this.value = this.defaultValue;
 };
 
+jfxr.Parameter.prototype.hasDefaultValue = function() {
+  return this.value == this.defaultValue;
+};
+
 jfxr.Sound = function() {
   this.name = 'Unnamed';
 

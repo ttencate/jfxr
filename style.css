@@ -426,6 +426,10 @@ h1 {
   opacity: 0.4;
 }
 
+.iconbutton:disabled {
+  opacity: 0.08;
+}
+
 .iconbutton-delete {
   background-position: 0px -15px;
 }

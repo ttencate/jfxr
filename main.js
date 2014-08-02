@@ -43,7 +43,6 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
       this.newSound();
     }
   }.bind(this);
-  maybeAddDefaultSound();
 
   this.soundIndex = jfxr.Math.clamp(0, this.sounds.length - 1, localStorage.get('soundIndex', 0));
 
@@ -141,6 +140,8 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
     if (!value) value = '';
     localStorage.set('sounds[' + index + ']', value);
   }.bind(this);
+
+  maybeAddDefaultSound();
 
   $scope.$watchCollection(function() { return this.sounds; }.bind(this), function(value, oldValue) {
     // The entire array might have shifted, so we need to save them all.

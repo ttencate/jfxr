@@ -21,10 +21,10 @@ jfxr.Random.prototype.uint32 = function() {
 };
 
 jfxr.Random.prototype.uniform = function(min, max) {
-  if (min == undefined && max == undefined) {
+  if (min === undefined && max === undefined) {
     min = 0;
     max = 1;
-  } else if (max == undefined) {
+  } else if (max === undefined) {
     max = min;
     min = 0;
   }

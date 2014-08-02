@@ -1,8 +1,8 @@
-jfxrApp.service('synthFactory', function($q, $timeout) {
+jfxrApp.service('synthFactory', ['$q', '$timeout', function($q, $timeout) {
   return function(str) {
     return new jfxr.Synth($q, $timeout, str);
   };
-});
+}]);
 
 jfxr.Synth = function($q, $timeout, str) {
   this.$q = $q;
@@ -40,7 +40,7 @@ jfxr.Synth = function($q, $timeout, str) {
 
   this.startSample = 0;
   this.blockSize = 10240;
-}
+};
 
 jfxr.Synth.prototype.run = function() {
   if (this.deferred) {
@@ -163,7 +163,7 @@ jfxr.Synth.Generator.prototype.run = function(json, array, startSample, endSampl
     if (fractionInRepetition > frequencyJump2Onset / 100) {
       currentFrequency *= 1 + frequencyJump2Amount / 100;
     }
-    if (vibratoDepth != 0) {
+    if (vibratoDepth !== 0) {
       currentFrequency += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * time * vibratoFrequency));
     }
 
@@ -312,7 +312,7 @@ jfxr.Synth.Tremolo.prototype.run = function(json, array, startSample, endSample)
   var tremoloDepth = json.tremoloDepth;
   var tremoloFrequency = json.tremoloFrequency;
 
-  if (tremoloDepth == 0) {
+  if (tremoloDepth === 0) {
     return;
   }
 
@@ -323,7 +323,7 @@ jfxr.Synth.Tremolo.prototype.run = function(json, array, startSample, endSample)
 };
 
 jfxr.Synth.Flanger = function(json, array) {
-  if (json.flangerOffset == 0 && json.flangerOffsetSweep == 0) {
+  if (json.flangerOffset === 0 && json.flangerOffsetSweep === 0) {
     return;
   }
 
@@ -366,7 +366,7 @@ jfxr.Synth.BitCrush.prototype.run = function(json, array, startSample, endSample
   var bitCrush = json.bitCrush;
   var bitCrushSweep = json.bitCrushSweep;
 
-  if (bitCrush == 0 && bitCrushSweep == 0) {
+  if (bitCrush === 0 && bitCrushSweep === 0) {
     return;
   }
 
@@ -404,7 +404,7 @@ jfxr.Synth.LowPass.prototype.run = function(json, array, startSample, endSample)
       lowPassAlpha = 1;
     } else {
       // From somewhere on the internet: cos wc = 2a / (1+a^2)
-      var lowPassAlpha = 1 / cosWc - Math.sqrt(1 / (cosWc * cosWc) - 1);
+      lowPassAlpha = 1 / cosWc - Math.sqrt(1 / (cosWc * cosWc) - 1);
       lowPassAlpha = 1 - lowPassAlpha; // Probably the internet's definition of alpha is different.
     }
     var sample = array[i];
@@ -462,7 +462,7 @@ jfxr.Synth.Envelope.prototype.run = function(json, array, startSample, endSample
   var sustainPunch = json.sustainPunch;
   var decay = json.decay;
 
-  if (attack == 0 && decay == 0) {
+  if (attack === 0 && decay === 0) {
     return;
   }
 
@@ -509,7 +509,8 @@ jfxr.Synth.Normalize.prototype.run = function(json, array, startSample, endSampl
   }
 
   var maxSample = this.maxSample;
-  for (var i = startSample; i < endSample; i++) {
+  var i;
+  for (i = startSample; i < endSample; i++) {
     maxSample = Math.max(maxSample, Math.abs(array[i]));
   }
   this.maxSample = maxSample;
@@ -517,7 +518,7 @@ jfxr.Synth.Normalize.prototype.run = function(json, array, startSample, endSampl
   var numSamples = array.length;
   if (endSample == numSamples) {
     var factor = 1 / maxSample;
-    for (var i = 0; i < numSamples; i++) {
+    for (i = 0; i < numSamples; i++) {
       array[i] *= factor;
     }
   }

@@ -1,4 +1,4 @@
-jfxrApp.service('fileStorage', function($q) {
+jfxrApp.service('fileStorage', ['$q', function($q) {
 
   var download = function(blob, filename) {
     var link = document.createElement('a');
@@ -93,4 +93,4 @@ jfxrApp.service('fileStorage', function($q) {
       return sound;
     });
   };
-});
+}]);

@@ -16,7 +16,7 @@ Features
 Productionization
 -----------------
 
-- Merge/minify JavaScript
 - Minify CSS
 - Crunch PNGs
+- Add Analytics
 - Test in non-Chrome browsers

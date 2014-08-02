@@ -1,8 +1,9 @@
-jfxrApp.service('context', function() {
+jfxrApp.service('context', [function() {
   return new AudioContext();
-});
+}]);
 
-jfxrApp.service('Player', function($rootScope, $timeout, context) {
+jfxrApp.service('Player', ['$rootScope', '$timeout', 'context', function(
+      $rootScope, $timeout, context) {
   var Player = function() {
     this.position = 0;
 
@@ -60,9 +61,9 @@ jfxrApp.service('Player', function($rootScope, $timeout, context) {
   };
 
   return Player;
-});
+}]);
 
-jfxrApp.directive('analyser', function() {
+jfxrApp.directive('analyser', [function() {
   var draw = function(context, width, height, data) {
     var barWidth = Math.max(2, Math.ceil(width / data.length));
     var numBars = Math.floor(width / barWidth);
@@ -79,18 +80,21 @@ jfxrApp.directive('analyser', function() {
     gradient.addColorStop(0.6, '#dd0');
     gradient.addColorStop(1, '#0b0');
 
+    var i;
+    var y;
+
     context.fillStyle = gradient;
     context.globalAlpha = 1.0;
-    for (var i = 0; i < numBars; i++) {
+    for (i = 0; i < numBars; i++) {
       var f = (data[i] + 100) / 100;
-      var y = Math.round(f * numBlocks) / numBlocks;
+      y = Math.round(f * numBlocks) / numBlocks;
       context.fillRect(i * barWidth, (1 - y) * height, barWidth - barGap, y * height);
     }
 
     context.fillStyle = '#111';
     context.globalAlpha = 0.3;
-    for (var i = 0; i < numBlocks; i++) {
-      var y = i * blockHeight + 1;
+    for (i = 0; i < numBlocks; i++) {
+      y = i * blockHeight + 1;
       context.fillRect(0, y, width, blockGap);
     }
   };
@@ -137,9 +141,9 @@ jfxrApp.directive('analyser', function() {
       });
     },
   };
-});
+}]);
 
-jfxrApp.directive('waveshape', function() {
+jfxrApp.directive('waveshape', [function() {
   var draw = function(canvas, buffer) {
     var width = canvas.clientWidth;
     var height = canvas.clientHeight;
@@ -172,12 +176,15 @@ jfxrApp.directive('waveshape', function() {
     context.strokeStyle = '#57d';
     context.globalAlpha = 1.0;
 
+    var i;
+    var sample;
+
     if (numSamples < width) {
       // Draw a line between each pair of successive samples.
       context.beginPath();
       context.moveTo(0, height / 2);
-      for (var i = 0; i < numSamples; i++) {
-        var sample = channel[i];
+      for (i = 0; i < numSamples; i++) {
+        sample = channel[i];
         context.lineTo(i / numSamples * width, (1 - sample) * height / 2);
       }
       context.stroke();
@@ -191,8 +198,8 @@ jfxrApp.directive('waveshape', function() {
         var min = 1e99, max = -1e99;
         var start = Math.floor(x / width * numSamples);
         var end = Math.ceil((x + 1) / width * numSamples);
-        for (var i = start; i < end; i++) {
-          var sample = channel[i];
+        for (i = start; i < end; i++) {
+          sample = channel[i];
           if (sample < min) min = sample;
           if (sample > max) max = sample;
         }
@@ -223,9 +230,9 @@ jfxrApp.directive('waveshape', function() {
       });
     },
   };
-});
+}]);
 
-jfxrApp.directive('customParam', function() {
+jfxrApp.directive('customParam', [function() {
   return {
     restrict: 'E',
     scope: {
@@ -243,9 +250,9 @@ jfxrApp.directive('customParam', function() {
       '  </div>' +
       '</div>',
   };
-});
+}]);
 
-jfxrApp.directive('floatParam', function() {
+jfxrApp.directive('floatParam', [function() {
   return {
     restrict: 'E',
     scope: {
@@ -306,9 +313,9 @@ jfxrApp.directive('floatParam', function() {
       });
     },
   };
-});
+}]);
 
-jfxrApp.directive('booleanParam', function() {
+jfxrApp.directive('booleanParam', [function() {
   return {
     restrict: 'E',
     scope: {
@@ -341,16 +348,16 @@ jfxrApp.directive('booleanParam', function() {
       // Something funny is going on with initialization of range elements with float values.
       // E.g. without this, the sustain slider will start at the 0 position. Angular bug?
       var unwatch = scope.$watch('sound[param].value', function(value) {
-        if (value != undefined) {
+        if (value !== undefined) {
           element.find('input')[0].value = value;
           unwatch();
         }
       });
     },
   };
-});
+}]);
 
-jfxrApp.directive('waveformButton', function() {
+jfxrApp.directive('waveformButton', [function() {
   return {
     require: 'ngModel',
     scope: {
@@ -384,16 +391,16 @@ jfxrApp.directive('waveformButton', function() {
       });
     },
   };
-});
+}]);
 
-jfxrApp.service('localStorage', function() {
+jfxrApp.service('localStorage', [function() {
   var LocalStorage = function() {
     this.data = window.localStorage || {};
   };
 
   LocalStorage.prototype.get = function(key, defaultValue) {
     var json = this.data[key];
-    if (json == undefined) {
+    if (json === undefined) {
       return defaultValue;
     }
     return JSON.parse(json);
@@ -408,60 +415,4 @@ jfxrApp.service('localStorage', function() {
   };
 
   return new LocalStorage();
-});
-
-// http://stackoverflow.com/questions/16240864/update-number-boundary-using-ng-model
-
-jfxr.isEmpty = function(value) {
-  return angular.isUndefined(value) || value === '' || value === null || value !== value;
-}
-
-jfxrApp.directive('ngMin', function() {
-  return {
-    restrict: 'A',
-    require: 'ngModel',
-    link: function(scope, elem, attr, ctrl) {
-      scope.$watch(attr.ngMin, function(){
-        ctrl.$setViewValue(ctrl.$viewValue);
-      });
-      var minValidator = function(value) {
-        var min = scope.$eval(attr.ngMin) || 0;
-        if (!jfxr.isEmpty(value) && value < min) {
-          ctrl.$setValidity('ngMin', false);
-          return undefined;
-        } else {
-          ctrl.$setValidity('ngMin', true);
-          return value;
-        }
-      };
-
-      ctrl.$parsers.push(minValidator);
-      ctrl.$formatters.push(minValidator);
-    },
-  };
-});
-
-jfxrApp.directive('ngMax', function() {
-  return {
-    restrict: 'A',
-    require: 'ngModel',
-    link: function(scope, elem, attr, ctrl) {
-      scope.$watch(attr.ngMax, function(){
-        ctrl.$setViewValue(ctrl.$viewValue);
-      });
-      var maxValidator = function(value) {
-        var max = scope.$eval(attr.ngMax) || Infinity;
-        if (!jfxr.isEmpty(value) && value > max) {
-          ctrl.$setValidity('ngMax', false);
-          return undefined;
-        } else {
-          ctrl.$setValidity('ngMax', true);
-          return value;
-        }
-      };
-
-      ctrl.$parsers.push(maxValidator);
-      ctrl.$formatters.push(maxValidator);
-    },
-  };
-});
+}]);

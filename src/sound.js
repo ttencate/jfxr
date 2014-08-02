@@ -429,7 +429,7 @@ jfxr.Sound.prototype.serialize = function() {
 
 jfxr.Sound.prototype.parse = function(str) {
   this.reset();
-  if (str && str != '') {
+  if (str && str !== '') {
     var json = JSON.parse(str);
     if (json._version > jfxr.VERSION) {
       throw new Error('Cannot read this sound; it was written by jfxr version ' + json._version +

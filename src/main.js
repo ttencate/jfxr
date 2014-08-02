@@ -5,7 +5,8 @@
 // written by this version.
 jfxr.VERSION = 1;
 
-jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, localStorage, fileStorage, synthFactory) {
+jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'localStorage', 'fileStorage', 'synthFactory', function(
+      context, Player, $scope, $timeout, localStorage, fileStorage, synthFactory) {
   var player = new Player();
 
   this.buffer = null;
@@ -39,7 +40,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   }.bind(this);
 
   var maybeAddDefaultSound = function() {
-    if (this.sounds.length == 0) {
+    if (this.sounds.length === 0) {
       this.newSound();
     }
   }.bind(this);
@@ -158,7 +159,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   });
 
   var storeSound = function(index, value) {
-    if (value == undefined && index < this.sounds.length) {
+    if (value === undefined && index < this.sounds.length) {
       value = this.sounds[index].serialize();
     }
     if (!value) value = '';
@@ -168,11 +169,12 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   maybeAddDefaultSound();
 
   $scope.$watchCollection(function() { return this.sounds; }.bind(this), function(value, oldValue) {
+    var i;
     // The entire array might have shifted, so we need to save them all.
-    for (var i = 0; i < value.length; i++) {
+    for (i = 0; i < value.length; i++) {
       storeSound(i);
     }
-    for (var i = value.length; i < oldValue.length; i++) {
+    for (i = value.length; i < oldValue.length; i++) {
       localStorage.delete('sounds[' + i + ']');
     }
   }.bind(this));
@@ -184,7 +186,7 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
     }
     player.stop();
     this.buffer = null;
-    if (value != undefined && value != '') {
+    if (value !== undefined && value !== '') {
       storeSound(this.soundIndex, value);
       this.synth = synthFactory(value);
       this.synth.run().then(function(msg) {
@@ -200,8 +202,8 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   }.bind(this));
 
   $scope.$watch(function() { return this.soundIndex; }.bind(this), function(value) {
-    if (value != undefined) {
+    if (value !== undefined) {
       localStorage.set('soundIndex', value);
     }
   }.bind(this));
-});
+}]);

@@ -13,4 +13,3 @@ Productionization
 -----------------
 
 - Add Analytics
-- Test in non-Chrome browsers

@@ -522,6 +522,7 @@ h1 a {
 
 .parameters-column {
   flex-grow: 1;
+  flex-basis: 0;
   padding-right: 16px;
   border-right: 1px solid #080808;
   margin-right: 16px;

@@ -63,11 +63,6 @@ input, button {
   outline: 0;
 }
 
-label,
-input[type="checkbox"] {
-  cursor: pointer;
-}
-
 input[type="text"] {
   border: 1px solid transparent;
   background-color: transparent;
@@ -775,6 +770,7 @@ h2:first-child {
   box-shadow:
     1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
     -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
+  cursor: pointer;
   transition: background-color 0.2s linear;
 }
 
@@ -799,6 +795,7 @@ h2:first-child {
   box-shadow:
     1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
     -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
+  cursor: inherit;
 }
 
 .floattext {

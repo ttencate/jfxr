@@ -123,7 +123,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'loca
   };
 
   this.keyDown = function(e) {
-    if (e.target.tagName == 'INPUT') {
+    if (e.target.tagName == 'INPUT' && e.target.type == 'text') {
       return;
     }
     if (e.keyCode == 32) { // space

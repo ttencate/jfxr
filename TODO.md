@@ -1,15 +1,11 @@
 To do
 =====
 
-Usability
----------
-
-- Draw amplitude graph
-- Draw frequency graph
-
 Features
 --------
 
+- Draw amplitude graph
+- Draw frequency graph
 - Copy link
 - Undo
 

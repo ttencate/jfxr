@@ -13,6 +13,12 @@ mixes multiple generated sounds together). Some filters also have a slightly
 different meaning, most notably the bit crunch, which is a real bit crunch
 rather than a downsample.
 
+Reporting bugs
+--------------
+
+Please report any issues you find to the [issue tracker on
+GitHub](https://github.com/ttencate/jfxr/issues).
+
 Developing
 ----------
 

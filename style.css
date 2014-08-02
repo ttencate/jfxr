@@ -317,15 +317,21 @@ h1 a {
   border: none;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
-
-  font-family: Arial, sans-serif;
   font-size: 32px;
   line-height: 32px;
 }
 
 .playicon {
+  display: inline-block;
+  vertical-align: center;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 12px 21px;
+  border-color: transparent;
+  border-left-color: #ddd;
   position: relative;
-  top: -3px;
+  left: 10.5px;
 }
 
 .filespane {

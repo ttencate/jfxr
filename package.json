@@ -1,0 +1,16 @@
+{
+  "name": "jfxr",
+  "version": "0.9.0",
+  "description": "A browser-based tool to create sound effects for games.",
+  "homepage": "http://jfxr.frozenfractal.com",
+  "repository": "https://github.com/ttencate/jfxr",
+  "bugs": "https://github.com/ttencate/jfxr/issues",
+  "license": "BSD-3-Clause",
+  "author": {"name": "Thomas ten Cate"},
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*"
+  }
+}	

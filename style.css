@@ -169,6 +169,11 @@ h1 {
   line-height: 39px;
 }
 
+h1 a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 .credits {
   font-family: Chango, sans-serif;
   font-size: 9px;

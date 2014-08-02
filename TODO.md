@@ -16,6 +16,5 @@ Features
 Productionization
 -----------------
 
-- Crunch PNGs
 - Add Analytics
 - Test in non-Chrome browsers

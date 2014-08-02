@@ -11,6 +11,7 @@
     "grunt": "*",
     "grunt-contrib-concat": "*",
     "grunt-contrib-cssmin": "*",
+    "grunt-contrib-imagemin": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
 	"grunt-htmlrefs": "*"

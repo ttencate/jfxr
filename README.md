@@ -13,6 +13,13 @@ mixes multiple generated sounds together). Some filters also have a slightly
 different meaning, most notably the bit crunch, which is a real bit crunch
 rather than a downsample.
 
+Requirements
+------------
+
+Tested on the latest Chrome and Firefox, on Linux and OS X. In other modern
+browsers, I guarantee that the sliders will look broken, but hopefully
+everything else will still work.
+
 Reporting bugs
 --------------
 

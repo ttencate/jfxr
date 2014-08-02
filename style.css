@@ -759,6 +759,13 @@ h2:first-child {
   background-position: 0 0, -76px -16px;
 }
 
+.booleanlabel.booleanlabel-disabled {
+  background-color: #666;
+  box-shadow:
+    1px 1px 0.5px rgba(255, 255, 255, 0.3) inset,
+    -1px -1px 0.5px rgba(0, 0, 0, 0.5) inset;
+}
+
 .floattext {
   box-sizing: border-box;
   width: 100%;
@@ -777,4 +784,8 @@ h2:first-child {
   box-shadow:
     -1px -1px 0.5px rgba(255, 255, 255, 0.1) inset,
     1px 1px 2px rgba(0, 0, 0, 1.0) inset;
+}
+
+.floattext.ng-invalid {
+  border-color: #c44;
 }

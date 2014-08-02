@@ -4,7 +4,6 @@ To do
 Usability
 ---------
 
-- Make text input boxes work better
 - Draw amplitude graph
 - Draw frequency graph
 

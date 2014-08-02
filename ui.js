@@ -255,14 +255,18 @@ jfxrApp.directive('floatParam', function() {
     template:
       '<custom-param sound="sound" param="{{param}}" value="sound[param].value">' +
       '  <div class="paramcontrol">' +
-      '    <input type="range" ng-min="{{sound[param].minValue}}" ng-max="{{sound[param].maxValue}}" step="{{sound[param].step}}" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)" class="floatslider"></input>' +
+      '    <input type="range" min="{{sound[param].minValue}}" max="{{sound[param].maxValue}}" step="{{sound[param].step}}" ng-model="sound[param].value" ng-model-options="{debounce: 300}" ng-disabled="sound[param].isDisabled(sound)" class="floatslider"></input>' +
       '  </div>' +
-      '  <div class="paramvalue" ng-switch="sound[param].isDisabled(sound)">' +
-      '    <input ng-switch-when="false" class="floattext" type="text" ng-model="sound[param].value"></input>' +
-      '    <span ng-switch-when="true">&mdash;</span>' +
+      '  <div class="paramvalue">' +
+      '    <input ng-show="!sound[param].isDisabled(sound)" class="floattext" type="text" ng-model="ctrl.editedValue"></input>' +
+      '    <span ng-show="sound[param].isDisabled(sound)">&mdash;</span>' +
       '  </div>' +
       '  <div class="paramunit">{{sound[param].unit}}</div>' +
       '</div>',
+    controller: function() {
+      this.editedValue = null;
+    },
+    controllerAs: 'ctrl',
     link: function(scope, element, attrs, ctrl) {
       element.bind('wheel', function(e) {
         if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey || e.buttons) {
@@ -274,6 +278,31 @@ jfxrApp.directive('floatParam', function() {
           param.value -= jfxr.Math.sign(delta) * param.step;
         });
         e.preventDefault();
+      });
+
+      scope.$watch('sound[param].value', function(value) {
+        ctrl.editedValue = value;
+      });
+
+      var textInput = angular.element(element[0].getElementsByClassName('floattext'));
+      textInput.bind('blur', function(e) {
+        console.log(e);
+        scope.sound[scope.param].value = ctrl.editedValue;
+        ctrl.editedValue = scope.sound[scope.param].value;
+        scope.$apply();
+      });
+      textInput.bind('keydown', function(e) {
+        switch (e.keyCode) {
+          case 13: // Enter
+            textInput[0].blur();
+            e.preventDefault();
+            break;
+          case 27: // Esc
+            ctrl.editedValue = scope.sound[scope.param].value;
+            textInput[0].blur();
+            e.preventDefault();
+            break;
+        }
       });
     },
   };
@@ -289,7 +318,7 @@ jfxrApp.directive('booleanParam', function() {
     template:
       '<custom-param sound="sound" param="{{param}}">' +
       '  <div class="paramcontrol">' +
-      '    <label class="booleanlabel" ng-class="{\'booleanlabel-checked\': sound[param].value}"><input type="checkbox" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)"></input></label>' +
+      '    <label class="booleanlabel" ng-class="{\'booleanlabel-checked\': sound[param].value, \'booleanlabel-disabled\': sound[param].isDisabled(sound)}"><input type="checkbox" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)"></input></label>' +
       '  </div>' +
       '  <div class="customparamvalue" ng-switch="sound[param].isDisabled(sound)">' +
       '    <span ng-switch-when="false">{{sound[param].valueTitle()}}</span>' +

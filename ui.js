@@ -255,7 +255,7 @@ jfxrApp.directive('floatParam', function() {
     template:
       '<custom-param sound="sound" param="{{param}}" value="sound[param].value">' +
       '  <div class="paramcontrol">' +
-      '    <input type="range" min="{{sound[param].minValue}}" max="{{sound[param].maxValue}}" step="{{sound[param].step}}" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)" class="floatslider"></input>' +
+      '    <input type="range" ng-min="{{sound[param].minValue}}" ng-max="{{sound[param].maxValue}}" step="{{sound[param].step}}" ng-model="sound[param].value" ng-disabled="sound[param].isDisabled(sound)" class="floatslider"></input>' +
       '  </div>' +
       '  <div class="paramvalue" ng-switch="sound[param].isDisabled(sound)">' +
       '    <input ng-switch-when="false" class="floattext" type="text" ng-model="sound[param].value"></input>' +
@@ -274,15 +274,6 @@ jfxrApp.directive('floatParam', function() {
           param.value -= jfxr.Math.sign(delta) * param.step;
         });
         e.preventDefault();
-      });
-
-      // Something funny is going on with initialization of range elements with float values.
-      // E.g. without this, the sustain slider will start at the 0 position. Angular bug?
-      var unwatch = scope.$watch('sound[param].value', function(value) {
-        if (value != undefined) {
-          element.find('input')[0].value = value;
-          unwatch();
-        }
       });
     },
   };
@@ -388,4 +379,60 @@ jfxrApp.service('localStorage', function() {
   };
 
   return new LocalStorage();
+});
+
+// http://stackoverflow.com/questions/16240864/update-number-boundary-using-ng-model
+
+jfxr.isEmpty = function(value) {
+  return angular.isUndefined(value) || value === '' || value === null || value !== value;
+}
+
+jfxrApp.directive('ngMin', function() {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function(scope, elem, attr, ctrl) {
+      scope.$watch(attr.ngMin, function(){
+        ctrl.$setViewValue(ctrl.$viewValue);
+      });
+      var minValidator = function(value) {
+        var min = scope.$eval(attr.ngMin) || 0;
+        if (!jfxr.isEmpty(value) && value < min) {
+          ctrl.$setValidity('ngMin', false);
+          return undefined;
+        } else {
+          ctrl.$setValidity('ngMin', true);
+          return value;
+        }
+      };
+
+      ctrl.$parsers.push(minValidator);
+      ctrl.$formatters.push(minValidator);
+    },
+  };
+});
+
+jfxrApp.directive('ngMax', function() {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function(scope, elem, attr, ctrl) {
+      scope.$watch(attr.ngMax, function(){
+        ctrl.$setViewValue(ctrl.$viewValue);
+      });
+      var maxValidator = function(value) {
+        var max = scope.$eval(attr.ngMax) || Infinity;
+        if (!jfxr.isEmpty(value) && value > max) {
+          ctrl.$setValidity('ngMax', false);
+          return undefined;
+        } else {
+          ctrl.$setValidity('ngMax', true);
+          return value;
+        }
+      };
+
+      ctrl.$parsers.push(maxValidator);
+      ctrl.$formatters.push(maxValidator);
+    },
+  };
 });

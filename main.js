@@ -115,9 +115,26 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
   };
 
   this.keyDown = function(e) {
+    if (e.target.tagName == 'INPUT') {
+      return;
+    }
     if (e.keyCode == 32) { // space
       this.togglePlay();
       e.preventDefault();
+    }
+  };
+
+  this.soundNameKeyDown = function(e, currentName) {
+    switch (e.keyCode) {
+      case 13: // Enter
+        $timeout(function() { e.target.blur(); });
+        e.preventDefault();
+        break;
+      case 27: // Esc
+        e.target.value = currentName;
+        $timeout(function() { e.target.blur(); });
+        e.preventDefault();
+        break;
     }
   };
 

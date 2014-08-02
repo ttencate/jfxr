@@ -11,7 +11,6 @@ Features
 --------
 
 - Copy link
-- Rename sound
 - Duplicate sound
 - Undo
 

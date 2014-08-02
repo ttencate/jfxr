@@ -98,6 +98,13 @@ jfxrApp.controller('JfxrCtrl', function(context, Player, $scope, $timeout, local
     fileStorage.saveJfxr(this.getSound(), this.getSound().name);
   };
 
+  this.duplicateSound = function() {
+    var dup = new jfxr.Sound();
+    dup.parse(this.getSound().serialize());
+    dup.name = getFreeName(dup.name.replace(/ \d+$/, ''));
+    this.sounds.splice(this.soundIndex, 0, dup);
+  };
+
   this.exportSound = function() {
     this.synth.run().then(function(msg) {
       fileStorage.downloadWav(msg.array, msg.sampleRate, this.getSound().name);

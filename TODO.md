@@ -11,7 +11,6 @@ Features
 --------
 
 - Copy link
-- Duplicate sound
 - Undo
 
 Productionization

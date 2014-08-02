@@ -5,8 +5,8 @@
 // written by this version.
 jfxr.VERSION = 1;
 
-jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'localStorage', 'fileStorage', 'synthFactory', function(
-      context, Player, $scope, $timeout, localStorage, fileStorage, synthFactory) {
+jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'localStorage', 'fileStorage', 'synthFactory', 'allPresets', function(
+      context, Player, $scope, $timeout, localStorage, fileStorage, synthFactory, allPresets) {
   var player = new Player();
 
   this.buffer = null;
@@ -50,7 +50,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'loca
   this.analyserEnabled = localStorage.get('analyserEnabled', true);
   this.autoplay = localStorage.get('autoplayEnabled', true);
 
-  this.presets = jfxr.Preset.all;
+  this.presets = allPresets;
 
   this.getSound = function() {
     return this.sounds[this.soundIndex];

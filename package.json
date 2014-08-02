@@ -10,8 +10,9 @@
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-concat": "*",
-	"grunt-htmlrefs": "*",
+    "grunt-contrib-cssmin": "*",
     "grunt-contrib-jshint": "*",
-    "grunt-contrib-uglify": "*"
+    "grunt-contrib-uglify": "*",
+	"grunt-htmlrefs": "*"
   }
 }	

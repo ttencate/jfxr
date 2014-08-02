@@ -28,6 +28,12 @@ module.exports = function(grunt) {
         },
       },
     },
+    cssmin: {
+      minify: {
+        src: ['style.css'],
+        dest: 'dist/style.min.css',
+      },
+    },
     htmlrefs: {
       dist: {
         src: 'index.html',
@@ -37,9 +43,10 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-htmlrefs');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-htmlrefs');
 
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'htmlrefs']);
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'cssmin', 'htmlrefs']);
 };

@@ -4,7 +4,6 @@ To do
 Features
 --------
 
-- Draw amplitude graph
 - Draw frequency graph
 - Copy link
 - Undo

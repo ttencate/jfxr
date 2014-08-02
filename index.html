@@ -76,7 +76,7 @@
         </div>
 
         <div class="pane pane-bottom-right column-right mainpane">
-          <canvas waveshape="ctrl.buffer" class="waveshape" ng-class="{'waveshape-rendering': ctrl.synth.isRunning()}"></canvas>
+          <canvas waveshape waveshape-buffer="ctrl.buffer" waveshape-sound="ctrl.getSound()" class="waveshape" ng-class="{'waveshape-rendering': ctrl.synth.isRunning()}"></canvas>
           <div class="parameters vertical-scroll">
             <div class="parameters-column">
               <h2 class="amplitude">Amplitude</h2>

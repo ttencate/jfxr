@@ -396,6 +396,10 @@ jfxr.Sound = function() {
   });
 };
 
+jfxr.Sound.prototype.duration = function() {
+  return this.attack.value + this.sustain.value + this.decay.value;
+};
+
 jfxr.Sound.prototype.forEachParam = function(func) {
   for (var key in this) {
     var value = this[key];

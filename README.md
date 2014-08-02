@@ -1,40 +1,42 @@
 JFXR
 ====
 
-Jfxr is a browser-based tool to generate sound effects, for example for use in games. It was inspired by [bfxr](http://www.bfxr.net/), but aims to be more powerful and more intuitive to use.
+Jfxr is a browser-based tool to generate sound effects, for example for use in
+games. It was inspired by [bfxr](http://www.bfxr.net/), but aims to be more
+powerful and more intuitive to use.
 
 Status
 ------
 
-Work in progress. Not much to see here yet.
+Ready for use. Compared to bfxr, the only missing feature is the mixer (which
+mixes multiple generated sounds together). Some filters also have a slightly
+different meaning, most notably the bit crunch, which is a real bit crunch
+rather than a downsample.
 
-License (BSD)
--------------
+Developing
+----------
 
-Copyright (c) 2014, Thomas ten Cate
-All rights reserved.
+Clone the repository and open `index.html` locally in your browser. This should
+just work.
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+To produce production assets (minified JavaScript, CSS and images), you need
+node.js installed. To run the Grunt tasks, you also need the `grunt`
+command-line tool; if you don't have it:
 
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+    sudo npm install -g grunt-cli
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+To install the dependencies of the packaging system, just run:
 
-3. Neither the name of the copyright holder nor the names of its contributors
-   may be used to endorse or promote products derived from this software
-   without specific prior written permission.
+    npm install
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Finally, to build production assets:
+
+    grunt
+
+This produces output in the `dist` directory, which can be used locally or
+copied to a webserver.
+
+License
+-------
+
+Three-clause BSD license; see LICENSE for details.

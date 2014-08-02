@@ -375,7 +375,7 @@ jfxr.Sound = function() {
   // Output parameters
   
   this.compression = new jfxr.Parameter({
-    label: 'Compression exponent',
+    label: 'Compression',
     defaultValue: 1,
     minValue: 0,
     maxValue: 10,

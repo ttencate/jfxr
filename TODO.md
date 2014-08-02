@@ -8,8 +8,3 @@ Features
 - Draw frequency graph
 - Copy link
 - Undo
-
-Productionization
------------------
-
-- Add Analytics

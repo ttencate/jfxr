@@ -142,7 +142,8 @@ jfxrApp.directive('drawFrequency', [function() {
 
         var min = 0;
         var max = 0;
-        for (var x = 0; x < width; x++) {
+        var x;
+        for (x = 0; x < width; x++) {
           var f = sound.frequencyAt(x / width * duration);
           max = Math.max(max, f);
         }
@@ -160,7 +161,7 @@ jfxrApp.directive('drawFrequency', [function() {
         context.globalAlpha = 1.0;
         context.lineWidth = 1.0;
         context.beginPath();
-        for (var x = 0; x < width; x++) {
+        for (x = 0; x < width; x++) {
           var time = x / width * duration;
           context.lineTo(x, baseY + sound.frequencyAt(time) * scaleY);
         }

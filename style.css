@@ -500,17 +500,25 @@ h1 a {
   flex-direction: column;
 }
 
-.waveshape {
+.canvas {
   width: 100%;
-  height: 63px;
   background-color: #111;
   box-shadow:
     0.5px 1px 0.5px rgba(255, 255, 255, 0.2),
     1px 2px 2px rgba(0, 0, 0, 1.0);
 }
 
-.waveshape-rendering {
+.canvas-waveshape {
+  height: 63px;
+}
+
+.canvas-waveshape-rendering {
   opacity: 0.5;
+}
+
+.canvas-frequency {
+  margin-top: 8px;
+  height: 31px;
 }
 
 .parameters {
@@ -518,6 +526,7 @@ h1 a {
   margin-top: 8px;
   flex-grow: 1;
   flex-shrink: 1;
+  flex-basis: 0;
 }
 
 .parameters-column {

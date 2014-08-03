@@ -1,16 +1,17 @@
-jfxrApp.directive('waveshape', [function() {
+jfxrApp.directive('canvasManager', [function() {
   return {
-    scope: {
-      'buffer': '=waveshapeBuffer',
-      'sound': '=waveshapeSound',
-    },
-    link: function(scope, element, attrs, ctrl) {
-      var canvas = element[0];
+    controller: ['$element', function($element) {
+      var canvas = $element[0];
       var context = canvas.getContext('2d');
-      var width;
-      var height;
+      var width = 0;
+      var height = 0;
+      var drawFunctions = [];
 
-      var prepare = function() {
+      this.registerDrawFunction = function(drawFunction) {
+        drawFunctions.push(drawFunction);
+      };
+      
+      this.draw = function() {
         width = canvas.clientWidth;
         height = canvas.clientHeight;
         if (canvas.width != width) {
@@ -19,14 +20,27 @@ jfxrApp.directive('waveshape', [function() {
         if (canvas.height != height) {
           canvas.height = height;
         }
-      };
 
-      var clear = function() {
         context.globalAlpha = 1.0;
         context.clearRect(0, 0, width, height);
+        
+        for (var i = 0; i < drawFunctions.length; i++) {
+          drawFunctions[i](context, width, height);
+        }
       };
+    }],
+  };
+}]);
 
-      var drawBuffer = function(buffer) {
+jfxrApp.directive('waveshape', [function() {
+  return {
+    require: 'canvasManager',
+    link: function(scope, element, attrs, ctrl) {
+      var buffer = null;
+
+      ctrl.registerDrawFunction(function(context, width, height) {
+        if (!buffer) return;
+        
         var channel = buffer.getChannelData(0);
         var numSamples = buffer.length;
 
@@ -73,9 +87,25 @@ jfxrApp.directive('waveshape', [function() {
             context.stroke();
           }
         }
-      };
+      });
 
-      var drawAmplitude = function(sound) {
+      scope.$watch(attrs.waveshape, function(value) {
+        buffer = value;
+        ctrl.draw();
+      });
+    },
+  };
+}]);
+
+jfxrApp.directive('drawAmplitude', [function() {
+  return {
+    require: 'canvasManager',
+    link: function(scope, element, attrs, ctrl) {
+      var sound = null;
+
+      ctrl.registerDrawFunction(function(context, width, height) {
+        if (!sound) return;
+
         var duration = sound.duration();
         var baseY = height / 2;
         var scaleY = -(height / 2 - 0.5) / (1 + sound.sustainPunch.value / 100);
@@ -91,9 +121,25 @@ jfxrApp.directive('waveshape', [function() {
           }
           context.stroke();
         }
-      };
+      });
 
-      var drawFrequency = function(sound) {
+      scope.$watch(attrs.drawAmplitude, function(value) {
+        sound = value;
+        ctrl.draw();
+      });
+    },
+  };
+}]);
+
+jfxrApp.directive('drawFrequency', [function() {
+  return {
+    require: 'canvasManager',
+    link: function(scope, element, attrs, ctrl) {
+      var sound = null;
+
+      ctrl.registerDrawFunction(function(context, width, height) {
+        if (!sound) return;
+
         var duration = sound.duration();
 
         var min = 0;
@@ -121,18 +167,11 @@ jfxrApp.directive('waveshape', [function() {
           context.lineTo(x, baseY + sound.frequencyAt(time) * scaleY);
         }
         context.stroke();
-      };
+      });
 
-      scope.$watchGroup(['sound', 'buffer'], function(values) {
-        prepare();
-        clear();
-        if (values[1]) {
-          drawBuffer(values[1]);
-        }
-        if (values[0]) {
-          drawAmplitude(values[0]);
-          drawFrequency(values[0]);
-        }
+      scope.$watch(attrs.drawFrequency, function(value) {
+        sound = value;
+        ctrl.draw();
       });
     },
   };

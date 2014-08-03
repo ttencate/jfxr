@@ -63,7 +63,16 @@ jfxr.Preset.mutate = function(sound) {
 jfxr.Preset.all = function() {
   return [
     new jfxr.Preset({
-      name: 'Randomize',
+      name: 'Default',
+      createSound: function() {
+        var sound = new jfxr.Sound();
+        sound.sustain.value = 0.2;
+        return sound;
+      },
+    }),
+
+    new jfxr.Preset({
+      name: 'Random',
       createSound: function() {
         var sound = new jfxr.Sound();
         var random = this.random;

@@ -41,7 +41,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'loca
 
   var maybeAddDefaultSound = function() {
     if (this.sounds.length === 0) {
-      this.newSound();
+      this.applyPreset(this.presets[0]);
     }
   }.bind(this);
 
@@ -78,14 +78,6 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'loca
 
   this.getFrequencyData = function() {
     return player.getFrequencyData();
-  };
-
-  this.newSound = function() {
-    var sound = new jfxr.Sound(context);
-    sound.name = getFreeName('New');
-    sound.sustain.value = 0.2;
-    this.sounds.unshift(sound);
-    this.soundIndex = 0;
   };
 
   this.openSound = function() {

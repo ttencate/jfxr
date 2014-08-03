@@ -5,8 +5,8 @@
 // written by this version.
 jfxr.VERSION = 1;
 
-jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'localStorage', 'fileStorage', 'synthFactory', 'allPresets', function(
-      context, Player, $scope, $timeout, localStorage, fileStorage, synthFactory, allPresets) {
+jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'synthFactory', 'allPresets', function(
+      context, Player, $scope, $timeout, $window, localStorage, fileStorage, synthFactory, allPresets) {
   var player = new Player();
 
   this.buffer = null;
@@ -96,6 +96,16 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'loca
     dup.parse(this.getSound().serialize());
     dup.name = getFreeName(dup.name.replace(/ \d+$/, ''));
     this.sounds.splice(this.soundIndex, 0, dup);
+  };
+
+  this.link = null;
+
+  this.createLink = function() {
+    // http://stackoverflow.com/questions/3213531/creating-a-new-location-object-in-javascript
+    var url = document.createElement('a');
+    url.href = window.location.href;
+    url.hash = this.getSound().serialize();
+    this.link = url.href;
   };
 
   this.exportSound = function() {
@@ -198,4 +208,21 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', 'loca
       localStorage.set('soundIndex', value);
     }
   }.bind(this));
+
+  var parseHash = function() {
+    var json = $window.location.hash.replace(/^#/, '');
+    $window.location.hash = '';
+    if (json.length > 0) {
+      var sound = new jfxr.Sound();
+      try {
+        sound.parse(json);
+      } catch (ex) {
+        console.error('Could not parse sound from URL fragment', ex);
+        return;
+      }
+      this.sounds.unshift(sound);
+      this.soundIndex = 0;
+    }
+  }.bind(this);
+  parseHash();
 }]);

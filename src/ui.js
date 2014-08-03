@@ -157,3 +157,27 @@ jfxrApp.directive('waveformButton', [function() {
     },
   };
 }]);
+
+jfxrApp.directive('linkbox', ['$document', '$timeout', function($document, $timeout) {
+  return {
+    scope: {
+      for: '=',
+    },
+    template: '<input type="text" readonly class="linkbox" ng-model="for" ng-show="for"></input>',
+    link: function(scope, element, attrs, ctrl) {
+      var input = element.find('input');
+      input.on('blur', function() {
+        scope['for'] = null;
+        scope.$apply();
+      });
+      scope.$watch('for', function(value) {
+        if (value) {
+          $timeout(function() {
+            input[0].focus();
+            input[0].setSelectionRange(0, value.length);
+          });
+        }
+      });
+    },
+  };
+}]);

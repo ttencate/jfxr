@@ -398,9 +398,21 @@ h1 a {
   width: 100%;
 }
 
+.offsetparent {
+  position: relative;
+}
+
 .toolbar {
   display: flex;
   flex-direction: row;
+}
+
+.linkbox {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  width: 128px;
+  z-index: 10;
 }
 
 .presets {

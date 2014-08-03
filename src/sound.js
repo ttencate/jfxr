@@ -400,6 +400,55 @@ jfxr.Sound.prototype.duration = function() {
   return this.attack.value + this.sustain.value + this.decay.value;
 };
 
+jfxr.Sound.prototype.amplitudeAt = function(time) {
+  var attack = this.attack.value;
+  var sustain = this.sustain.value;
+  var sustainPunch = this.sustainPunch.value;
+  var decay = this.decay.value;
+  var tremoloDepth = this.tremoloDepth.value;
+  var amp;
+  if (time < attack) {
+    amp = time / attack;
+  } else if (time < attack + sustain) {
+    amp = 1 + sustainPunch / 100 * (1 - (time - attack) / sustain);
+  } else {
+    amp = 1 - (time - attack - sustain) / decay;
+  }
+  if (tremoloDepth !== 0) {
+    amp *= 1 - (tremoloDepth / 100) * (0.5 + 0.5 * Math.cos(2 * Math.PI * time * this.tremoloFrequency.value));
+  }
+  return amp;
+};
+
+jfxr.Sound.prototype.effectiveRepeatFrequency = function() {
+  return Math.max(this.repeatFrequency.value, 1 / this.duration());
+};
+
+jfxr.Sound.prototype.frequencyAt = function(time) {
+  var repeatFrequency = this.effectiveRepeatFrequency();
+  var fractionInRepetition = jfxr.Math.frac(time * repeatFrequency);
+  var freq =
+    this.frequency.value +
+    fractionInRepetition * this.frequencySweep.value +
+    fractionInRepetition * fractionInRepetition * this.frequencyDeltaSweep.value;
+  if (fractionInRepetition > this.frequencyJump1Onset.value / 100) {
+    freq *= 1 + this.frequencyJump1Amount.value / 100;
+  }
+  if (fractionInRepetition > this.frequencyJump2Onset.value / 100) {
+    freq *= 1 + this.frequencyJump2Amount.value / 100;
+  }
+  if (this.vibratoDepth.value !== 0) {
+    freq += 1 - this.vibratoDepth.value * (0.5 - 0.5 * Math.sin(2 * Math.PI * time * this.vibratoFrequency.value));
+  }
+  return Math.max(0, freq);
+};
+
+jfxr.Sound.prototype.squareDutyAt = function(time) {
+  var repeatFrequency = this.effectiveRepeatFrequency();
+  var fractionInRepetition = jfxr.Math.frac(time * repeatFrequency);
+  return (this.squareDuty.value + fractionInRepetition * this.squareDutySweep.value) / 100;
+};
+
 jfxr.Sound.prototype.forEachParam = function(func) {
   for (var key in this) {
     var value = this[key];

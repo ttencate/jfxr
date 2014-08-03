@@ -47,7 +47,6 @@ jfxrApp.directive('waveshape', [function() {
         if (numSamples < width) {
           // Draw a line between each pair of successive samples.
           context.beginPath();
-          context.moveTo(0, height / 2);
           for (i = 0; i < numSamples; i++) {
             sample = channel[i];
             context.lineTo(i / numSamples * width, (1 - sample) * height / 2);
@@ -58,7 +57,7 @@ jfxrApp.directive('waveshape', [function() {
           // takes 300ms. For performance, draw a vertical line in each pixel
           // column, representing the range of samples falling into this
           // column.
-          // TODO: make this look better by taking advantage of antialiasing somehow
+          // TODO: make this look smoother by taking advantage of antialiasing somehow
           for (var x = 0; x < width; x++) {
             var min = 1e99, max = -1e99;
             var start = Math.floor(x / width * numSamples);
@@ -76,30 +75,52 @@ jfxrApp.directive('waveshape', [function() {
         }
       };
 
-      var drawSound = function(sound) {
-        var scaleX = width / sound.duration();
+      var drawAmplitude = function(sound) {
+        var duration = sound.duration();
         var baseY = height / 2;
         var scaleY = -(height / 2 - 0.5) / (1 + sound.sustainPunch.value / 100);
 
-        var points = [
-          [0, 0],
-          [sound.attack.value, 1],
-          [sound.attack.value, 1 + sound.sustainPunch.value / 100],
-          [sound.attack.value + sound.sustain.value, 1],
-          [sound.attack.value + sound.sustain.value + sound.decay.value, 0],
-        ];
-
         context.strokeStyle = '#d66';
         context.globalAlpha = 1.0;
-        context.lineWidth = 1.0;
-        context.beginPath();
+        context.lineWidth = 0.5;
         for (var j = -1; j <= 1; j += 2) {
-          context.moveTo(points[0][0] * scaleX, baseY + points[0][1] * scaleY);
-          for (var i = 1; i < points.length; i++) {
-            context.lineTo(points[i][0] * scaleX, baseY + j * points[i][1] * scaleY);
+          context.beginPath();
+          for (var x = 0; x < width; x++) {
+            var time = x / width * duration;
+            context.lineTo(x, baseY + j * sound.amplitudeAt(time) * scaleY);
           }
           context.stroke();
         }
+      };
+
+      var drawFrequency = function(sound) {
+        var duration = sound.duration();
+
+        var min = 0;
+        var max = 0;
+        for (var x = 0; x < width; x++) {
+          var f = sound.frequencyAt(x / width * duration);
+          max = Math.max(max, f);
+        }
+        var baseY;
+        var scaleY;
+        if (max - min > 0) {
+          scaleY = -(height - 1) / (max - min);
+          baseY = height - 0.5 - min * scaleY;
+        } else {
+          scaleY = 0;
+          baseY = height / 2;
+        }
+
+        context.strokeStyle = '#bb5';
+        context.globalAlpha = 1.0;
+        context.lineWidth = 0.5;
+        context.beginPath();
+        for (var x = 0; x < width; x++) {
+          var time = x / width * duration;
+          context.lineTo(x, baseY + sound.frequencyAt(time) * scaleY);
+        }
+        context.stroke();
       };
 
       scope.$watchGroup(['sound', 'buffer'], function(values) {
@@ -109,7 +130,8 @@ jfxrApp.directive('waveshape', [function() {
           drawBuffer(values[1]);
         }
         if (values[0]) {
-          drawSound(values[0]);
+          drawAmplitude(values[0]);
+          drawFrequency(values[0]);
         }
       });
     },

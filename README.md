@@ -26,6 +26,13 @@ Reporting bugs
 Please report any issues you find to the [issue tracker on
 GitHub](https://github.com/ttencate/jfxr/issues).
 
+Technical details
+-----------------
+
+Jfxr uses [Angular.js](https://angularjs.org/) for its UI and module dependency
+management. It relies on several of the latest web technologies: WebAudio,
+canvas2d, local storage and of course CSS3.
+
 Developing
 ----------
 

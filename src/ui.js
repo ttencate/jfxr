@@ -59,7 +59,6 @@ jfxrApp.directive('floatParam', [function() {
 
       var textInput = angular.element(element[0].getElementsByClassName('floattext'));
       textInput.bind('blur', function(e) {
-        console.log(e);
         scope.sound[scope.param].value = ctrl.editedValue;
         ctrl.editedValue = scope.sound[scope.param].value;
         scope.$apply();

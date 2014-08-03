@@ -4,17 +4,15 @@ jfxrApp.service('synthFactory', ['$q', '$timeout', function($q, $timeout) {
   };
 }]);
 
-jfxr.Synth = function($q, $timeout, str) {
+jfxr.Synth = function($q, $timeout, json) {
   this.$q = $q;
   this.$timeout = $timeout;
-  this.json = JSON.parse(str);
+  this.sound = new jfxr.Sound();
+  this.sound.parse(json);
 
-  var sampleRate = this.json.sampleRate;
-  var attack = this.json.attack;
-  var sustain = this.json.sustain;
-  var decay = this.json.decay;
+  var sampleRate = this.sound.sampleRate.value;
 
-  var numSamples = Math.max(1, Math.ceil(sampleRate * (attack + sustain + decay)));
+  var numSamples = Math.max(1, Math.ceil(sampleRate * this.sound.duration()));
 
   this.array = new Float32Array(numSamples);
 
@@ -33,7 +31,7 @@ jfxr.Synth = function($q, $timeout, str) {
 
   this.transformers = [];
   for (var i = 0; i < classes.length; i++) {
-    this.transformers.push(new classes[i](this.json, this.array));
+    this.transformers.push(new classes[i](this.sound, this.array));
   }
 
   this.startTime = Date.now();
@@ -60,7 +58,7 @@ jfxr.Synth.prototype.tick = function() {
   var numSamples = this.array.length;
   var endSample = Math.min(numSamples, this.startSample + this.blockSize);
   for (var i = 0; i < this.transformers.length; i++) {
-    this.transformers[i].run(this.json, this.array, this.startSample, endSample);
+    this.transformers[i].run(this.sound, this.array, this.startSample, endSample);
   }
   this.startSample = endSample;
 
@@ -68,7 +66,7 @@ jfxr.Synth.prototype.tick = function() {
     this.renderTimeMs = Date.now() - this.startTime;
     this.$timeout(function() {
       if (this.deferred) {
-        this.deferred.resolve({array: this.array, sampleRate: this.json.sampleRate});
+        this.deferred.resolve({array: this.array, sampleRate: this.sound.sampleRate.value});
         this.deferred = null;
       }
     }.bind(this));
@@ -91,15 +89,11 @@ jfxr.Synth.prototype.cancel = function() {
   this.deferred = null;
 };
 
-jfxr.Synth.Generator = function(json, array) {
+jfxr.Synth.Generator = function(sound, array) {
   var numSamples = array.length;
-  var sampleRate = json.sampleRate;
+  var sampleRate = sound.sampleRate.value;
 
   var duration = numSamples / sampleRate;
-  this.repeatFrequency = json.repeatFrequency;
-  if (this.repeatFrequency < 1 / duration) {
-    this.repeatFrequency = 1 / duration;
-  }
 
   var oscillatorClass = {
     sine: jfxr.Synth.SineOscillator,
@@ -112,15 +106,15 @@ jfxr.Synth.Generator = function(json, array) {
     whitenoise: jfxr.Synth.WhiteNoiseOscillator,
     pinknoise: jfxr.Synth.PinkNoiseOscillator,
     brownnoise: jfxr.Synth.BrownNoiseOscillator,
-  }[json.waveform];
+  }[sound.waveform.value];
 
   var amp = 1;
   var totalAmp = 0;
   this.oscillators = [];
-  for (var harmonicIndex = 0; harmonicIndex <= json.harmonics; harmonicIndex++) {
+  for (var harmonicIndex = 0; harmonicIndex <= sound.harmonics.value; harmonicIndex++) {
     totalAmp += amp;
-    amp *= json.harmonicsFalloff;
-    this.oscillators.push(new oscillatorClass(json));
+    amp *= sound.harmonicsFalloff.value;
+    this.oscillators.push(new oscillatorClass(sound));
   }
   this.firstHarmonicAmp = 1 / totalAmp;
 
@@ -128,21 +122,11 @@ jfxr.Synth.Generator = function(json, array) {
   this.prevPhase = 0;
 };
 
-jfxr.Synth.Generator.prototype.run = function(json, array, startSample, endSample) {
-  var sampleRate = json.sampleRate;
-  var frequency = json.frequency;
-  var frequencySweep = json.frequencySweep;
-  var frequencyDeltaSweep = json.frequencyDeltaSweep;
-  var frequencyJump1Onset = json.frequencyJump1Onset;
-  var frequencyJump1Amount = json.frequencyJump1Amount;
-  var frequencyJump2Onset = json.frequencyJump2Onset;
-  var frequencyJump2Amount = json.frequencyJump2Amount;
-  var vibratoDepth = json.vibratoDepth;
-  var vibratoFrequency = json.vibratoFrequency;
-  var harmonics = json.harmonics;
-  var harmonicsFalloff = json.harmonicsFalloff;
+jfxr.Synth.Generator.prototype.run = function(sound, array, startSample, endSample) {
+  var sampleRate = sound.sampleRate.value;
+  var harmonics = sound.harmonics.value;
+  var harmonicsFalloff = sound.harmonicsFalloff.value;
 
-  var repeatFrequency = this.repeatFrequency;
   var firstHarmonicAmp = this.firstHarmonicAmp;
   var oscillators = this.oscillators;
   var random = new jfxr.Random(0x3cf78ba3);
@@ -151,31 +135,15 @@ jfxr.Synth.Generator.prototype.run = function(json, array, startSample, endSampl
 
   for (var i = startSample; i < endSample; i++) {
     var time = i / sampleRate;
-    var fractionInRepetition = jfxr.Math.frac(time * repeatFrequency);
 
-    var currentFrequency =
-      frequency +
-      fractionInRepetition * frequencySweep +
-      fractionInRepetition * fractionInRepetition * frequencyDeltaSweep;
-    if (fractionInRepetition > frequencyJump1Onset / 100) {
-      currentFrequency *= 1 + frequencyJump1Amount / 100;
-    }
-    if (fractionInRepetition > frequencyJump2Onset / 100) {
-      currentFrequency *= 1 + frequencyJump2Amount / 100;
-    }
-    if (vibratoDepth !== 0) {
-      currentFrequency += 1 - vibratoDepth * (0.5 - 0.5 * Math.sin(2 * Math.PI * time * vibratoFrequency));
-    }
-
-    if (currentFrequency >= 0) {
-      phase = jfxr.Math.frac(phase + currentFrequency / sampleRate);
-    }
+    var currentFrequency = sound.frequencyAt(time);
+    phase = jfxr.Math.frac(phase + currentFrequency / sampleRate);
 
     var sample = 0;
     var amp = firstHarmonicAmp;
     for (var harmonicIndex = 0; harmonicIndex <= harmonics; harmonicIndex++) {
       var harmonicPhase = jfxr.Math.frac(phase * (harmonicIndex + 1));
-      sample += amp * oscillators[harmonicIndex].getSample(harmonicPhase, fractionInRepetition);
+      sample += amp * oscillators[harmonicIndex].getSample(harmonicPhase, time);
       amp *= harmonicsFalloff;
     }
     array[i] = sample;
@@ -201,12 +169,11 @@ jfxr.Synth.SawtoothOscillator.prototype.getSample = function(phase) {
   return phase < 0.5 ? 2 * phase : -2 + 2 * phase;
 };
 
-jfxr.Synth.SquareOscillator = function(json) {
-  this.squareDuty = json.squareDuty;
-  this.squareDutySweep = json.squareDutySweep;
+jfxr.Synth.SquareOscillator = function(sound) {
+  this.sound = sound;
 };
-jfxr.Synth.SquareOscillator.prototype.getSample = function(phase, fractionInRepetition) {
-  return phase < ((this.squareDuty + fractionInRepetition * this.squareDutySweep) / 100) ? 1 : -1;
+jfxr.Synth.SquareOscillator.prototype.getSample = function(phase, time) {
+  return phase < this.sound.squareDutyAt(time) ? 1 : -1;
 };
 
 jfxr.Synth.TangentOscillator = function() {};
@@ -227,8 +194,8 @@ jfxr.Synth.BreakerOscillator.prototype.getSample = function(phase) {
   return -1 + 2 * Math.abs(1 - p*p*2);
 };
 
-jfxr.Synth.WhiteNoiseOscillator = function(json) {
-  this.interpolateNoise = json.interpolateNoise;
+jfxr.Synth.WhiteNoiseOscillator = function(sound) {
+  this.interpolateNoise = sound.interpolateNoise.value;
 
   this.random = new jfxr.Random(0x3cf78ba3);
   this.prevPhase = 0;
@@ -249,8 +216,8 @@ jfxr.Synth.WhiteNoiseOscillator.prototype.getSample = function(phase) {
     this.currRandom;
 };
 
-jfxr.Synth.PinkNoiseOscillator = function(json, array) {
-  this.interpolateNoise = json.interpolateNoise;
+jfxr.Synth.PinkNoiseOscillator = function(sound, array) {
+  this.interpolateNoise = sound.interpolateNoise.value;
 
   this.random = new jfxr.Random(0x3cf78ba3);
   this.prevPhase = 0;
@@ -282,8 +249,8 @@ jfxr.Synth.PinkNoiseOscillator.prototype.getSample = function(phase) {
     this.currRandom;
 };
 
-jfxr.Synth.BrownNoiseOscillator = function(json, array) {
-  this.interpolateNoise = json.interpolateNoise;
+jfxr.Synth.BrownNoiseOscillator = function(sound, array) {
+  this.interpolateNoise = sound.interpolateNoise.value;
 
   this.random = new jfxr.Random(0x3cf78ba3);
   this.prevPhase = 0;
@@ -304,13 +271,13 @@ jfxr.Synth.BrownNoiseOscillator.prototype.getSample = function(phase) {
     this.currRandom;
 };
 
-jfxr.Synth.Tremolo = function(json, array) {
+jfxr.Synth.Tremolo = function(sound, array) {
 };
 
-jfxr.Synth.Tremolo.prototype.run = function(json, array, startSample, endSample) {
-  var sampleRate = json.sampleRate;
-  var tremoloDepth = json.tremoloDepth;
-  var tremoloFrequency = json.tremoloFrequency;
+jfxr.Synth.Tremolo.prototype.run = function(sound, array, startSample, endSample) {
+  var sampleRate = sound.sampleRate.value;
+  var tremoloDepth = sound.tremoloDepth.value;
+  var tremoloFrequency = sound.tremoloFrequency.value;
 
   if (tremoloDepth === 0) {
     return;
@@ -322,25 +289,25 @@ jfxr.Synth.Tremolo.prototype.run = function(json, array, startSample, endSample)
   }
 };
 
-jfxr.Synth.Flanger = function(json, array) {
-  if (json.flangerOffset === 0 && json.flangerOffsetSweep === 0) {
+jfxr.Synth.Flanger = function(sound, array) {
+  if (sound.flangerOffset.value === 0 && sound.flangerOffsetSweep.value === 0) {
     return;
   }
 
   // Maximum 100ms offset
-  this.buffer = new Float32Array(Math.ceil(json.sampleRate * 0.1));
+  this.buffer = new Float32Array(Math.ceil(sound.sampleRate.value * 0.1));
   this.bufferPos = 0;
 };
 
-jfxr.Synth.Flanger.prototype.run = function(json, array, startSample, endSample) {
+jfxr.Synth.Flanger.prototype.run = function(sound, array, startSample, endSample) {
   if (!this.buffer) {
     return;
   }
 
   var numSamples = array.length;
-  var sampleRate = json.sampleRate;
-  var flangerOffset = json.flangerOffset;
-  var flangerOffsetSweep = json.flangerOffsetSweep;
+  var sampleRate = sound.sampleRate.value;
+  var flangerOffset = sound.flangerOffset.value;
+  var flangerOffsetSweep = sound.flangerOffsetSweep.value;
 
   var buffer = this.buffer;
   var bufferPos = this.bufferPos;
@@ -358,13 +325,13 @@ jfxr.Synth.Flanger.prototype.run = function(json, array, startSample, endSample)
   this.bufferPos = bufferPos;
 };
 
-jfxr.Synth.BitCrush = function(json, array) {
+jfxr.Synth.BitCrush = function(sound, array) {
 };
 
-jfxr.Synth.BitCrush.prototype.run = function(json, array, startSample, endSample) {
+jfxr.Synth.BitCrush.prototype.run = function(sound, array, startSample, endSample) {
   var numSamples = array.length;
-  var bitCrush = json.bitCrush;
-  var bitCrushSweep = json.bitCrushSweep;
+  var bitCrush = sound.bitCrush.value;
+  var bitCrushSweep = sound.bitCrushSweep.value;
 
   if (bitCrush === 0 && bitCrushSweep === 0) {
     return;
@@ -378,15 +345,15 @@ jfxr.Synth.BitCrush.prototype.run = function(json, array, startSample, endSample
   }
 };
 
-jfxr.Synth.LowPass = function(json, array) {
+jfxr.Synth.LowPass = function(sound, array) {
   this.lowPassPrev = 0;
 };
 
-jfxr.Synth.LowPass.prototype.run = function(json, array, startSample, endSample) {
+jfxr.Synth.LowPass.prototype.run = function(sound, array, startSample, endSample) {
   var numSamples = array.length;
-  var lowPassCutoff = json.lowPassCutoff;
-  var lowPassCutoffSweep = json.lowPassCutoffSweep;
-  var sampleRate = json.sampleRate;
+  var lowPassCutoff = sound.lowPassCutoff.value;
+  var lowPassCutoffSweep = sound.lowPassCutoffSweep.value;
+  var sampleRate = sound.sampleRate.value;
 
   if (lowPassCutoff >= sampleRate / 2 && lowPassCutoff + lowPassCutoffSweep >= sampleRate / 2) {
     return;
@@ -416,16 +383,16 @@ jfxr.Synth.LowPass.prototype.run = function(json, array, startSample, endSample)
   this.lowPassPrev = lowPassPrev;
 };
 
-jfxr.Synth.HighPass = function(json, array) {
+jfxr.Synth.HighPass = function(sound, array) {
   this.highPassPrevIn = 0;
   this.highPassPrevOut = 0;
 };
 
-jfxr.Synth.HighPass.prototype.run = function(json, array, startSample, endSample) {
+jfxr.Synth.HighPass.prototype.run = function(sound, array, startSample, endSample) {
   var numSamples = array.length;
-  var sampleRate = json.sampleRate;
-  var highPassCutoff = json.highPassCutoff;
-  var highPassCutoffSweep = json.highPassCutoffSweep;
+  var sampleRate = sound.sampleRate.value;
+  var highPassCutoff = sound.highPassCutoff.value;
+  var highPassCutoffSweep = sound.highPassCutoffSweep.value;
 
   if (highPassCutoff <= 0 && highPassCutoff + highPassCutoffSweep <= 0) {
     return;
@@ -452,15 +419,15 @@ jfxr.Synth.HighPass.prototype.run = function(json, array, startSample, endSample
   this.highPassPrevOut = highPassPrevOut;
 };
 
-jfxr.Synth.Envelope = function(json, array) {
+jfxr.Synth.Envelope = function(sound, array) {
 };
 
-jfxr.Synth.Envelope.prototype.run = function(json, array, startSample, endSample) {
-  var sampleRate = json.sampleRate;
-  var attack = json.attack;
-  var sustain = json.sustain;
-  var sustainPunch = json.sustainPunch;
-  var decay = json.decay;
+jfxr.Synth.Envelope.prototype.run = function(sound, array, startSample, endSample) {
+  var sampleRate = sound.sampleRate.value;
+  var attack = sound.attack.value;
+  var sustain = sound.sustain.value;
+  var sustainPunch = sound.sustainPunch.value;
+  var decay = sound.decay.value;
 
   if (attack === 0 && decay === 0) {
     return;
@@ -468,21 +435,15 @@ jfxr.Synth.Envelope.prototype.run = function(json, array, startSample, endSample
 
   for (var i = startSample; i < endSample; i++) {
     var time = i / sampleRate;
-    if (time < attack) {
-      array[i] *= time / attack;
-    } else if (time < attack + sustain) {
-      array[i] *= 1 + sustainPunch / 100 * (1 - (time - attack) / sustain);
-    } else {
-      array[i] *= 1 - (time - attack - sustain) / decay;
-    }
+    array[i] *= sound.amplitudeAt(time);
   }
 };
 
-jfxr.Synth.Compress = function(json, array) {
+jfxr.Synth.Compress = function(sound, array) {
 };
 
-jfxr.Synth.Compress.prototype.run = function(json, array, startSample, endSample) {
-  var compression = json.compression;
+jfxr.Synth.Compress.prototype.run = function(sound, array, startSample, endSample) {
+  var compression = sound.compression.value;
 
   if (compression == 1) {
     return;
@@ -499,12 +460,12 @@ jfxr.Synth.Compress.prototype.run = function(json, array, startSample, endSample
   }
 };
 
-jfxr.Synth.Normalize = function(json, array) {
+jfxr.Synth.Normalize = function(sound, array) {
   this.maxSample = 0;
 };
 
-jfxr.Synth.Normalize.prototype.run = function(json, array, startSample, endSample) {
-  if (!json.normalization) {
+jfxr.Synth.Normalize.prototype.run = function(sound, array, startSample, endSample) {
+  if (!sound.normalization.value) {
     return;
   }
 
@@ -524,11 +485,11 @@ jfxr.Synth.Normalize.prototype.run = function(json, array, startSample, endSampl
   }
 };
 
-jfxr.Synth.Amplify = function(json, array) {
+jfxr.Synth.Amplify = function(sound, array) {
 };
 
-jfxr.Synth.Amplify.prototype.run = function(json, array, startSample, endSample) {
-  var factor = json.amplification / 100;
+jfxr.Synth.Amplify.prototype.run = function(sound, array, startSample, endSample) {
+  var factor = sound.amplification.value / 100;
 
   if (factor == 1) {
     return;

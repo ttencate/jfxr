@@ -107,24 +107,22 @@ jfxrApp.directive('drawAmplitude', [function() {
         if (!sound) return;
 
         var duration = sound.duration();
-        var baseY = height / 2;
-        var scaleY = -(height / 2 - 0.5) / (1 + sound.sustainPunch.value / 100);
+        var baseY = height - 0.5;
+        var scaleY = -(height - 1) / (1 + sound.sustainPunch.value / 100);
 
         context.strokeStyle = '#d66';
         context.globalAlpha = 1.0;
-        context.lineWidth = 0.5;
-        for (var j = -1; j <= 1; j += 2) {
-          context.beginPath();
-          for (var x = 0; x < width; x++) {
-            var time = x / width * duration;
-            context.lineTo(x, baseY + j * sound.amplitudeAt(time) * scaleY);
-          }
-          context.stroke();
+        context.lineWidth = 1.0;
+        context.beginPath();
+        for (var x = 0; x < width; x++) {
+          var time = x / width * duration;
+          context.lineTo(x, baseY + sound.amplitudeAt(time) * scaleY);
         }
+        context.stroke();
       });
 
-      scope.$watch(attrs.drawAmplitude, function(value) {
-        sound = value;
+      scope.$watch(attrs.drawAmplitude + '.serialize()', function(value) {
+        sound = scope.$eval(attrs.drawAmplitude);
         ctrl.draw();
       });
     },
@@ -160,7 +158,7 @@ jfxrApp.directive('drawFrequency', [function() {
 
         context.strokeStyle = '#bb5';
         context.globalAlpha = 1.0;
-        context.lineWidth = 0.5;
+        context.lineWidth = 1.0;
         context.beginPath();
         for (var x = 0; x < width; x++) {
           var time = x / width * duration;
@@ -169,8 +167,8 @@ jfxrApp.directive('drawFrequency', [function() {
         context.stroke();
       });
 
-      scope.$watch(attrs.drawFrequency, function(value) {
-        sound = value;
+      scope.$watch(attrs.drawFrequency + '.serialize()', function(value) {
+        sound = scope.$eval(attrs.drawFrequency);
         ctrl.draw();
       });
     },

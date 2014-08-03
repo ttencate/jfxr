@@ -501,6 +501,8 @@ h1 a {
 }
 
 .canvas {
+  display: block;
+  box-sizing: border-box;
   width: 100%;
   background-color: #111;
   box-shadow:
@@ -512,13 +514,10 @@ h1 a {
   height: 63px;
 }
 
-.canvas-waveshape-rendering {
-  opacity: 0.5;
-}
-
-.canvas-frequency {
-  margin-top: 8px;
-  height: 31px;
+.canvas-small {
+  height: 23px;
+  margin-top: 4px;
+  margin-bottom: 5px;
 }
 
 .parameters {
@@ -547,7 +546,7 @@ h2 {
   text-transform: uppercase;
   font-weight: 400;
   font-size: 100%;
-  padding-top: 8px;
+  padding-top: 16px;
   line-height: 16px;
   box-sizing: border-box;
   color: #555;

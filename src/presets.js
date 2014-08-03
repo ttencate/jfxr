@@ -1,6 +1,6 @@
 jfxr.Preset = function(args) {
   this.name = args.name;
-  this.createSound = args.createSound || null;
+  this.applyTo = args.applyTo || null;
   this.random = new jfxr.Random();
 };
 
@@ -64,8 +64,7 @@ jfxr.Preset.all = function() {
   return [
     new jfxr.Preset({
       name: 'Default',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         sound.sustain.value = 0.2;
         return sound;
       },
@@ -73,8 +72,7 @@ jfxr.Preset.all = function() {
 
     new jfxr.Preset({
       name: 'Random',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         var random = this.random;
         var randomize = this.randomize.bind(this);
 
@@ -196,8 +194,7 @@ jfxr.Preset.all = function() {
 
     new jfxr.Preset({
       name: 'Pickup/coin',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         var random = this.random;
         var randomize = this.randomize.bind(this);
 
@@ -232,8 +229,7 @@ jfxr.Preset.all = function() {
 
     new jfxr.Preset({
       name: 'Laser/shoot',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         var random = this.random;
         var randomize = this.randomize.bind(this);
 
@@ -267,8 +263,7 @@ jfxr.Preset.all = function() {
 
     new jfxr.Preset({
       name: 'Explosion',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         var random = this.random;
         var randomize = this.randomize.bind(this);
 
@@ -309,8 +304,7 @@ jfxr.Preset.all = function() {
 
     new jfxr.Preset({
       name: 'Powerup',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         var random = this.random;
         var randomize = this.randomize.bind(this);
 
@@ -341,8 +335,7 @@ jfxr.Preset.all = function() {
 
     new jfxr.Preset({
       name: 'Hit/hurt',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         var random = this.random;
         var randomize = this.randomize.bind(this);
 
@@ -371,8 +364,7 @@ jfxr.Preset.all = function() {
 
     new jfxr.Preset({
       name: 'Jump',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         var random = this.random;
         var randomize = this.randomize.bind(this);
 
@@ -407,8 +399,7 @@ jfxr.Preset.all = function() {
 
     new jfxr.Preset({
       name: 'Blip/select',
-      createSound: function() {
-        var sound = new jfxr.Sound();
+      applyTo: function(sound) {
         var random = this.random;
         var randomize = this.randomize.bind(this);
 

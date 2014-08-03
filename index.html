@@ -65,9 +65,9 @@
             </button>
           </div>
           <ul class="history">
-            <li ng-repeat="sound in ctrl.sounds" class="sound" ng-class="{'sound-current': $index == ctrl.soundIndex}" ng-click="ctrl.soundIndex = $index">
-              <input type="text" class="soundname" ng-disabled="ctrl.soundIndex != $index" ng-model="sound.name" ng-model-options="{updateOn: 'blur'}" ng-keydown="ctrl.soundNameKeyDown($event, sound.name)"></input>
-              <button class="iconbutton iconbutton-delete deletebutton" ng-click="ctrl.deleteSound($index)"></button>
+            <li ng-repeat="sound in ctrl.getSounds()" class="sound" ng-class="{'sound-current': $index == ctrl.currentSoundIndex()}" ng-click="ctrl.setCurrentSoundIndex($index)">
+              <input type="text" class="soundname" ng-disabled="ctrl.currentSoundIndex() != $index" ng-model="sound.name" ng-model-options="{updateOn: 'blur'}" ng-keydown="ctrl.soundNameKeyDown($event, sound.name)"></input>
+              <button class="iconbutton iconbutton-delete deletebutton" ng-click="ctrl.deleteSound($index)" title="Delete this sound"></button>
             </li>
           </ul>
           <div class="statusbar" ng-switch="ctrl.synth.isRunning()">
@@ -154,6 +154,7 @@
     <!-- ref:js jfxr.min.js -->
     <script src="src/analyser.js"></script>
     <script src="src/file.js"></script>
+    <script src="src/history.js"></script>
     <script src="src/main.js"></script>
     <script src="src/math.js"></script>
     <script src="src/player.js"></script>

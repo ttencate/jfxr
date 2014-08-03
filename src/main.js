@@ -5,63 +5,40 @@
 // written by this version.
 jfxr.VERSION = 1;
 
-jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'synthFactory', 'allPresets', function(
-      context, Player, $scope, $timeout, $window, localStorage, fileStorage, synthFactory, allPresets) {
+jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', 'allPresets', function(
+      context, Player, $scope, $timeout, $window, localStorage, fileStorage, history, synthFactory, allPresets) {
   var player = new Player();
 
   this.buffer = null;
   this.synth = null;
 
-  this.sounds = [];
-  for (var i = 0;; i++) {
-    var str = localStorage.get('sounds[' + i + ']', undefined);
-    if (!str) {
-      break;
-    }
-    var sound = new jfxr.Sound();
-    sound.parse(str);
-    this.sounds.push(sound);
-  }
-
-  var addSound = function(sound) {
-    this.sounds.unshift(sound);
-    this.soundIndex = 0;
-  }.bind(this);
-
-  var getFreeName = function(basename) {
-    var max = 0;
-    for (var i = 0; i < this.sounds.length; i++) {
-      var m = this.sounds[i].name.match('^' + basename + ' (\\d+)$');
-      if (m) {
-         max = Math.max(max, parseInt(m[1]));
-      }
-    }
-    return basename + ' ' + (max + 1);
-  }.bind(this);
-
-  var maybeAddDefaultSound = function() {
-    if (this.sounds.length === 0) {
-      this.applyPreset(this.presets[0]);
-    }
-  }.bind(this);
-
-  this.soundIndex = jfxr.Math.clamp(0, this.sounds.length - 1, localStorage.get('soundIndex', 0));
+  this.history = history;
 
   this.analyserEnabled = localStorage.get('analyserEnabled', true);
   this.autoplay = localStorage.get('autoplayEnabled', true);
 
   this.presets = allPresets;
 
+  this.link = null;
+
+  this.getSounds = function() {
+    return this.history.getSounds();
+  };
+
   this.getSound = function() {
-    return this.sounds[this.soundIndex];
+    return this.history.getCurrentSound();
+  };
+
+  this.currentSoundIndex = function() {
+    return this.history.getCurrentIndex();
+  };
+
+  this.setCurrentSoundIndex = function(index) {
+    this.history.setCurrentIndex(index);
   };
 
   this.deleteSound = function(index) {
-    this.sounds.splice(index, 1);
-    maybeAddDefaultSound();
-    if (this.soundIndex >= this.sounds.length) {
-      this.soundIndex = this.sounds.length - 1;
-    }
+    this.history.deleteSound(index);
   };
 
   this.isPlaying = function() {
@@ -82,9 +59,10 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
 
   this.openSound = function() {
     fileStorage.loadJfxr().then(function(sound) {
-      this.sounds.unshift(sound);
-      this.soundIndex = 0;
-    }.bind(this));
+      this.history.addSound(sound);
+    }.bind(this), function(error) {
+      console.error('Could not load sound', error);
+    });
   };
 
   this.saveSound = function() {
@@ -92,13 +70,8 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
   };
 
   this.duplicateSound = function() {
-    var dup = new jfxr.Sound();
-    dup.parse(this.getSound().serialize());
-    dup.name = getFreeName(dup.name.replace(/ \d+$/, ''));
-    this.sounds.splice(this.soundIndex, 0, dup);
+    this.history.duplicateSound(this.history.getCurrentIndex());
   };
-
-  this.link = null;
 
   this.createLink = function() {
     // http://stackoverflow.com/questions/3213531/creating-a-new-location-object-in-javascript
@@ -115,9 +88,8 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
   };
 
   this.applyPreset = function(preset) {
-    var sound = preset.createSound();
-    sound.name = getFreeName(preset.name);
-    addSound(sound);
+    var sound = history.newSound(preset.name);
+    preset.applyTo(sound);
   };
 
   this.mutate = function() {
@@ -148,6 +120,13 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
     }
   };
 
+  // Make sure there is always a sound to operate on.
+  $scope.$watch(function() { return this.getSounds().length; }.bind(this), function(value) {
+    if (value === 0) {
+      this.applyPreset(this.presets[0]);
+    }
+  }.bind(this));
+
   $scope.$watch(function() { return this.analyserEnabled; }.bind(this), function(value) {
     if (angular.isDefined(value)) {
       localStorage.set('analyserEnabled', value);
@@ -160,27 +139,6 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
     }
   });
 
-  var storeSound = function(index, value) {
-    if (value === undefined && index < this.sounds.length) {
-      value = this.sounds[index].serialize();
-    }
-    if (!value) value = '';
-    localStorage.set('sounds[' + index + ']', value);
-  }.bind(this);
-
-  maybeAddDefaultSound();
-
-  $scope.$watchCollection(function() { return this.sounds; }.bind(this), function(value, oldValue) {
-    var i;
-    // The entire array might have shifted, so we need to save them all.
-    for (i = 0; i < value.length; i++) {
-      storeSound(i);
-    }
-    for (i = value.length; i < oldValue.length; i++) {
-      localStorage.delete('sounds[' + i + ']');
-    }
-  }.bind(this));
-
   $scope.$watch(function() { return this.getSound().serialize(); }.bind(this), function(value) {
     if (this.synth) {
       this.synth.cancel();
@@ -189,7 +147,6 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
     player.stop();
     this.buffer = null;
     if (value !== undefined && value !== '') {
-      storeSound(this.soundIndex, value);
       this.synth = synthFactory(value);
       this.synth.run().then(function(msg) {
         this.buffer = context.createBuffer(1, msg.array.length, msg.sampleRate);
@@ -197,15 +154,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
         if (this.autoplay) {
           player.play(this.buffer);
         }
-      }.bind(this), function() {
-        // Cancelled.
-      });
-    }
-  }.bind(this));
-
-  $scope.$watch(function() { return this.soundIndex; }.bind(this), function(value) {
-    if (value !== undefined) {
-      localStorage.set('soundIndex', value);
+      }.bind(this));
     }
   }.bind(this));
 
@@ -220,8 +169,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
         console.error('Could not parse sound from URL fragment', ex);
         return;
       }
-      this.sounds.unshift(sound);
-      this.soundIndex = 0;
+      this.history.addSound(sound);
     }
   }.bind(this);
   parseHash();

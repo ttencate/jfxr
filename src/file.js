@@ -87,7 +87,6 @@ jfxrApp.service('fileStorage', ['$q', function($q) {
   this.loadJfxr = function() {
     return upload().then(function(msg) {
       var sound = new jfxr.Sound();
-      console.log(msg);
       sound.parse(msg.data);
       sound.name = msg.name.replace(/\.jfxr$/, '');
       return sound;

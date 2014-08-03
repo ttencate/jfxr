@@ -465,6 +465,12 @@ jfxr.Sound.prototype.reset = function() {
   });
 };
 
+jfxr.Sound.prototype.clone = function() {
+  var clone = new jfxr.Sound();
+  clone.parse(this.serialize());
+  return clone;
+};
+
 jfxr.Sound.prototype.serialize = function() {
   var json = {
     _version: 1,

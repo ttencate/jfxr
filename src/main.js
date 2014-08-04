@@ -77,7 +77,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
     // http://stackoverflow.com/questions/3213531/creating-a-new-location-object-in-javascript
     var url = document.createElement('a');
     url.href = window.location.href;
-    url.hash = this.getSound().serialize();
+    url.hash = encodeURIComponent(this.getSound().serialize());
     this.link = url.href;
   };
 
@@ -167,7 +167,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
   }.bind(this));
 
   var parseHash = function() {
-    var json = $window.location.hash.replace(/^#/, '');
+    var json = decodeURIComponent($window.location.hash.replace(/^#/, ''));
     $window.location.hash = '';
     if (json.length > 0) {
       var sound = new jfxr.Sound();

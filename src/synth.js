@@ -67,7 +67,6 @@ jfxr.Synth.prototype.tick = function() {
     this.$timeout(function() {
       if (this.deferred) {
         this.deferred.resolve({array: this.array, sampleRate: this.sound.sampleRate.value});
-        this.deferred = null;
       }
     }.bind(this));
   } else {

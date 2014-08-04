@@ -96,6 +96,14 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
     jfxr.Preset.mutate(this.getSound());
   };
 
+  this.canUndo = function() {
+    return this.history.canUndo();
+  };
+
+  this.undo = function() {
+    this.history.undo();
+  };
+
   this.keyDown = function(e) {
     if (e.target.tagName == 'INPUT' && e.target.type == 'text') {
       return;

@@ -59,9 +59,11 @@
               <span>{{preset.name}}</span>
             </button>
           </div>
-          <div class="presets">
+          <div class="toolbar">
             <button class="button button-preset" ng-click="ctrl.mutate()" title="Slightly change all parameters, except those which are locked">
               <span>Mutate</span>
+            <button class="button" ng-disabled="!ctrl.canUndo()" ng-click="ctrl.undo()" title="Undo the last change to the current sound">
+              <span>Undo</span>
             </button>
           </div>
           <ul class="history">

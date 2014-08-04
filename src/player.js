@@ -22,7 +22,7 @@ jfxrApp.service('Player', ['$rootScope', '$timeout', 'context', function(
     // Make sure that the AnalyserNode is tickled at a regular interval,
     // even if we paint the canvas at irregular intervals. This is needed
     // because smoothing is applied only when the data is requested.
-    this.script = context.createScriptProcessor();
+    this.script = context.createScriptProcessor(1024);
     this.script.onaudioprocess = function(e) {
       this.analyser.getFloatFrequencyData(this.frequencyData);
     }.bind(this);
@@ -38,7 +38,7 @@ jfxrApp.service('Player', ['$rootScope', '$timeout', 'context', function(
     this.source = context.createBufferSource();
     this.source.connect(this.analyser);
     this.source.buffer = buffer;
-    this.source.start();
+    this.source.start(0);
     this.source.onended = function() {
       this.playing = false;
       $rootScope.$apply();
@@ -50,7 +50,7 @@ jfxrApp.service('Player', ['$rootScope', '$timeout', 'context', function(
     if (!this.playing) {
       return;
     }
-    this.source.stop();
+    this.source.stop(0);
     this.source.onended = null;
     this.source = null;
     this.playing = false;

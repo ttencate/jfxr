@@ -182,7 +182,7 @@ jfxr.Preset.all = function() {
         }
 
         if (random.boolean(0.5)) {
-          randomize(sound.compression);
+          randomize(sound.compression, 0.5, 2.0);
         }
 
         sound.normalization.value = true;

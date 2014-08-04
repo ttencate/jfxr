@@ -378,7 +378,7 @@ jfxr.Sound = function() {
     label: 'Compression',
     defaultValue: 1,
     minValue: 0,
-    maxValue: 10,
+    maxValue: 5,
     step: 0.1,
   });  
   this.normalization = new jfxr.Parameter({

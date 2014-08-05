@@ -45,6 +45,9 @@ jfxrApp.service('history', ['$rootScope', 'localStorage', function($rootScope, l
   this.deleteSound = function(index) {
     sounds.splice(index, 1);
     undoStacks.splice(index, 1);
+    if (soundIndex > index) {
+      soundIndex--;
+    }
     if (soundIndex >= sounds.length) {
       soundIndex = sounds.length - 1;
     }

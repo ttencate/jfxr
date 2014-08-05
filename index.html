@@ -74,8 +74,9 @@
             </button>
           </div>
           <ul class="history">
-            <li ng-repeat="sound in ctrl.getSounds()" class="sound" ng-class="{'sound-current': $index == ctrl.currentSoundIndex()}" ng-click="ctrl.setCurrentSoundIndex($index)">
-              <input type="text" class="soundname" ng-disabled="ctrl.currentSoundIndex() != $index" ng-model="sound.name" ng-model-options="{updateOn: 'blur'}" ng-keydown="ctrl.soundNameKeyDown($event, sound.name)"></input>
+            <li ng-repeat="sound in ctrl.getSounds()" class="sound" ng-class="{'sound-current': $index == ctrl.currentSoundIndex()}">
+              <input type="text" class="soundname" ng-model="sound.name" ng-model-options="{updateOn: 'blur'}" ng-keydown="ctrl.soundNameKeyDown($event, sound.name)"></input>
+              <div class="soundnamesensor" ng-click="ctrl.setCurrentSoundIndex($index)" ng-show="$index != ctrl.currentSoundIndex()"></div>
               <button class="iconbutton iconbutton-delete deletebutton" ng-click="ctrl.deleteSound($index)" title="Delete this sound"></button>
             </li>
           </ul>

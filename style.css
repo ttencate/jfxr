@@ -473,7 +473,6 @@ h1 a {
 }
 
 .sound {
-  cursor: pointer;
   position: relative;
   transition: color 0.1s linear, background-color 0.1s linear;
 }
@@ -497,9 +496,13 @@ h1 a {
   height: 16px;
 }
 
-.soundname:disabled {
-  border-color: transparent;
-  cursor: inherit;
+.soundnamesensor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 
 .iconbutton {

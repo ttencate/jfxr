@@ -1,6 +1,7 @@
 jfxrApp.service('fileStorage', ['$q', function($q) {
 
   var download = function(blob, filename) {
+    // saveAs from FileSaver.js
     saveAs(blob, filename);
   };
 

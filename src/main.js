@@ -5,6 +5,34 @@
 // written by this version.
 jfxr.VERSION = 1;
 
+jfxr.missingBrowserFeatures = function() {
+  missing = [];
+  if (window.Blob === undefined || window.FileReader === undefined) {
+    missing.push('File API');
+  }
+  if (window.AudioContext === undefined) {
+    missing.push('Web Audio');
+  }
+  if (window.HTMLCanvasElement === undefined) {
+    missing.push('Canvas');
+  }
+  return missing;
+};
+
+jfxr.init = function() {
+  var panic = angular.element(document.getElementById('panic'));
+  var missing = jfxr.missingBrowserFeatures();
+  if (missing.length > 0) {
+    panic.html(
+        'Unfortunately, jfxr cannot run in this browser because it lacks the following features: ' +
+        missing.join(', '));
+    return;
+  }
+  panic.remove();
+
+  angular.bootstrap(document, ['jfxrApp']);
+};
+
 jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', 'allPresets', function(
       context, Player, $scope, $timeout, $window, localStorage, fileStorage, history, synthFactory, allPresets) {
   var player = new Player();

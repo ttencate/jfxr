@@ -44,6 +44,7 @@ jfxr.Synth.prototype.run = function() {
   if (this.deferred) {
     return this.deferred.promise;
   }
+  this.running = true;
   this.deferred = this.$q.defer();
   var promise = this.deferred.promise;
   this.tick();
@@ -65,6 +66,7 @@ jfxr.Synth.prototype.tick = function() {
   if (this.startSample == numSamples) {
     this.renderTimeMs = Date.now() - this.startTime;
     this.$timeout(function() {
+      this.running = false;
       if (this.deferred) {
         this.deferred.resolve({array: this.array, sampleRate: this.sound.sampleRate.value});
       }
@@ -77,7 +79,7 @@ jfxr.Synth.prototype.tick = function() {
 };
 
 jfxr.Synth.prototype.isRunning = function() {
-  return !!this.deferred;
+  return this.running;
 };
 
 jfxr.Synth.prototype.cancel = function() {
@@ -86,6 +88,7 @@ jfxr.Synth.prototype.cancel = function() {
   }
   this.deferred.reject();
   this.deferred = null;
+  this.running = false;
 };
 
 jfxr.Synth.Generator = function(sound, array) {

@@ -5,6 +5,8 @@ Jfxr is a browser-based tool to generate sound effects, for example for use in
 games. It was inspired by [bfxr](http://www.bfxr.net/), but aims to be more
 powerful and more intuitive to use.
 
+You can use it at [jfxr.frozenfractal.com](http://jfxr.frozenfractal.com).
+
 Status
 ------
 

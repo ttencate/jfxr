@@ -1,15 +1,7 @@
 jfxrApp.service('fileStorage', ['$q', function($q) {
 
   var download = function(blob, filename) {
-    var link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    link.click();
-    // Revoking is tricky:
-    // https://code.google.com/p/chromium/issues/detail?id=375297#c7
-    window.setTimeout(function() {
-      URL.revokeObjectURL(blob);
-    }, 0);
+    saveAs(blob, filename);
   };
 
   var upload = function() {

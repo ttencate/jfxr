@@ -7,7 +7,8 @@ jfxr.VERSION = 1;
 
 jfxr.missingBrowserFeatures = function() {
   missing = [];
-  if (window.Blob === undefined || window.FileReader === undefined) {
+  if (window.Blob === undefined || window.FileReader === undefined ||
+      window.URL === undefined || URL.createObjectURL === undefined) {
     missing.push('File API');
   }
   if (window.AudioContext === undefined) {
@@ -19,22 +20,35 @@ jfxr.missingBrowserFeatures = function() {
   return missing;
 };
 
+jfxr.callIfSaveAsBroken = function(callback) {
+  // https://github.com/eligrey/FileSaver.js/issues/12#issuecomment-34557946
+  var svg = new Blob(["<svg xmlns='http://www.w3.org/2000/svg'></svg>"], {type: "image/svg+xml;charset=utf-8"});
+  var img = new Image();
+  img.onerror = callback;
+  img.src = URL.createObjectURL(svg);
+};
+
 jfxr.init = function() {
   var panic = angular.element(document.getElementById('panic'));
   var missing = jfxr.missingBrowserFeatures();
   if (missing.length > 0) {
     panic.html(
         'Unfortunately, jfxr cannot run in this browser because it lacks the following features: ' +
-        missing.join(', '));
+        missing.join(', ') + '. Try a recent Chrome or Firefox instead.');
     return;
   }
   panic.remove();
 
-  angular.bootstrap(document, ['jfxrApp']);
+  angular.element(document).ready(function() {
+    angular.bootstrap(document, ['jfxrApp']);
+  });
 };
 
 jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', 'allPresets', function(
       context, Player, $scope, $timeout, $window, localStorage, fileStorage, history, synthFactory, allPresets) {
+  this.showSafariWarning = false;
+  jfxr.callIfSaveAsBroken(function() { this.showSafariWarning = true; }.bind(this));
+
   var player = new Player();
 
   this.buffer = null;

@@ -136,7 +136,7 @@ jfxrApp.directive('floatParam', [function() {
       });
 
       var rangeInput = angular.element(element[0].getElementsByClassName('floatslider'));
-      rangeInput.bind('change', function(e) {
+      rangeInput.bind('input', function(e) {
         var value = ctrl.getRangeValue();
         ctrl.setTextValue(value);
         ctrl.setParamValue(value);

@@ -58,6 +58,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
 
   this.analyserEnabled = localStorage.get('analyserEnabled', true);
   this.autoplay = localStorage.get('autoplayEnabled', true);
+  this.createNew = localStorage.get('createNew', true);
 
   this.presets = allPresets;
 
@@ -130,7 +131,13 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
   };
 
   this.applyPreset = function(preset) {
-    var sound = history.newSound(preset.name);
+    var sound;
+    if (this.createNew) {
+      sound = history.newSound(preset.name);
+    } else {
+      sound = this.getSound();
+      sound.reset();
+    }
     preset.applyTo(sound);
   };
 
@@ -186,6 +193,12 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
   $scope.$watch(function() { return this.autoplay; }.bind(this), function(value) {
     if (angular.isDefined(value)) {
       localStorage.set('autoplayEnabled', value);
+    }
+  });
+
+  $scope.$watch(function() { return this.createNew; }.bind(this), function(value) {
+    if (angular.isDefined(value)) {
+      localStorage.set('createNew', value);
     }
   });
 

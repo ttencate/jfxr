@@ -61,10 +61,16 @@
               <span>Export</span>
             </button>
           </div>
-          <div class="presets">
-            <button ng-repeat="preset in ctrl.presets" class="button button-preset" ng-click="ctrl.applyPreset(preset)">
-              <span>{{preset.name}}</span>
-            </button>
+          <div class="toolbar">
+            <label class="button button-createnew" ng-class="{'button-checked': ctrl.createNew}" title="Create a new sound each time you click one of the preset buttons">
+              <input type="checkbox" ng-model="ctrl.createNew"></input>
+              <span>Create new sound</span>
+            </label>
+            <div class="presets">
+              <button ng-repeat="preset in ctrl.presets" class="button button-preset" ng-click="ctrl.applyPreset(preset)">
+                <span>{{preset.name}}</span>
+              </button>
+            </div>
           </div>
           <div class="toolbar">
             <button class="button button-preset" ng-click="ctrl.mutate()" title="Slightly change all parameters, except those which are locked">

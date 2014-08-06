@@ -11,7 +11,6 @@ module.exports = function(grunt) {
       options: {
         nonull: true,
         separator: ';',
-        sourceMap: true,
       },
       dist: {
         src: ['src/**/*.js'],

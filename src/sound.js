@@ -9,6 +9,7 @@ jfxr.Parameter = function(args) {
   this.minValue = numeric ? args.minValue : null;
   this.maxValue = numeric ? args.maxValue : null;
   this.step = numeric ? (args.step || 'any') : null;
+  this.logarithmic = !!(this.type == 'float' && args.logarithmic);
   this.digits = this.type == 'float' ? Math.max(0, Math.round(-Math.log(this.step) / Math.log(10))) : null;
   this.disabledReason_ = args.disabledReason || null;
   this.locked = false;
@@ -113,6 +114,7 @@ jfxr.Sound = function() {
     minValue: 0,
     maxValue: 5,
     step: 0.01,
+    logarithmic: true,
   });
   this.sustain = new jfxr.Parameter({
     label: 'Sustain',
@@ -121,6 +123,7 @@ jfxr.Sound = function() {
     minValue: 0,
     maxValue: 5,
     step: 0.01,
+    logarithmic: true,
   });
   this.sustainPunch = new jfxr.Parameter({
     label: 'Sustain punch',
@@ -137,6 +140,7 @@ jfxr.Sound = function() {
     minValue: 0,
     maxValue: 5,
     step: 0.01,
+    logarithmic: true,
   });
   this.tremoloDepth = new jfxr.Parameter({
     label: 'Tremolo depth',
@@ -153,6 +157,7 @@ jfxr.Sound = function() {
     minValue: 1,
     maxValue: 1000,
     step: 1,
+    logarithmic: true,
   });
 
   // Pitch parameters
@@ -164,6 +169,7 @@ jfxr.Sound = function() {
     minValue: 10,
     maxValue: 10000,
     step: 100,
+    logarithmic: true,
   });
   this.frequencySweep = new jfxr.Parameter({
     label: 'Frequency sweep',
@@ -172,6 +178,7 @@ jfxr.Sound = function() {
     minValue: -10000,
     maxValue: 10000,
     step: 100,
+    logarithmic: true,
   });
   this.frequencyDeltaSweep = new jfxr.Parameter({
     label: 'Freq. delta sweep',
@@ -180,6 +187,7 @@ jfxr.Sound = function() {
     minValue: -10000,
     maxValue: 10000,
     step: 100,
+    logarithmic: true,
   });
   this.repeatFrequency = new jfxr.Parameter({
     label: 'Repeat frequency',
@@ -188,6 +196,7 @@ jfxr.Sound = function() {
     minValue: 0,
     maxValue: 100,
     step: 0.1,
+    logarithmic: true,
   });
   this.frequencyJump1Onset = new jfxr.Parameter({
     label: 'Freq. jump 1 onset',
@@ -277,6 +286,7 @@ jfxr.Sound = function() {
     minValue: 0,
     maxValue: 1000,
     step: 10,
+    logarithmic: true,
   });
   this.vibratoFrequency = new jfxr.Parameter({
     label: 'Vibrato frequency',
@@ -285,6 +295,7 @@ jfxr.Sound = function() {
     minValue: 1,
     maxValue: 1000,
     step: 1,
+    logarithmic: true,
   });
   this.squareDuty = new jfxr.Parameter({
     label: 'Square duty',
@@ -346,6 +357,7 @@ jfxr.Sound = function() {
     minValue: 0,
     maxValue: 22050,
     step: 100,
+    logarithmic: true,
   });
   this.lowPassCutoffSweep = new jfxr.Parameter({
     label: 'Low-pass sweep',
@@ -354,6 +366,7 @@ jfxr.Sound = function() {
     minValue: -22050,
     maxValue: 22050,
     step: 100,
+    logarithmic: true,
   });
   this.highPassCutoff = new jfxr.Parameter({
     label: 'High-pass cutoff',
@@ -362,6 +375,7 @@ jfxr.Sound = function() {
     minValue: 0,
     maxValue: 22050,
     step: 100,
+    logarithmic: true,
   });
   this.highPassCutoffSweep = new jfxr.Parameter({
     label: 'High-pass sweep',
@@ -370,6 +384,7 @@ jfxr.Sound = function() {
     minValue: -22050,
     maxValue: 22050,
     step: 100,
+    logarithmic: true,
   });
 
   // Output parameters

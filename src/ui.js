@@ -47,10 +47,10 @@ jfxrApp.directive('floatParam', [function() {
       // through 0, but loses precision for numbers close to 0.
       function fromLog(r) {
         return jfxr.Math.sign(r) * (Math.pow(2, Math.abs(r)) - 1);
-      };
+      }
       function toLog(p) {
         return jfxr.Math.sign(p) * Math.log(Math.abs(p) + 1) / Math.log(2);
-      };
+      }
 
       var param = null;
       var logarithmic = false;
@@ -116,7 +116,7 @@ jfxrApp.directive('floatParam', [function() {
           value /= param.step;
         }
         this.setParamValue(value);
-      }
+      };
     }],
     controllerAs: 'ctrl',
     link: function(scope, element, attrs, ctrl) {

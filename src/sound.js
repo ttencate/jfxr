@@ -408,6 +408,7 @@ jfxr.Sound = function() {
     logarithmic: true,
   });
   this.highPassCutoffSweep = new jfxr.Parameter({
+	label: 'High-pass sweep',
 	description: 'Amount by which to change the high-pass cutoff frequency over the course of the sound.',
     unit: 'Hz',
     defaultValue: 0,

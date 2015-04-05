@@ -30,7 +30,7 @@
         <div class="pane pane-top-right column-right playbackpane">
           <canvas width="680" height="43" analyser="ctrl.getFrequencyData()" enabled="ctrl.analyserEnabled" ng-click="ctrl.analyserEnabled = !ctrl.analyserEnabled" class="analyser" ng-class="{'analyser-disabled': !ctrl.analyserEnabled}" title="Click to disable frequency analyser (saves battery)"></canvas>
           <label class="shiny autoplay" ng-class="{'shiny-checked': ctrl.autoplay}" title="Play automatically on change">
-            <input type="checkbox" ng-model="ctrl.autoplay"></input>
+            <input type="checkbox" ng-model="ctrl.autoplay">
             <span class="shinycontent">Auto</span>
           </label>
           <button ng-click="ctrl.togglePlay()" class="shiny playstop" ng-class="{'shiny-checked': ctrl.isPlaying()}" title="{{ctrl.isPlaying() ? 'Stop (space)' : 'Play (space)'}}">
@@ -63,7 +63,7 @@
           </div>
           <div class="toolbar">
             <label class="button button-createnew" ng-class="{'button-checked': ctrl.createNew}" title="Create a new sound each time you click one of the preset buttons">
-              <input type="checkbox" ng-model="ctrl.createNew"></input>
+              <input type="checkbox" ng-model="ctrl.createNew">
               <span>Create new sound</span>
             </label>
             <div class="presets">
@@ -81,7 +81,7 @@
           </div>
           <ul class="history">
             <li ng-repeat="sound in ctrl.getSounds()" class="sound" ng-class="{'sound-current': $index == ctrl.currentSoundIndex()}">
-              <input type="text" class="soundname" ng-model="sound.name" ng-model-options="{updateOn: 'blur'}" ng-keydown="ctrl.soundNameKeyDown($event, sound.name)"></input>
+              <input type="text" class="soundname" ng-model="sound.name" ng-model-options="{updateOn: 'blur'}" ng-keydown="ctrl.soundNameKeyDown($event, sound.name)">
               <div class="soundnamesensor" ng-click="ctrl.setCurrentSoundIndex($index)" ng-show="$index != ctrl.currentSoundIndex()"></div>
               <button class="iconbutton iconbutton-delete deletebutton" ng-click="ctrl.deleteSound($index)" title="Delete this sound"></button>
             </li>
@@ -158,6 +158,7 @@
               <boolean-param sound="ctrl.getSound()" param="normalization"></boolean-param>
               <float-param sound="ctrl.getSound()" param="amplification"></float-param>
             </div>
+          </div>
         </div>
       </div>
 

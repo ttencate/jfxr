@@ -399,7 +399,7 @@ jfxr.Sound = function() {
   });
   this.highPassCutoff = new jfxr.Parameter({
     label: 'High-pass cutoff',
-	description: 'Threshold below which frequencies should be filtered out, using a simple IIR high-pass filter.',
+	description: 'Threshold below which frequencies should be filtered out, using a simple high-pass filter.',
     unit: 'Hz',
     defaultValue: 0,
     minValue: 0,

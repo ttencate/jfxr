@@ -42,7 +42,7 @@
 
       <div class="content">
 
-        <div class="pane pane-bottom-left column-left filespane">
+        <div class="pane pane-bottom-left column-left filespane statusbarpane">
           <div class="toolbar">
             <button class="button button-tool" ng-click="ctrl.openSound()" title="Load sound from file">
               <span>Open</span>
@@ -92,7 +92,7 @@
           </div>
         </div>
 
-        <div class="pane pane-bottom-right column-right mainpane">
+        <div class="pane pane-bottom-right column-right mainpane statusbarpane">
           <canvas canvas-manager waveshape="ctrl.buffer" class="canvas canvas-waveshape"></canvas>
           <div class="parameters vertical-scroll">
             <div class="parameters-column">
@@ -158,6 +158,14 @@
               <boolean-param sound="ctrl.getSound()" param="normalization"></boolean-param>
               <float-param sound="ctrl.getSound()" param="amplification"></float-param>
             </div>
+          </div>
+          <div class="statusbar statusbar-right">
+            <a href="https://github.com/ttencate/jfxr#faq">FAQ</a> |
+            <a href="https://github.com/ttencate/jfxr">Source code</a> |
+            <a href="https://github.com/ttencate/jfxr/issues">Issue tracker</a> |
+            <a href="http://frozenfractal.com">Web</a> |
+            <a href="http://twitter.com/frozenfractal">Twitter</a> |
+            <a href="mailto:jfxr@frozenfractal.com">Email</a>
           </div>
         </div>
       </div>

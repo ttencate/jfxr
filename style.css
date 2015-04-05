@@ -378,8 +378,6 @@ h1 a {
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  padding-bottom: 0;
-  background-image: linear-gradient(to top, #0b0b0b 16px, transparent 16px);
 }
 
 .button {
@@ -593,13 +591,36 @@ h1 a {
   display: block;
 }
 
+.statusbarpane {
+  padding-bottom: 0;
+  background-image: linear-gradient(to top, #0b0b0b 16px, transparent 16px);
+}
+
 .statusbar {
   margin-top: 8px;
   height: 16px;
   line-height: 16px;
   color: #333;
   font-size: 11px;
-  border-bottom-left-radius: 4px;
+}
+
+.statusbar-right {
+  text-align: right;
+}
+
+.statusbar a {
+  color: #555;
+  text-decoration: none;
+}
+
+.statusbar a:hover {
+  color: #888;
+  text-decoration: underline;
+}
+
+.statusbar a:active {
+  color: #aaa;
+  text-decoration: underline;
 }
 
 .mainpane {

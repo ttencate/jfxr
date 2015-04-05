@@ -7,7 +7,7 @@ html {
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 12px;
   font-weight: 300;
-  color: #aaa;
+  color: #ccc;
   background-color: #101010; 
   background-image: linear-gradient(#101010 0, #101010 8px, #0c0c0c 8px, #0c0c0c 16px);
   background-size: 100% 16px;
@@ -19,18 +19,6 @@ body {
   padding: 16px;
   box-sizing: border-box;
   height: 100%;
-}
-
-table {
-  border: 0;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-th, td {
-  border: 0;
-  vertical-align: middle;
-  font-weight: normal;
 }
 
 input, button {
@@ -45,12 +33,12 @@ input[type="text"] {
 }
 
 input[type="text"]:not(:disabled):not(:focus):hover {
-  border-color: #222;
+  border-color: #444;
 }
 
 input[type="text"]:focus {
   color: #ccc;
-  border-color: #444;
+  border-color: #666;
   background-color: #111;
   box-shadow:
     -1px -1px 0.5px rgba(255, 255, 255, 0.1) inset,
@@ -127,7 +115,7 @@ ul, ol, li {
   min-height: 320px;
   margin: 0 auto;
   border-radius: 16px;
-  background: #080808;
+  background: #141218;
   box-shadow:
     0 0 8px #000,
     2px 4px 8px #000,
@@ -232,7 +220,7 @@ h1 a {
   line-height: 9px;
   margin: -4px 4px 0;
   text-align: right;
-  color: #333;
+  color: #444;
 }
 
 .credits a {
@@ -272,11 +260,11 @@ h1 a {
 }
 
 .shiny {
-  background-image: linear-gradient(#101020 0%, #404080 100%);
+  background-image: linear-gradient(#181830 0%, #5050a0 100%);
   box-shadow:
     0 0 2px rgba(224, 224, 255, 0.3) inset,
-    0 0 8px rgba(0, 0, 0, 1.0) inset,
-    0 12px 4px rgba(192, 192, 255, 0.5) inset;
+    0 0 8px rgba(0, 0, 0, 0.8) inset,
+    0 8px 4px rgba(224, 224, 255, 0.6) inset;
   color: rgba(255, 255, 255, 0.7);
   text-shadow:
     -1px -2px 4px rgba(0, 0, 0, 0.5),
@@ -293,12 +281,12 @@ h1 a {
 }
 
 .shiny-checked {
-  background-image: linear-gradient(#080810 0%, #202040 100%);
+  background-image: linear-gradient(#181830 0%, #303060 100%);
   color: rgba(255, 255, 255, 0.9);
   box-shadow:
     -1px -1px 0px rgba(224, 224, 255, 0.2) inset,
     1px 1px 8px rgba(0, 0, 0, 1.0) inset,
-    0 6px 4px rgba(192, 192, 255, 0.3) inset;
+    0 6px 4px rgba(192, 192, 255, 0.4) inset;
 }
 
 .shiny:active {
@@ -306,7 +294,7 @@ h1 a {
   box-shadow:
     -1px -1px 0px rgba(224, 224, 255, 0.2) inset,
     1px 1px 8px rgba(0, 0, 0, 1.0) inset,
-    0 4px 4px rgba(192, 192, 255, 0.3) inset;
+    0 4px 4px rgba(192, 192, 255, 0.4) inset;
 }
 
 .shinycontent {
@@ -373,6 +361,10 @@ h1 a {
   left: 10.5px;
 }
 
+.shiny:hover .playicon {
+  border-left-color: rgba(240, 240, 255, 1.0);
+}
+
 .filespane {
   display: -webkit-flex;
   display: flex;
@@ -394,7 +386,7 @@ h1 a {
   text-align: center;
 
   background-color: #111;
-  color: #666;
+  color: #888;
   box-shadow:
     2px 2px 4px rgba(255, 255, 255, 0.05) inset,
     -2px -2px 4px rgba(0, 0, 0, 0.4) inset;
@@ -406,8 +398,8 @@ h1 a {
 }
 
 .button-checked {
-  background-color: #181818;
-  color: #888;
+  background-color: #222;
+  color: #aaa;
   box-shadow:
     -2px -2px 4px rgba(255, 255, 255, 0.05) inset,
     2px 2px 4px rgba(0, 0, 0, 0.4) inset;
@@ -415,13 +407,13 @@ h1 a {
 }
 
 .button:hover:not(:disabled) {
-  color: #888;
+  color: #ccc;
   background-color: #222;
   transition: none;
 }
 
 .button:active:not(:disabled) {
-  background-color: #111;
+  background-color: #181818;
   box-shadow:
     -1px -1px 2px rgba(255, 255, 255, 0.05) inset,
     1px 1px 2px rgba(0, 0, 0, 0.4) inset;
@@ -435,7 +427,7 @@ h1 a {
 }
 
 .button:disabled {
-  color: #333;
+  color: #444;
   box-shadow: none;
   cursor: inherit;
 }
@@ -508,7 +500,6 @@ h1 a {
 }
 
 .history {
-  margin-top: 8px;
   -webkit-flex: 1;
   flex: 1;
   align-items: stretch;
@@ -521,16 +512,17 @@ h1 a {
 }
 
 .sound:hover {
-  color: #ddd;
+  color: #eee;
   transition: none;
 }
 
 .sound:active {
-  color: #999;
+  color: #ccc;
 }
 
 .sound-current {
   background: #222;
+  color: #eee;
 }
 
 .soundname {
@@ -555,7 +547,7 @@ h1 a {
   background-image: url(sprites.png);
   border: 0;
   background-color: transparent;
-  opacity: 0.3;
+  opacity: 0.4;
   transition: opacity 0.1s linear;
 }
 
@@ -564,16 +556,16 @@ h1 a {
 }
 
 .iconbutton:not(:disabled):hover {
-  opacity: 0.6;
+  opacity: 0.7;
   transition: none;
 }
 
 .iconbutton:not(:disabled):active {
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .iconbutton:disabled {
-  opacity: 0.08;
+  opacity: 0.1;
 }
 
 .iconbutton-delete {
@@ -600,7 +592,7 @@ h1 a {
   margin-top: 8px;
   height: 16px;
   line-height: 16px;
-  color: #333;
+  color: #444;
   font-size: 11px;
 }
 
@@ -611,15 +603,16 @@ h1 a {
 .statusbar a {
   color: #555;
   text-decoration: none;
+  transition: color 0.1s linear;
 }
 
 .statusbar a:hover {
-  color: #888;
+  color: #aaa;
   text-decoration: underline;
 }
 
 .statusbar a:active {
-  color: #aaa;
+  color: #888;
   text-decoration: underline;
 }
 

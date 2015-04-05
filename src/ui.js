@@ -7,7 +7,7 @@ jfxrApp.directive('customParam', [function() {
     },
     transclude: true,
     template: 
-      '<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}}>' +
+      '<div class="param" ng-class="{\'param-disabled\': sound[param].isDisabled(sound)}" title={{sound[param].whyDisabled(sound)}} ng-mouseenter="$emit(\'parammouseenter\', sound[param])" ng-mouseleave="$emit(\'parammouseleave\', sound[param])">' +
             '  <div class="paramlabel">{{sound[param].label}}</div>' +
             '  <div class="paramcontent" ng-transclude></div>' +
       '  <div class="parambuttons">' +

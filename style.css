@@ -53,6 +53,11 @@ ul, ol, li {
   list-style-type: none;
 }
 
+strong {
+  font-weight: normal;
+  color: #eee;
+}
+
 .errorbar {
   position: relative;
   width: 100%;
@@ -370,6 +375,8 @@ h1 a {
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 .button {
@@ -990,4 +997,10 @@ h2:first-child {
   width: 100%;
   text-align: right;
   height: 17px;
+}
+
+.paramdescription {
+  margin-top: 8px;
+  border-top: 1px solid #080808;
+  padding-top: 7px;
 }

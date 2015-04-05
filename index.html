@@ -159,6 +159,14 @@
               <float-param sound="ctrl.getSound()" param="amplification"></float-param>
             </div>
           </div>
+          <div class="paramdescription">
+            <p ng-show="ctrl.hoveredParam">
+              <strong>{{ctrl.hoveredParam.label}}</strong>: {{ctrl.hoveredParam.description}}
+            </p>
+            <p ng-show="!ctrl.hoveredParam">
+              &nbsp;
+            </p>
+          </div>
           <div class="statusbar statusbar-right">
             <a href="https://github.com/ttencate/jfxr#faq">FAQ</a> |
             <a href="https://github.com/ttencate/jfxr">Source code</a> |

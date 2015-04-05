@@ -64,6 +64,8 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
 
   this.link = null;
 
+  this.hoveredParam = null;
+
   this.getSounds = function() {
     return this.history.getSounds();
   };
@@ -219,6 +221,14 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
         }
       }.bind(this));
     }
+  }.bind(this));
+
+  $scope.$on('parammouseenter', function($event, param) {
+    this.hoveredParam = param;
+  }.bind(this));
+
+  $scope.$on('parammouseleave', function($event, param) {
+    this.hoveredParam = null;
   }.bind(this));
 
   var parseHash = function() {

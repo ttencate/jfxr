@@ -49,7 +49,7 @@
             ">
             <div class="tooltipanchor">
               <input class="shiny shiny-display" type="submit" name="submit" value="Donate" title="Donate to the author of jfxr via PayPal" ng-click="ctrl.dismissDonateTooltipForever()">
-              <div class="tooltip" ng-class="{'tooltip-hidden': !ctrl.showDonateTooltip}">
+              <div class="tooltip" ng-class="{'tooltip-visible': ctrl.showDonateTooltip}">
                 <div class="tooltiparrow"></div>
                 <div class="tooltipcontent">
                   <button class="closebutton tooltiptopright" ng-click="ctrl.dismissDonateTooltip(); $event.preventDefault();">×</button>

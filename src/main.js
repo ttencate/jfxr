@@ -75,6 +75,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
   };
 
   this.dismissDonateTooltipForever = function() {
+    this.dismissDonateTooltip();
     localStorage.set('donated', true);
   };
 

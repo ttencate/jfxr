@@ -405,13 +405,14 @@ h1 a {
   z-index: 9999;
   border-radius: 16px;
   box-shadow: 4px 4px 16px rgba(0, 0, 0, 1);
-  opacity: 1;
+  opacity: 0;
+  visibility: hidden;
   transition: opacity 0.2s ease-out, visibility 0.2s;
 }
 
-.tooltip-hidden {
-  opacity: 0;
-  visibility: hidden;
+.tooltip-visible {
+  opacity: 1;
+  visibility: visible;
 }
 
 .tooltiparrow {

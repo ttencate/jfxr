@@ -49,6 +49,13 @@ input[type="text"].ng-invalid {
   border-color: #c44;
 }
 
+input[type="submit"] {
+  width: 100%;
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+}
+
 ul, ol, li {
   list-style-type: none;
 }
@@ -130,6 +137,7 @@ strong {
 
 .topbar {
   display: -webkit-flex;
+  width: 100%;
   display: flex;
   -webkit-flex-direction: row;
   flex-direction: row;
@@ -283,6 +291,13 @@ h1 a {
   text-shadow:
     -1px -2px 4px rgba(0, 0, 0, 0.5),
     1px 2px 4px rgba(128, 128, 255, 1.0);
+}
+
+.shiny-display {
+  font-family: Chango, sans-serif;
+  font-size: 24px;
+  height: 32px;
+  border-radius: 8px;
 }
 
 .shiny-checked {

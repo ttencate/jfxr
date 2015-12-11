@@ -11,7 +11,8 @@ FAQ
 ### Can I use these sounds commercially?
 
 Yes! Any sound you create with jfxr is entirely yours, and you are free to use
-it in any way you like, including commercial projects.
+it in any way you like, including commercial projects. If your project is
+commercially successful, I would really appreciate a donation (see below).
 
 ### Is attribution required?
 
@@ -22,7 +23,7 @@ your creation!
 ### Can I send you money?
 
 Thanks for asking! If you want to express your appreciation for this project,
-you can send donations via [this PayPal link](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ttencate%40gmail%2ecom&lc=US&item_name=jfxr&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted).
+you can send donations via the in-app donation button or [this PayPal link](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ttencate%40gmail%2ecom&lc=US&item_name=jfxr&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted).
 
 ### How does it compare to sfxr/bfxr?
 

@@ -1100,3 +1100,7 @@ h2:first-child {
   border-top: 1px solid #080808;
   padding-top: 7px;
 }
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}

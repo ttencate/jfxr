@@ -9,7 +9,7 @@
     <!-- endref -->
   </head>
   <body ng-controller="JfxrCtrl as ctrl" ng-keydown="ctrl.keyDown($event)">
-    <div id="panic" class="errorbar errorbar-panic"></div>
+    <div ng-cloak id="panic" class="errorbar errorbar-panic"></div>
     <div ng-cloak ng-if="ctrl.showSafariWarning" class="errorbar errorbar-warning">
       Exporting WAV files is broken on Safari. Saving will open a new tab, which you can still save manually.
       | <a href="https://github.com/ttencate/jfxr/issues/18">Details</a>

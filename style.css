@@ -548,6 +548,8 @@ h1 a {
 
 .toolbar {
   position: relative;
+  flex-grow: 0;
+  flex-shrink: 0;
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: row;

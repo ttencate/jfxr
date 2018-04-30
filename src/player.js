@@ -32,18 +32,22 @@ jfxrApp.service('Player', ['$rootScope', '$timeout', 'context', function(
   };
 
   Player.prototype.play = function(buffer) {
-    if (this.playing) {
-      this.stop();
-    }
-    this.source = context.createBufferSource();
-    this.source.connect(this.analyser);
-    this.source.buffer = buffer;
-    this.source.start(0);
-    this.source.onended = function() {
-      this.playing = false;
-      $rootScope.$apply();
-    }.bind(this);
-    this.playing = true;
+    // Always try resuming the context before starting playback:
+    // https://goo.gl/7K7WLu
+    context.resume().then(function() {
+      if (this.playing) {
+        this.stop();
+      }
+      this.source = context.createBufferSource();
+      this.source.connect(this.analyser);
+      this.source.buffer = buffer;
+      this.source.start(0);
+      this.source.onended = function() {
+        this.playing = false;
+        $rootScope.$apply();
+      }.bind(this);
+      this.playing = true;
+    }.bind(this));
   };
 
   Player.prototype.stop = function() {

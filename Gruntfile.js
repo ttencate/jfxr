@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+      files: ['Gruntfile.js', 'lib/**/*.js', 'ui/**/*.js'],
       options: {
       },
     },
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         separator: ';',
       },
       dist: {
-        src: ['src/**/*.js'],
+        src: ['lib/**/*.js', 'ui/**/*.js'],
         dest: 'dist/jfxr.js'
       },
     },

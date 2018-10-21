@@ -3,7 +3,7 @@ games. It was inspired by [bfxr](http://www.bfxr.net/), but aims to be more
 powerful and more intuitive to use.
 
 **Start using it right now at
-[jfxr.frozenfractal.com](http://jfxr.frozenfractal.com).**
+[jfxr.frozenfractal.com](https://jfxr.frozenfractal.com).**
 
 FAQ
 ---
@@ -60,6 +60,7 @@ installed.
 
 To install the development dependencies, run:
 
+    cd app
     npm install
 
 Then, to build the app:
@@ -68,6 +69,22 @@ Then, to build the app:
 
 This produces output in the `app/dist` directory, which can be used locally or
 copied to a webserver.
+
+Use as a library
+----------------
+
+The sound synthesis code can be used as a standalone library. To build it
+separate from the app:
+
+    cd lib
+    npm install
+    npm run build
+
+This produces an npm package in the `lib/dist` directory, which can be used
+as-is or published to the npm registry.
+
+For further details, see [`lib/README.md`](lib/README.md) or the [documentation
+on npmjs.com](https://www.npmjs.com/package/jfxr).
 
 License
 -------

@@ -1,4 +1,4 @@
-import { clamp, Sound } from '../../lib';
+import { clamp, Sound } from '../../lib/src';
 
 export var history = ['$rootScope', 'localStorage', function($rootScope, localStorage) {
   var sounds = [];

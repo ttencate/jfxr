@@ -3,24 +3,24 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      files: ['*.js', 'lib/*.js', 'app/js/*.js'],
+      files: ['../lib/src/*.js', 'js/*.js'],
       options: {
         esnext: true,
       },
     },
     webpack: {
-      dist: require('./app/webpack.config.js'),
+      dist: require('./webpack.config.js'),
     },
     cssmin: {
       dist: {
-        src: ['app/css/style.css'],
-        dest: 'app/dist/style.min.css',
+        src: ['css/style.css'],
+        dest: 'dist/style.min.css',
       },
     },
     imagemin: {
       dist: {
-        src: ['app/images/sprites.png'],
-        dest: 'app/dist/sprites.png',
+        src: ['images/sprites.png'],
+        dest: 'dist/sprites.png',
       },
       options: {
         optimizationLevel: 7,
@@ -28,8 +28,8 @@ module.exports = function(grunt) {
     },
     copy: {
       dist: {
-        src: 'app/index.html',
-        dest: 'app/dist/index.html',
+        src: 'index.html',
+        dest: 'dist/index.html',
       },
     },
   });

@@ -1,4 +1,4 @@
-import { sign } from '../../lib';
+import { sign } from '../../lib/src';
 
 export var customParam = [function() {
   return {

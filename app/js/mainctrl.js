@@ -1,4 +1,4 @@
-import { ALL_PRESETS } from '../../lib';
+import { ALL_PRESETS } from '../../lib/src';
 import { callIfSaveAsBroken } from './shims.js';
 
 export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', function(

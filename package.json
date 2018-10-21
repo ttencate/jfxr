@@ -14,6 +14,6 @@
     "grunt-contrib-imagemin": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
-	"grunt-htmlrefs": "*"
+    "grunt-htmlrefs": "*"
   }
-}	
+}

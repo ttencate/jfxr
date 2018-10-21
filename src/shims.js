@@ -24,7 +24,7 @@ jfxr.shims.haveWebWorkers = function() {
     console.log('Web workers buggy and disabled, please update your browser');
     return false;
   }
-  
+
   return true;
 };
 

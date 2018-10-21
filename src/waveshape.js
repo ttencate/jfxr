@@ -10,7 +10,7 @@ jfxrApp.directive('canvasManager', [function() {
       this.registerDrawFunction = function(drawFunction) {
         drawFunctions.push(drawFunction);
       };
-      
+
       this.draw = function() {
         width = canvas.clientWidth;
         height = canvas.clientHeight;
@@ -23,7 +23,7 @@ jfxrApp.directive('canvasManager', [function() {
 
         context.globalAlpha = 1.0;
         context.clearRect(0, 0, width, height);
-        
+
         for (var i = 0; i < drawFunctions.length; i++) {
           drawFunctions[i](context, width, height);
         }
@@ -40,7 +40,7 @@ jfxrApp.directive('waveshape', [function() {
 
       ctrl.registerDrawFunction(function(context, width, height) {
         if (!buffer) return;
-        
+
         var channel = buffer.getChannelData(0);
         var numSamples = buffer.length;
 

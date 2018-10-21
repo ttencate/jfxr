@@ -28,7 +28,7 @@ jfxrApp.service('fileStorage', ['$q', function($q) {
     // promise.
     return deferred.promise;
   };
-  
+
   this.downloadWav = function(buffer, sampleRate, basename) {
     var floats = new Float32Array(buffer);
     var shorts = new Int16Array(floats.length);

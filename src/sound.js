@@ -352,7 +352,7 @@ jfxr.Sound = function() {
   });
   this.flangerOffsetSweep = new jfxr.Parameter({
     label: 'Flanger offset sweep',
-    description: 'Amount by which the flanger offset changes linearly by this amonut over the course of the sound.',
+    description: 'Amount by which the flanger offset changes linearly over the course of the sound.',
     unit: 'ms',
     defaultValue: 0,
     minValue: -50,

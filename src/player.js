@@ -2,8 +2,8 @@ jfxrApp.service('context', [function() {
   return new AudioContext();
 }]);
 
-jfxrApp.service('Player', ['$rootScope', '$timeout', 'context', function(
-      $rootScope, $timeout, context) {
+jfxrApp.service('Player', ['$rootScope', 'context', function(
+      $rootScope, context) {
   var Player = function() {
     this.position = 0;
 

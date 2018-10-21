@@ -1,12 +1,22 @@
-jfxrApp.service('synthFactory', ['$q', '$timeout', function($q, $timeout) {
-  return function(str) {
-    return new jfxr.Synth($q, $timeout, str);
-  };
-}]);
-
-jfxr.Synth = function($q, $timeout, json) {
-  this.$q = $q;
-  this.$timeout = $timeout;
+/**
+ * This class synthesizes sound effects. It is intended for one-shot use, so do
+ * not try to use a single instance multiple times.
+ *
+ * Example usage:
+ *
+ *     var json = '{...}'; // E.g. contents of a .jfxr file.
+ *     var synth = new jfxr.Synth(json);
+ *     synth.run(function(sound) {
+ *       var samples = sound.array;         // raw samples as a Float32Array
+ *       var sampleRate = sound.sampleRate; // sample rate in Hz
+ *     });
+ *
+ * @param {function} setTimeout A function that can be called in the same way
+ *     as window.setTimeout (remember to bind() it or use a fat arrow if needed).
+ * @param {string} json A string containing a serialized Sound.
+ */
+jfxr.Synth = function(json, setTimeout) {
+  this.setTimeout = setTimeout || window.setTimeout.bind(window);
   this.sound = new jfxr.Sound();
   this.sound.parse(json);
 
@@ -40,19 +50,44 @@ jfxr.Synth = function($q, $timeout, json) {
   this.blockSize = 10240;
 };
 
-jfxr.Synth.prototype.run = function() {
-  if (this.deferred) {
-    return this.deferred.promise;
+/**
+ * @param {function} doneCallback A callback that is invoked when the synthesis
+ *     is complete. It receives one argument, which is an object containing two
+ *     fields: array being the Float32Array of samples (normally between -1 and
+ *     1), and sampleRate being the sample rate in Hz. The callback is invoked
+ *     from a timeout (see setTimeout param passed into the constructor).
+ */
+jfxr.Synth.prototype.run = function(doneCallback) {
+  if (this.doneCallback) {
+    return;
   }
-  this.running = true;
-  this.deferred = this.$q.defer();
-  var promise = this.deferred.promise;
+  this.doneCallback = doneCallback;
   this.tick();
-  return promise;
 };
 
+/**
+ * @return {bool} True if the synth is currently running (between a call to
+ *     run() and either cancel() or receipt of a doneCallback() call).
+ */
+jfxr.Synth.prototype.isRunning = function() {
+  return !!this.doneCallback;
+};
+
+/**
+ * Cancels synthesis if currently running.
+ */
+jfxr.Synth.prototype.cancel = function() {
+  if (!this.isRunning()) {
+    return;
+  }
+  this.doneCallback = null;
+};
+
+/**
+ * @private
+ */
 jfxr.Synth.prototype.tick = function() {
-  if (!this.deferred) {
+  if (!this.isRunning()) {
     return;
   }
 
@@ -65,10 +100,12 @@ jfxr.Synth.prototype.tick = function() {
 
   if (this.startSample == numSamples) {
     this.renderTimeMs = Date.now() - this.startTime;
-    this.$timeout(function() {
-      this.running = false;
-      if (this.deferred) {
-        this.deferred.resolve({array: this.array, sampleRate: this.sound.sampleRate.value});
+    // Always invoke the callback from a timeout so that, in case setTimeout is
+    // $timeout, Angular will run a digest after it.
+    this.setTimeout(function() {
+      if (this.doneCallback) {
+        this.doneCallback({array: this.array, sampleRate: this.sound.sampleRate.value});
+        this.doneCallback = null;
       }
     }.bind(this));
   } else {
@@ -76,19 +113,6 @@ jfxr.Synth.prototype.tick = function() {
     // window.requestAnimationFrame(this.tick.bind(this));
     this.tick();
   }
-};
-
-jfxr.Synth.prototype.isRunning = function() {
-  return this.running;
-};
-
-jfxr.Synth.prototype.cancel = function() {
-  if (!this.isRunning()) {
-    return;
-  }
-  this.deferred.reject();
-  this.deferred = null;
-  this.running = false;
 };
 
 jfxr.Synth.Generator = function(sound, array) {

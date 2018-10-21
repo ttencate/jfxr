@@ -1,4 +1,4 @@
-jfxrApp.directive('analyser', [function() {
+export var analyser = [function() {
   var draw = function(context, width, height, data) {
     var barWidth = Math.max(2, Math.ceil(width / data.length));
     var numBars = Math.floor(width / barWidth);
@@ -76,4 +76,4 @@ jfxrApp.directive('analyser', [function() {
       });
     },
   };
-}]);
+}];

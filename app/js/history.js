@@ -1,4 +1,6 @@
-jfxrApp.service('history', ['$rootScope', 'localStorage', function($rootScope, localStorage) {
+import { clamp, Sound } from '../../lib';
+
+export var history = ['$rootScope', 'localStorage', function($rootScope, localStorage) {
   var sounds = [];
   var undoStacks = [];
   var soundIndex = null;
@@ -19,11 +21,11 @@ jfxrApp.service('history', ['$rootScope', 'localStorage', function($rootScope, l
   this.setCurrentIndex = function(index) {
     index = index || 0;
     if (sounds.length === 0) return;
-    soundIndex = jfxr.Math.clamp(0, sounds.length - 1, index);
+    soundIndex = clamp(0, sounds.length - 1, index);
   };
 
   this.newSound = function(basename) {
-    var sound = new jfxr.Sound();
+    var sound = new Sound();
     sound.name = getFreeName(basename);
     this.addSound(sound);
     return sound;
@@ -101,7 +103,7 @@ jfxrApp.service('history', ['$rootScope', 'localStorage', function($rootScope, l
     if (!str) {
       break;
     }
-    var sound = new jfxr.Sound();
+    var sound = new Sound();
     try {
       sound.parse(str);
     } catch (ex) {
@@ -111,7 +113,7 @@ jfxrApp.service('history', ['$rootScope', 'localStorage', function($rootScope, l
     this.addSound(sound, i);
   }
 
-  soundIndex = jfxr.Math.clamp(0, sounds.length - 1, localStorage.get('soundIndex', 0));
+  soundIndex = clamp(0, sounds.length - 1, localStorage.get('soundIndex', 0));
 
   $rootScope.$watchCollection(function() { return this.getSounds(); }.bind(this), function(value, oldValue) {
     var i;
@@ -150,4 +152,4 @@ jfxrApp.service('history', ['$rootScope', 'localStorage', function($rootScope, l
   $rootScope.$watch(function() { return this.getCurrentIndex(); }.bind(this), function(value) {
     localStorage.set('soundIndex', value);
   }.bind(this));
-}]);
+}];

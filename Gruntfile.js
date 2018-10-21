@@ -3,59 +3,42 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      files: ['Gruntfile.js', 'lib/**/*.js', 'ui/**/*.js'],
+      files: ['*.js', 'lib/*.js', 'app/js/*.js'],
       options: {
+        esnext: true,
       },
     },
-    concat: {
-      options: {
-        nonull: true,
-        separator: ';',
-      },
-      dist: {
-        src: ['lib/**/*.js', 'ui/**/*.js'],
-        dest: 'dist/jfxr.js'
-      },
-    },
-    uglify: {
-      options: {
-        sourceMap: true,
-      },
-      dist: {
-        files: {
-          'dist/jfxr.min.js': ['<%= concat.dist.dest %>']
-        },
-      },
+    webpack: {
+      dist: require('./app/webpack.config.js'),
     },
     cssmin: {
       dist: {
-        src: ['style.css'],
-        dest: 'dist/style.min.css',
+        src: ['app/css/style.css'],
+        dest: 'app/dist/style.min.css',
       },
     },
     imagemin: {
       dist: {
-        src: ['sprites.png'],
-        dest: 'dist/sprites.png',
+        src: ['app/images/sprites.png'],
+        dest: 'app/dist/sprites.png',
       },
       options: {
         optimizationLevel: 7,
       },
     },
-    htmlrefs: {
+    copy: {
       dist: {
-        src: 'index.html',
-        dest: 'dist/index.html',
+        src: 'app/index.html',
+        dest: 'app/dist/index.html',
       },
     },
   });
 
-  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-htmlrefs');
+  grunt.loadNpmTasks('grunt-webpack');
 
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'cssmin', 'imagemin', 'htmlrefs']);
+  grunt.registerTask('default', ['jshint', 'webpack', 'cssmin', 'imagemin', 'copy']);
 };

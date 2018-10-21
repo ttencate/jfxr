@@ -1,4 +1,6 @@
-jfxrApp.directive('customParam', [function() {
+import { sign } from '../../lib';
+
+export var customParam = [function() {
   return {
     restrict: 'E',
     scope: {
@@ -16,9 +18,9 @@ jfxrApp.directive('customParam', [function() {
       '  </div>' +
       '</div>',
   };
-}]);
+}];
 
-jfxrApp.directive('floatParam', [function() {
+export var floatParam = [function() {
   return {
     restrict: 'E',
     scope: {
@@ -46,10 +48,10 @@ jfxrApp.directive('floatParam', [function() {
       // This works for negative numbers and ensures continuity (and even differentiability)
       // through 0, but loses precision for numbers close to 0.
       function fromLog(r) {
-        return jfxr.Math.sign(r) * (Math.pow(2, Math.abs(r)) - 1);
+        return sign(r) * (Math.pow(2, Math.abs(r)) - 1);
       }
       function toLog(p) {
-        return jfxr.Math.sign(p) * Math.log(Math.abs(p) + 1) / Math.log(2);
+        return sign(p) * Math.log(Math.abs(p) + 1) / Math.log(2);
       }
 
       var param = null;
@@ -109,7 +111,7 @@ jfxrApp.directive('floatParam', [function() {
       this.stepParam = function(delta) {
         if (!param) return;
         var value = this.getParamValue();
-        delta = jfxr.Math.sign(delta);
+        delta = sign(delta);
         if (logarithmic) {
           value -= delta * param.step;
         } else {
@@ -164,9 +166,9 @@ jfxrApp.directive('floatParam', [function() {
       });
     },
   };
-}]);
+}];
 
-jfxrApp.directive('booleanParam', [function() {
+export var booleanParam = [function() {
   return {
     restrict: 'E',
     scope: {
@@ -191,7 +193,7 @@ jfxrApp.directive('booleanParam', [function() {
         var delta = e.deltaX + e.deltaY;
         scope.$apply(function() {
           var param = scope.sound[scope.param];
-          param.value -= jfxr.Math.sign(delta) * param.step;
+          param.value -= sign(delta) * param.step;
         });
         e.preventDefault();
       });
@@ -206,9 +208,9 @@ jfxrApp.directive('booleanParam', [function() {
       });
     },
   };
-}]);
+}];
 
-jfxrApp.directive('waveformButton', [function() {
+export var waveformButton = [function() {
   return {
     require: 'ngModel',
     scope: {
@@ -242,9 +244,9 @@ jfxrApp.directive('waveformButton', [function() {
       });
     },
   };
-}]);
+}];
 
-jfxrApp.directive('linkbox', ['$document', '$timeout', function($document, $timeout) {
+export var linkbox = ['$document', '$timeout', function($document, $timeout) {
   return {
     scope: {
       for: '=',
@@ -266,4 +268,4 @@ jfxrApp.directive('linkbox', ['$document', '$timeout', function($document, $time
       });
     },
   };
-}]);
+}];

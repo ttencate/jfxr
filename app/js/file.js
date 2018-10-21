@@ -1,7 +1,10 @@
-jfxrApp.service('fileStorage', ['$q', function($q) {
+import { saveAs } from 'file-saver';
+
+import { clamp, Sound } from '../../lib';
+
+export var fileStorage = ['$q', function($q) {
 
   var download = function(blob, filename) {
-    // saveAs from FileSaver.js
     saveAs(blob, filename);
   };
 
@@ -33,7 +36,7 @@ jfxrApp.service('fileStorage', ['$q', function($q) {
     var floats = new Float32Array(buffer);
     var shorts = new Int16Array(floats.length);
     for (var i = 0; i < floats.length; i++) {
-      shorts[i] = jfxr.Math.clamp(-0x8000, 0x7FFF, Math.round(floats[i] * 0x8000));
+      shorts[i] = clamp(-0x8000, 0x7FFF, Math.round(floats[i] * 0x8000));
     }
 
     function uint16(value) {
@@ -79,10 +82,10 @@ jfxrApp.service('fileStorage', ['$q', function($q) {
 
   this.loadJfxr = function() {
     return upload().then(function(msg) {
-      var sound = new jfxr.Sound();
+      var sound = new Sound();
       sound.parse(msg.data);
       sound.name = msg.name.replace(/\.jfxr$/, '');
       return sound;
     });
   };
-}]);
+}];

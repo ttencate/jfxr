@@ -9,9 +9,30 @@ window.requestAnimationFrame =
   window.oRequestAnimationFrame ||
   window.msRequestAnimationFrame;
 
-jfxr.shims = {};
+export function missingBrowserFeatures() {
+  var missing = [];
+  if (window.Blob === undefined || window.FileReader === undefined ||
+      window.URL === undefined || URL.createObjectURL === undefined) {
+    missing.push('File API');
+  }
+  if (window.AudioContext === undefined) {
+    missing.push('Web Audio');
+  }
+  if (window.HTMLCanvasElement === undefined) {
+    missing.push('Canvas');
+  }
+  return missing;
+}
 
-jfxr.shims.haveWebWorkers = function() {
+export function callIfSaveAsBroken(callback) {
+  // https://github.com/eligrey/FileSaver.js/issues/12#issuecomment-34557946
+  var svg = new Blob(["<svg xmlns='http://www.w3.org/2000/svg'></svg>"], {type: "image/svg+xml;charset=utf-8"});
+  var img = new Image();
+  img.onerror = callback;
+  img.src = URL.createObjectURL(svg);
+}
+
+export function haveWebWorkers() {
   if (!window.Worker) {
     console.log('Web workers not supported');
     return false;
@@ -20,15 +41,15 @@ jfxr.shims.haveWebWorkers = function() {
   // Web worker cleanup is buggy on Chrome < 34.0.1847.131, see
   // https://code.google.com/p/chromium/issues/detail?id=361792
   var m = navigator.appVersion.match(/Chrome\/((\d+\.)*\d)/);
-  if (m && m[1] && jfxr.shims.compareVersionStrings(m[1], '34.0.1847.131') < 0) {
+  if (m && m[1] && compareVersionStrings(m[1], '34.0.1847.131') < 0) {
     console.log('Web workers buggy and disabled, please update your browser');
     return false;
   }
 
   return true;
-};
+}
 
-jfxr.shims.compareVersionStrings = function(a, b) {
+function compareVersionStrings(a, b) {
   function toArray(x) {
     var array = x.split('.');
     for (var i = 0; i < array.length; i++) {
@@ -46,4 +67,4 @@ jfxr.shims.compareVersionStrings = function(a, b) {
   if (a.length > b.length) return 1;
   if (a.length < b.length) return -1;
   return 0;
-};
+}

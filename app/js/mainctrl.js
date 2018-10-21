@@ -1,56 +1,13 @@
-// This is the version written out to sound files. We maintain backwards
-// compatibility with files written by older versions where possible, but
-// refuse to read files written by newer versions. Only bump the version number
-// if older versions of jfxr would be unable to correctly interpret files
-// written by this version.
-jfxr.VERSION = 1;
+import { ALL_PRESETS } from '../../lib';
+import { callIfSaveAsBroken } from './shims.js';
 
-jfxr.missingBrowserFeatures = function() {
-  missing = [];
-  if (window.Blob === undefined || window.FileReader === undefined ||
-      window.URL === undefined || URL.createObjectURL === undefined) {
-    missing.push('File API');
-  }
-  if (window.AudioContext === undefined) {
-    missing.push('Web Audio');
-  }
-  if (window.HTMLCanvasElement === undefined) {
-    missing.push('Canvas');
-  }
-  return missing;
-};
-
-jfxr.callIfSaveAsBroken = function(callback) {
-  // https://github.com/eligrey/FileSaver.js/issues/12#issuecomment-34557946
-  var svg = new Blob(["<svg xmlns='http://www.w3.org/2000/svg'></svg>"], {type: "image/svg+xml;charset=utf-8"});
-  var img = new Image();
-  img.onerror = callback;
-  img.src = URL.createObjectURL(svg);
-};
-
-jfxr.init = function() {
-  var panic = angular.element(document.getElementById('panic'));
-  var missing = jfxr.missingBrowserFeatures();
-  if (missing.length > 0) {
-    panic.html(
-        'Unfortunately, jfxr cannot run in this browser because it lacks the following features: ' +
-        missing.join(', ') + '. Try a recent Chrome or Firefox instead.');
-    return;
-  }
-  panic.remove();
-
-  angular.element(document).ready(function() {
-    angular.bootstrap(document, ['jfxrApp']);
-  });
-};
-
-jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', 'allPresets', function(
-      context, Player, $scope, $timeout, $window, localStorage, fileStorage, history, synthFactory, allPresets) {
+export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', function(
+      context, Player, $scope, $timeout, $window, localStorage, fileStorage, history, synthFactory) {
   this.showDonateTooltip = !localStorage.get('donated', false) &&
     localStorage.get('donateTooltipLastHidden', 0) + 1000*60*60*24 < Date.now();
 
   this.showSafariWarning = false;
-  jfxr.callIfSaveAsBroken(function() { this.showSafariWarning = true; }.bind(this));
+  callIfSaveAsBroken(function() { this.showSafariWarning = true; }.bind(this));
 
   var player = new Player();
 
@@ -63,7 +20,7 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
   this.autoplay = localStorage.get('autoplayEnabled', true);
   this.createNew = localStorage.get('createNew', true);
 
-  this.presets = allPresets;
+  this.presets = ALL_PRESETS;
 
   this.link = null;
 
@@ -259,4 +216,4 @@ jfxrApp.controller('JfxrCtrl', ['context', 'Player', '$scope', '$timeout', '$win
     }
   }.bind(this);
   parseHash();
-}]);
+}];

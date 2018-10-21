@@ -1,8 +1,8 @@
-jfxrApp.service('context', [function() {
+export var context = [function() {
   return new AudioContext();
-}]);
+}];
 
-jfxrApp.service('Player', ['$rootScope', 'context', function(
+export var Player = ['$rootScope', 'context', function(
       $rootScope, context) {
   var Player = function() {
     this.position = 0;
@@ -65,4 +65,4 @@ jfxrApp.service('Player', ['$rootScope', 'context', function(
   };
 
   return Player;
-}]);
+}];

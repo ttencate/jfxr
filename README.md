@@ -55,24 +55,18 @@ local storage and of course CSS3.
 Developing
 ----------
 
-Clone the repository and open `index.html` locally in your browser. This should
-just work.
+To assemble the JavaScript files into a runnable whole, you need Node.js
+installed.
 
-To produce production assets (minified JavaScript, CSS and images), you need
-node.js installed. To run the Grunt tasks, you also need the `grunt`
-command-line tool; if you don't have it:
-
-    sudo npm install -g grunt-cli
-
-To install the dependencies of the packaging system, just run:
+To install the development dependencies, run:
 
     npm install
 
-Finally, to build production assets:
+Then, to build the app:
 
-    grunt
+    npm run build
 
-This produces output in the `dist` directory, which can be used locally or
+This produces output in the `app/dist` directory, which can be used locally or
 copied to a webserver.
 
 License

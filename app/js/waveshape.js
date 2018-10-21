@@ -1,4 +1,4 @@
-jfxrApp.directive('canvasManager', [function() {
+export var canvasManager = [function() {
   return {
     controller: ['$element', function($element) {
       var canvas = $element[0];
@@ -30,9 +30,9 @@ jfxrApp.directive('canvasManager', [function() {
       };
     }],
   };
-}]);
+}];
 
-jfxrApp.directive('waveshape', [function() {
+export var waveshape = [function() {
   return {
     require: 'canvasManager',
     link: function(scope, element, attrs, ctrl) {
@@ -95,9 +95,9 @@ jfxrApp.directive('waveshape', [function() {
       });
     },
   };
-}]);
+}];
 
-jfxrApp.directive('drawAmplitude', [function() {
+export var drawAmplitude = [function() {
   return {
     require: 'canvasManager',
     link: function(scope, element, attrs, ctrl) {
@@ -127,9 +127,9 @@ jfxrApp.directive('drawAmplitude', [function() {
       });
     },
   };
-}]);
+}];
 
-jfxrApp.directive('drawFrequency', [function() {
+export var drawFrequency = [function() {
   return {
     require: 'canvasManager',
     link: function(scope, element, attrs, ctrl) {
@@ -174,4 +174,4 @@ jfxrApp.directive('drawFrequency', [function() {
       });
     },
   };
-}]);
+}];

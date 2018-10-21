@@ -1,4 +1,4 @@
-jfxrApp.service('localStorage', [function() {
+export var localStorage = [function() {
   var LocalStorage = function() {
     this.data = window.localStorage || {};
   };
@@ -20,4 +20,4 @@ jfxrApp.service('localStorage', [function() {
   };
 
   return new LocalStorage();
-}]);
+}];

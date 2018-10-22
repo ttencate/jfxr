@@ -97,8 +97,8 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
   };
 
   this.exportSound = function() {
-    this.synth.run().then(function(msg) {
-      fileStorage.downloadWav(msg.array, msg.sampleRate, this.getSound().name);
+    this.synth.run().then(function(clip) {
+      fileStorage.downloadWav(clip, this.getSound().name);
     }.bind(this));
   };
 
@@ -183,9 +183,9 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
     this.buffer = null;
     if (value !== undefined && value !== '') {
       this.synth = synthFactory(value);
-      this.synth.run().then(function(msg) {
-        this.buffer = context.createBuffer(1, msg.array.length, msg.sampleRate);
-        this.buffer.getChannelData(0).set(msg.array);
+      this.synth.run().then(function(clip) {
+        this.buffer = context.createBuffer(1, clip.getNumSamples(), clip.getSampleRate());
+        this.buffer.getChannelData(0).set(clip.toFloat32Array());
         if (this.autoplay) {
           player.play(this.buffer);
         }

@@ -40,9 +40,9 @@ effect using the `AudioContext` API.
 
     var synth = new jfxr.Synth(mySound);
 
-    synth.run(function(result) {
-      var buffer = context.createBuffer(1, result.array.length, result.sampleRate);
-      buffer.getChannelData(0).set(result.array);
+    synth.run(function(clip) {
+      var buffer = context.createBuffer(1, clip.array.length, clip.sampleRate);
+      buffer.getChannelData(0).set(clip.toFloat32Array());
       context.resume().then(function() {
         var source = context.createBufferSource();
         source.buffer = buffer;
@@ -62,11 +62,22 @@ The `Synth` class is what produces the sound. Its interface is very simple:
   the jfxr app (the contents of a `.jfxr` file).
 
 * `synth.run(callback)` starts synthesis asynchronously. When complete, the
-  callback is invoked with a single parameter, `result`. This is an object with
-  the following properties:
-
-    * `result.array` is a `Float32Array` containing the generated samples
-      (mono). Usually the values will be between -1 and 1.
-    * `result.sampleRate` is the sample rate, in Hertz, typically 44100.
+  callback is invoked with a single parameter, `clip`, which is a `Clip`
+  object.
 
 * `synth.cancel()` cancels any in-progress synthesis.
+
+### `Clip`
+
+The `Clip` class represents a rendered sound effect. It's just a wrapper around
+an array of samples.
+
+* `clip.getNumSamples()` returns the number of audio samples in the clip.
+
+* `clip.getSampleRate()` returns the sample rate in Hertz, typically 44100.
+
+* `clip.toFloat32Array()` returns a `Float32Array` containing the generated
+  samples (mono). Usually the values will be between -1 and 1.
+
+* `clip.toWavBytes()` returns a `Uint8Array` containing the raw bytes of a WAV
+  file, encoded in 16-bits PCM.

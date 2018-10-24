@@ -1,4 +1,4 @@
-import { ALL_PRESETS } from '../../lib/src';
+import { Sound, Preset, ALL_PRESETS } from '../../lib/src';
 import { callIfSaveAsBroken } from './shims.js';
 
 export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', function(
@@ -114,7 +114,7 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
   };
 
   this.mutate = function() {
-    jfxr.Preset.mutate(this.getSound());
+    Preset.mutate(this.getSound());
   };
 
   this.canUndo = function() {
@@ -205,7 +205,7 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
     var json = decodeURIComponent($window.location.hash.replace(/^#/, ''));
     $window.location.hash = '';
     if (json.length > 0) {
-      var sound = new jfxr.Sound();
+      var sound = new Sound();
       try {
         sound.parse(json);
       } catch (ex) {

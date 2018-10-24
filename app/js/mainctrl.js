@@ -174,19 +174,19 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
     }
   });
 
-  $scope.$watch(function() { return this.getSound().serialize(); }.bind(this), function(value) {
+  $scope.$watch(function() { return this.getSound().serialize(); }.bind(this), function(newValue, oldValue) {
     if (this.synth) {
       this.synth.cancel();
       this.synth = null;
     }
     player.stop();
     this.buffer = null;
-    if (value !== undefined && value !== '') {
-      this.synth = synthFactory(value);
+    if (newValue !== undefined && newValue !== '') {
+      this.synth = synthFactory(newValue);
       this.synth.run().then(function(clip) {
         this.buffer = context.createBuffer(1, clip.getNumSamples(), clip.getSampleRate());
         this.buffer.getChannelData(0).set(clip.toFloat32Array());
-        if (this.autoplay) {
+        if (this.autoplay && newValue !== oldValue) {
           player.play(this.buffer);
         }
       }.bind(this));

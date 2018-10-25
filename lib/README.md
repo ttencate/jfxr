@@ -5,8 +5,9 @@ This library is the core of the [jfxr](https://jfxr.frozenfractal.com) sound
 effects generator. jfxr generates sounds from a small JSON object containing
 parameters like pitch, duration and effects.
 
-The library was developed only for running in the browser, but it might work in
-a Node.js environment as well.
+The library was developed only for running in the browser, but it can be made
+to work in a Node.js environment as well. If you need that, please [file an
+issue](https://github.com/ttencate/jfxr/issues).
 
 Installation
 ------------
@@ -14,8 +15,8 @@ Installation
 The module is built using UMD, so it should work with AMD, CommonJS, or as a
 browser global. Use one of these approaches:
 
-* To use it in the browser without any module system, you can just copy
-  `jfxr.js`, include it via a `<script>` tag:
+* To use it in the browser without any module system, you can use
+  the minified bundle `dist/jfxr.min.js`, and include it via a `<script>` tag:
 
         <script src="jfxr.js"></script>
 
@@ -27,7 +28,7 @@ browser global. Use one of these approaches:
 
   Then import it and use it using one of:
 
-        var jfxr = require('jfxr');  // Node.js syntax
+        var jfxr = require('jfxr');  // Node.js syntax (CommonJS)
         import jfxr from 'jfxr';     // ES2015 module syntax
 
 Example

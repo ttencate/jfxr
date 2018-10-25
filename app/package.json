@@ -14,13 +14,14 @@
     "deploy": "rsync -rv --delete --exclude=.* dist/ thomas@frozenfractal.com:/var/www/jfxr.frozenfractal.com/"
   },
   "devDependencies": {
+    "eslint": "^5.7.0",
+    "eslint-loader": "^2.1.1",
     "file-saver": "^2.0.0-rc.4",
     "grunt": "^1.0.3",
     "grunt-cli": "^1.3.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-imagemin": "^3.0.0",
-    "grunt-contrib-jshint": "^2.0.0",
     "grunt-webpack": "^3.1.3",
     "webpack": "^4.22.0",
     "webpack-cli": "^3.1.2"

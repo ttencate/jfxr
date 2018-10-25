@@ -2,12 +2,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    jshint: {
-      files: ['../lib/src/*.js', 'js/*.js'],
-      options: {
-        esnext: true,
-      },
-    },
     webpack: {
       dist: require('./webpack.config.js'),
     },
@@ -37,8 +31,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-webpack');
 
-  grunt.registerTask('default', ['jshint', 'webpack', 'cssmin', 'imagemin', 'copy']);
+  grunt.registerTask('default', ['webpack', 'cssmin', 'imagemin', 'copy']);
 };

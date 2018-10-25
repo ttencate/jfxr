@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver';
 
-import { Sound } from '../../lib/src';
+import { Sound } from '../../lib';
 
 export var fileStorage = ['$q', function($q) {
 

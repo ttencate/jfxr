@@ -23,7 +23,7 @@ export var Player = ['$rootScope', 'context', function(
     // even if we paint the canvas at irregular intervals. This is needed
     // because smoothing is applied only when the data is requested.
     this.script = context.createScriptProcessor(1024);
-    this.script.onaudioprocess = function(e) {
+    this.script.onaudioprocess = function(unused_e) {
       this.analyser.getFloatFrequencyData(this.frequencyData);
     }.bind(this);
     // Feed zeros into the analyser because otherwise it freezes up as soon

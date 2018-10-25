@@ -1,4 +1,4 @@
-import { Synth } from '../../lib/src';
+import { Synth } from '../../lib';
 
 export var synthFactory = ['$q', '$timeout', function($q, $timeout) {
   return function(str) {

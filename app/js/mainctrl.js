@@ -1,4 +1,4 @@
-import { Sound, Preset, ALL_PRESETS } from '../../lib/src';
+import { Sound, Preset, ALL_PRESETS } from '../../lib';
 import { callIfSaveAsBroken } from './shims.js';
 
 export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', function(
@@ -76,7 +76,7 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
     fileStorage.loadJfxr().then(function(sound) {
       this.history.addSound(sound);
     }.bind(this), function(error) {
-      console.error('Could not load sound', error);
+      console.error('Could not load sound', error); // eslint-disable-line no-console
     });
   };
 
@@ -197,7 +197,7 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
     this.hoveredParam = param;
   }.bind(this));
 
-  $scope.$on('parammouseleave', function($event, param) {
+  $scope.$on('parammouseleave', function(unused_$event, unused_param) {
     this.hoveredParam = null;
   }.bind(this));
 
@@ -209,7 +209,7 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
       try {
         sound.parse(json);
       } catch (ex) {
-        console.error('Could not parse sound from URL fragment', ex);
+        console.error('Could not parse sound from URL fragment', ex); // eslint-disable-line no-console
         return;
       }
       this.history.addSound(sound);

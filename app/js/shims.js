@@ -34,7 +34,7 @@ export function callIfSaveAsBroken(callback) {
 
 export function haveWebWorkers() {
   if (!window.Worker) {
-    console.log('Web workers not supported');
+    console.log('Web workers not supported'); // eslint-disable-line no-console
     return false;
   }
 
@@ -42,7 +42,7 @@ export function haveWebWorkers() {
   // https://code.google.com/p/chromium/issues/detail?id=361792
   var m = navigator.appVersion.match(/Chrome\/((\d+\.)*\d)/);
   if (m && m[1] && compareVersionStrings(m[1], '34.0.1847.131') < 0) {
-    console.log('Web workers buggy and disabled, please update your browser');
+    console.log('Web workers buggy and disabled, please update your browser'); // eslint-disable-line no-console
     return false;
   }
 

@@ -121,7 +121,7 @@ export var drawAmplitude = [function() {
         context.stroke();
       });
 
-      scope.$watch(attrs.drawAmplitude + '.serialize()', function(value) {
+      scope.$watch(attrs.drawAmplitude + '.serialize()', function(unused_value) {
         sound = scope.$eval(attrs.drawAmplitude);
         ctrl.draw();
       });
@@ -168,7 +168,7 @@ export var drawFrequency = [function() {
         context.stroke();
       });
 
-      scope.$watch(attrs.drawFrequency + '.serialize()', function(value) {
+      scope.$watch(attrs.drawFrequency + '.serialize()', function(unused_value) {
         sound = scope.$eval(attrs.drawFrequency);
         ctrl.draw();
       });

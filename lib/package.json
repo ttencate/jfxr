@@ -13,7 +13,7 @@
   "scripts": {
     "build": "webpack",
     "clean": "rm -rf build/",
-    "publish": "npm run clean && npm run build && webpack && npm publish"
+    "publish": "npm run clean && npm run build && npm publish"
   },
   "devDependencies": {
     "eslint": "^5.7.0",

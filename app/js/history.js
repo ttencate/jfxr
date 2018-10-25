@@ -1,4 +1,4 @@
-import { clamp, Sound } from '../../lib/src';
+import { clamp, Sound } from '../../lib';
 
 export var history = ['$rootScope', 'localStorage', function($rootScope, localStorage) {
   var sounds = [];
@@ -107,7 +107,7 @@ export var history = ['$rootScope', 'localStorage', function($rootScope, localSt
     try {
       sound.parse(str);
     } catch (ex) {
-      console.error('Could not parse sound from local storage', ex);
+      console.error('Could not parse sound from local storage', ex); // eslint-disable-line no-console
       continue;
     }
     this.addSound(sound, i);

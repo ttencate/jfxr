@@ -1,4 +1,4 @@
-import { sign } from '../../lib/src';
+import { sign } from '../../lib';
 
 export var customParam = [function() {
   return {
@@ -74,7 +74,7 @@ export var floatParam = [function() {
         }
       }.bind(this));
 
-      this.getRangeValue = function(value) {
+      this.getRangeValue = function() {
         if (logarithmic) {
           return fromLog(parseFloat(this.rangeValue));
         } else {
@@ -90,7 +90,7 @@ export var floatParam = [function() {
         }
       };
 
-      this.getTextValue = function(value) {
+      this.getTextValue = function() {
         return this.textValue;
       };
 
@@ -98,7 +98,7 @@ export var floatParam = [function() {
         this.textValue = value;
       };
 
-      this.getParamValue = function(value) {
+      this.getParamValue = function() {
         if (!param) return null;
         return param.value;
       };
@@ -138,7 +138,7 @@ export var floatParam = [function() {
       });
 
       var rangeInput = angular.element(element[0].getElementsByClassName('floatslider'));
-      rangeInput.bind('input', function(e) {
+      rangeInput.bind('input', function(unused_e) {
         var value = ctrl.getRangeValue();
         ctrl.setTextValue(value);
         ctrl.setParamValue(value);
@@ -146,7 +146,7 @@ export var floatParam = [function() {
       });
 
       var textInput = angular.element(element[0].getElementsByClassName('floattext'));
-      textInput.bind('blur', function(e) {
+      textInput.bind('blur', function(unused_e) {
         ctrl.setParamValue(ctrl.getTextValue());
         ctrl.setTextValue(ctrl.getParamValue()); // Propagates clamping etc. back to the text input.
         scope.$apply();
@@ -185,7 +185,7 @@ export var booleanParam = [function() {
       '    <span ng-switch-when="true">&mdash;</span>' +
       '  </div>' +
       '</div>',
-    link: function(scope, element, attrs, ctrl) {
+    link: function(scope, element, unused_attrs, unused_ctrl) {
       element.bind('wheel', function(e) {
         if (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey || e.buttons) {
           return;
@@ -252,7 +252,7 @@ export var linkbox = ['$document', '$timeout', function($document, $timeout) {
       for: '=',
     },
     template: '<input type="text" readonly class="linkbox" ng-model="for" ng-show="for"></input>',
-    link: function(scope, element, attrs, ctrl) {
+    link: function(scope, element, unused_attrs, unused_ctrl) {
       var input = element.find('input');
       input.on('blur', function() {
         scope['for'] = null;

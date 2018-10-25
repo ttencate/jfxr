@@ -39,12 +39,7 @@ export var analyser = [function() {
       'analyser': '=',
       'enabled': '=',
     },
-    link: function(scope, element, attrs, ctrl) {
-      var destroyed = false;
-      element.bind('$destroy', function() {
-        destroyed = true;
-      });
-
+    link: function(scope, element, unused_attrs, unused_ctrl) {
       var canvas = element[0];
       var context = canvas.getContext('2d');
       var width = canvas.width;

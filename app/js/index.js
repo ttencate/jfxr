@@ -9,6 +9,8 @@ import { synthFactory } from './synthfactory.js';
 import { customParam, floatParam, booleanParam, waveformButton, linkbox } from './ui.js';
 import { canvasManager, waveshape, drawAmplitude, drawFrequency } from './waveshape.js';
 
+import '../css/index.scss';
+
 var jfxrApp = angular.module('jfxrApp', []);
 
 jfxrApp.controller('MainCtrl', MainCtrl);

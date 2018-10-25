@@ -1,6 +1,6 @@
 {
   "name": "jfxr-app",
-  "version": "0.10.2",
+  "version": "0.11.0",
   "description": "A browser-based tool to create sound effects for games.",
   "homepage": "http://jfxr.frozenfractal.com",
   "repository": "https://github.com/ttencate/jfxr",
@@ -10,19 +10,21 @@
     "name": "Thomas ten Cate"
   },
   "scripts": {
-    "build": "grunt",
-    "deploy": "rsync -rv --delete --exclude=.* dist/ thomas@frozenfractal.com:/var/www/jfxr.frozenfractal.com/"
+    "clean": "rm -rf build/",
+    "build": "webpack",
+    "publish": "npm run clean && npm run build && rsync -rv --delete --exclude=.* dist/ thomas@frozenfractal.com:/var/www/jfxr.frozenfractal.com/"
   },
   "devDependencies": {
+    "css-loader": "^1.0.0",
     "eslint": "^5.7.0",
     "eslint-loader": "^2.1.1",
+    "file-loader": "^2.0.0",
     "file-saver": "^2.0.0-rc.4",
-    "grunt": "^1.0.3",
-    "grunt-cli": "^1.3.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-cssmin": "^3.0.0",
-    "grunt-contrib-imagemin": "^3.0.0",
-    "grunt-webpack": "^3.1.3",
+    "html-webpack-plugin": "^4.0.0-beta.2",
+    "image-webpack-loader": "^4.4.0",
+    "mini-css-extract-plugin": "^0.4.4",
+    "node-sass": "^4.9.4",
+    "sass-loader": "^7.1.0",
     "webpack": "^4.22.0",
     "webpack-cli": "^3.1.2"
   }

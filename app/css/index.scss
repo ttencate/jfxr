@@ -25,18 +25,22 @@ input, button {
   outline: 0;
 }
 
-input[type="text"] {
+input[type="text"], input:not([type]) {
   border: 1px solid transparent;
   background-color: transparent;
   color: inherit;
   font: inherit;
 }
 
-input[type="text"]:not(:disabled):not(:focus):hover {
+input[type="text"]:not(:disabled):not(:focus):hover,
+input:not([type]):not(:disabled):not(:focus):hover,
+{
   border-color: #444;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input:not([type]):focus,
+{
   color: #ccc;
   border-color: #666;
   background-color: #111;
@@ -45,7 +49,9 @@ input[type="text"]:focus {
     1px 1px 2px rgba(0, 0, 0, 1.0) inset;
 }
 
-input[type="text"].ng-invalid {
+input[type="text"].ng-invalid,
+input:not([type]).ng-invalid,
+{
   border-color: #c44;
 }
 
@@ -449,7 +455,7 @@ h1 a {
 }
 
 .closebutton {
-  content: '\u00d7';
+  content: '\00d7';
   font-weight: bold;
   width: 16px;
   height: 16px;
@@ -649,7 +655,7 @@ h1 a {
   display: block;
   width: 15px;
   height: 15px;
-  background-image: url(sprites.png);
+  background-image: url(../images/sprites.png);
   border: 0;
   background-color: transparent;
   opacity: 0.4;
@@ -909,7 +915,7 @@ h2:first-child {
   display: inline-block;
   width: 15px;
   height: 15px;
-  background: url(sprites.png);
+  background: url(../images/sprites.png);
   opacity: 0.7;
   transition: opacity 0.2s linear;
 }
@@ -1056,7 +1062,7 @@ h2:first-child {
   margin: 1px 0;
   color: #000;
   background-color: #666;
-  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, transparent 100%), url(sprites.png);
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, transparent 100%), url(../images/sprites.png);
   background-position: 0 0, -61px -16px;
   border-radius: 2px;
   box-shadow:

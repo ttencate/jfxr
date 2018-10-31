@@ -18,11 +18,9 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'eslint-loader',
+        enforce: 'pre',
         options: {
-          emitError: true,
           emitWarning: true,
-          failOnError: true,
-          failOnWarning: true,
         },
       },
       {
@@ -68,4 +66,5 @@ module.exports = {
       filename: '[hash].css',
     }),
   ],
+  stats: 'minimal',
 };

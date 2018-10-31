@@ -11,8 +11,9 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
     "clean": "rm -rf build/",
+    "build": "webpack",
+    "watch": "webpack --watch",
     "publish": "npm run clean && npm run build && npm publish"
   },
   "devDependencies": {

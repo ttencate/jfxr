@@ -12,6 +12,7 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "webpack",
+    "watch": "webpack --watch",
     "publish": "npm run clean && npm run build && rsync -rv --delete --exclude=.* dist/ thomas@frozenfractal.com:/var/www/jfxr.frozenfractal.com/"
   },
   "devDependencies": {

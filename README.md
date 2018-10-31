@@ -83,6 +83,10 @@ separate from the app:
 This produces an npm package in the `lib/dist` directory, which can be used
 as-is or published to the npm registry.
 
+For development, there is also a script to continuously rebuild on change:
+
+    npm run watch
+
 For further details, see [`lib/README.md`](lib/README.md) or the [documentation
 on npmjs.com](https://www.npmjs.com/package/jfxr).
 

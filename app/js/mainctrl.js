@@ -1,6 +1,7 @@
 import angular from 'angular';
 
 import { Sound, Preset, ALL_PRESETS } from '../../lib';
+import { debounce } from './debounce.js';
 import { callIfSaveAsBroken } from './shims.js';
 
 export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', function(
@@ -176,24 +177,27 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
     }
   });
 
-  $scope.$watch(function() { return this.getSound().serialize(); }.bind(this), function(newValue, oldValue) {
-    if (this.synth) {
-      this.synth.cancel();
-      this.synth = null;
-    }
-    player.stop();
-    this.buffer = null;
-    if (newValue !== undefined && newValue !== '') {
-      this.synth = synthFactory(newValue);
-      this.synth.run().then(function(clip) {
-        this.buffer = context.createBuffer(1, clip.getNumSamples(), clip.getSampleRate());
-        this.buffer.getChannelData(0).set(clip.toFloat32Array());
-        if (this.autoplay && newValue !== oldValue) {
-          player.play(this.buffer);
-        }
-      }.bind(this));
-    }
-  }.bind(this));
+  $scope.$watch(function() { return this.getSound().serialize(); }.bind(this), debounce(
+    function(newValue, oldValue) {
+      if (this.synth) {
+        this.synth.cancel();
+        this.synth = null;
+      }
+      player.stop();
+      this.buffer = null;
+      if (newValue !== undefined && newValue !== '') {
+        this.synth = synthFactory(newValue);
+        this.synth.run().then(function(clip) {
+          this.buffer = context.createBuffer(1, clip.getNumSamples(), clip.getSampleRate());
+          this.buffer.getChannelData(0).set(clip.toFloat32Array());
+          if (this.autoplay && newValue !== oldValue) {
+            player.play(this.buffer);
+          }
+        }.bind(this));
+      }
+    }.bind(this),
+    500
+  ));
 
   $scope.$on('parammouseenter', function($event, param) {
     this.hoveredParam = param;

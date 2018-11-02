@@ -1,8 +1,8 @@
 import { Sound, Preset, ALL_PRESETS } from '../../lib';
 import { callIfSaveAsBroken } from './shims.js';
 
-export var MainCtrl = ['context', 'Player', '$element', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', function(
-      context, Player, $element, $scope, $timeout, $window, localStorage, fileStorage, history, synthFactory) {
+export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', function(
+      context, Player, $scope, $timeout, $window, localStorage, fileStorage, history, synthFactory) {
   this.showDonateTooltip = !localStorage.get('donated', false) &&
     localStorage.get('donateTooltipLastHidden', 0) + 1000*60*60*24 < Date.now();
 
@@ -218,7 +218,12 @@ export var MainCtrl = ['context', 'Player', '$element', '$scope', '$timeout', '$
   parseHash();
 
   // Fire a ready event to be used for integrations (e.g. Electron iframe).
-  var readyEvent = new Event('jfxrReady', { bubbles: true });
+  // When running within an iframe, the event is emitted from the parent window
+  // instead. Otherwise, it is emitted from the current window (since in that
+  // case, window.parent == window).
+  var readyEvent = new Event('jfxrReady');
   readyEvent.mainCtrl = this;
-  $element[0].dispatchEvent(readyEvent);
+  if ($window.parent) {
+    $window.parent.dispatchEvent(readyEvent);
+  }
 }];

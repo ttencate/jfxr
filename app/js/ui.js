@@ -1,3 +1,5 @@
+import angular from 'angular';
+
 import { sign } from '../../lib';
 
 export var customParam = [function() {

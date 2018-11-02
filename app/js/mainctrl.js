@@ -1,3 +1,5 @@
+import angular from 'angular';
+
 import { Sound, Preset, ALL_PRESETS } from '../../lib';
 import { callIfSaveAsBroken } from './shims.js';
 

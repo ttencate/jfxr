@@ -1,3 +1,4 @@
+import angular from 'angular';
 import { saveAs } from 'file-saver';
 
 import { Sound } from '../../lib';

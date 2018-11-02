@@ -1,3 +1,5 @@
+import angular from 'angular';
+
 import { missingBrowserFeatures } from './shims.js';
 import { MainCtrl } from './mainctrl.js';
 import { analyser } from './analyser.js';

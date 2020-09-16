@@ -8,7 +8,7 @@ html {
   font-size: 12px;
   font-weight: 300;
   color: #ccc;
-  background-color: #101010; 
+  background-color: grey; 
   background-image: linear-gradient(#101010 0, #101010 8px, #0c0c0c 8px, #0c0c0c 16px);
   background-size: 100% 16px;
   background-position: 0 -4px;
@@ -23,6 +23,8 @@ body {
 
 input, button {
   outline: 0;
+  background:black;
+  color:white;
 }
 
 input[type="text"], input:not([type]) {

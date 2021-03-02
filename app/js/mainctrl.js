@@ -76,10 +76,12 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
   };
 
   this.openSound = function() {
-    fileStorage.loadJfxr().then(function(sound) {
-      this.history.addSound(sound);
+    fileStorage.loadJfxrs().then(function(sounds) {
+      for (var i = 0; i < sounds.length; i++) {
+        this.history.addSound(sounds[i]);
+      }
     }.bind(this), function(error) {
-      console.error('Could not load sound', error); // eslint-disable-line no-console
+      console.error('Could not load sounds', error); // eslint-disable-line no-console
     });
   };
 

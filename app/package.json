@@ -1,6 +1,6 @@
 {
   "name": "jfxr-app",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "A browser-based tool to create sound effects for games.",
   "homepage": "http://jfxr.frozenfractal.com",
   "repository": "https://github.com/ttencate/jfxr",

@@ -6,9 +6,6 @@ import { callIfSaveAsBroken } from './shims.js';
 
 export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'localStorage', 'fileStorage', 'history', 'synthFactory', function(
       context, Player, $scope, $timeout, $window, localStorage, fileStorage, history, synthFactory) {
-  this.showDonateTooltip = !localStorage.get('donated', false) &&
-    localStorage.get('donateTooltipLastHidden', 0) + 1000*60*60*24 < Date.now();
-
   this.showSafariWarning = false;
   callIfSaveAsBroken(function() { this.showSafariWarning = true; }.bind(this));
 
@@ -28,16 +25,6 @@ export var MainCtrl = ['context', 'Player', '$scope', '$timeout', '$window', 'lo
   this.link = null;
 
   this.hoveredParam = null;
-
-  this.dismissDonateTooltip = function() {
-    this.showDonateTooltip = false;
-    localStorage.set('donateTooltipLastHidden', Date.now());
-  };
-
-  this.dismissDonateTooltipForever = function() {
-    this.dismissDonateTooltip();
-    localStorage.set('donated', true);
-  };
 
   this.getSounds = function() {
     return this.history.getSounds();

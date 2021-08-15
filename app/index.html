@@ -40,21 +40,6 @@
       <div class="content">
 
         <div class="pane pane-bottom-left column-left filespane statusbarpane">
-          <form class="toolbar" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-            <input type="hidden" name="cmd" value="_s-xclick">
-            <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-            ">
-            <div class="tooltipanchor">
-              <input class="shiny shiny-display" type="submit" name="submit" value="Donate" title="Donate to the author of jfxr via PayPal" ng-click="ctrl.dismissDonateTooltipForever()">
-              <div class="tooltip" ng-class="{'tooltip-visible': ctrl.showDonateTooltip}">
-                <div class="tooltiparrow"></div>
-                <div class="tooltipcontent">
-                  <button class="closebutton tooltiptopright" ng-click="ctrl.dismissDonateTooltip(); $event.preventDefault();">×</button>
-                  jfxr is a free contribution to the community. If you enjoy using it, consider sending a donation!
-                </div>
-              </div>
-            </div>
-          </form>
 
           <div class="toolbar">
             <button class="button button-tool" ng-click="ctrl.openSound()" title="Load sound from file">

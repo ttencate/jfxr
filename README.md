@@ -50,16 +50,16 @@ Developing
 ----------
 
 To assemble the JavaScript files into a runnable whole, you need Node.js
-installed.
+and Yarn installed. (npm might work, but is not recommended.)
 
 To install the development dependencies, run:
 
     cd app
-    npm install
+    yarn install
 
 Then, to build the app:
 
-    npm run build
+    yarn build
 
 This produces output in the `app/dist` directory, which can be used locally or
 copied to a webserver.

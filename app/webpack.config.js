@@ -1,7 +1,10 @@
 const path = require('path');
 
+const ESLintPlugin = require('eslint-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const outputPath = path.resolve(__dirname, 'dist');
 
@@ -15,15 +18,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        options: {
-          emitWarning: true,
-        },
-      },
-      {
         test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
@@ -34,7 +28,6 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              outputStyle: 'compressed',
               sourceMap: true,
             },
           },
@@ -42,23 +35,30 @@ module.exports = {
       },
       {
         test: /\.png$/,
-        use: [
-          'file-loader',
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              optipng: {
-                enabled: true,
-                optimizationLevel: 7,
-              },
-            },
-          },
-        ],
+        type: 'asset',
       },
+    ],
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin(),
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.imageminMinify,
+          options: {
+            plugins: [
+              ['optipng', { optimizationLevel: 7 }],
+            ],
+          },
+        },
+      }),
     ],
   },
   devtool: 'source-map',
   plugins: [
+    new ESLintPlugin({
+      emitWarning: true,
+    }),
     new HtmlWebpackPlugin({
       template: './index.html',
     }),

@@ -84,6 +84,12 @@ For development, there is also a script to continuously rebuild on change:
 For further details, see [`lib/README.md`](lib/README.md) or the [documentation
 on npmjs.com](https://www.npmjs.com/package/jfxr).
 
+Ports
+-----
+
+- [Aurel300](https://github.com/Aurel300) ported the sound generation core to
+  Rust: [jfxr-rs](https://github.com/Aurel300/jfxr-rs).
+
 License
 -------
 
